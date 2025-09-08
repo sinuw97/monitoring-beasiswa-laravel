@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\auth\AuthAdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\mahasiswa\auth\AuthMahasiswaController;
 use App\Http\Controllers\mahasiswa\dashboard\DashboardMahasiswaController;
+use App\Http\Controllers\mahasiswa\monev\PengisianMonevController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,6 +17,7 @@ Route::prefix('mahasiswa')->group(function () {
 
     Route::middleware('mahasiswa')->group(function () {
         Route::get('/dashboard', [DashboardMahasiswaController::class, 'showDashboard'])->name('mahasiswa.dashboard');
+        Route::get('/pengisian-monev', [PengisianMonevController::class, 'showHalaman'])->name('mahasiswa.isi-monev');
     });
 });
 
