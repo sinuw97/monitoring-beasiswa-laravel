@@ -6,7 +6,7 @@
         <img src="/icon/icon-monitoring.svg" alt="e-monitoring" class="w-[120px]">
         <ul class="flex items-center gap-10 text-[#09697E] font-bold">
             <li><a href="{{ route('mahasiswa.dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ route('mahasiswa.isi-monev') }}">Laporan Monev</a></li>
+            <li><a href="{{ route('mahasiswa.laporan-monev') }}">Laporan Monev</a></li>
             <li><a href="">Riwayat Laporan</a></li>
         </ul>
         {{-- Dropdown disini --}}

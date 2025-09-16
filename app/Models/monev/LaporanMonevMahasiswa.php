@@ -16,6 +16,9 @@ class LaporanMonevMahasiswa extends Model
   protected $fillable = [
     'laporan_id',
     'nim',
+    'semester_id',
+    'semester',
+    'status',
   ];
   public $timestamps = true;
 

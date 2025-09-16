@@ -7,11 +7,12 @@
         </tr>
     </thead>
     <tbody>
-        @forelse($rows as $row)
+        @forelse(($rows ?? []) as $row)
             <tr class="bg-[#E7E6E6]">
                 @foreach ($row as $cell)
                     <td class="px-4 py-2 text-center">{{ $cell }}</td>
                 @endforeach
+                <td class="px-4 py-2 text-center">Lihat</td>
             </tr>
         @empty
             <tr>

@@ -102,9 +102,9 @@
             </div>
             {{-- Laporan yg disimpan --}}
             <div class="bg-white w-full h-[300px] shadow-md rounded-md p-2 mb-5">
-                <h2 class="font-semibold mb-3">Laporan Monev Yang Tersimpan</h2>
+                <h2 class="font-semibold mb-3 text-lg">Laporan Monev Yang Tersimpan</h2>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full rounded-xl">
+                    <table class="min-w-full text-sm">
                         <thead>
                             <tr class="bg-[#E8BE00]">
                                 <th class="px-4 py-2 text-center">No</th>
@@ -115,15 +115,36 @@
                                 <th class="px-4 py-2 text-center">Aksi</th>
                             </tr>
                         </thead>
-                        {{-- Isi tabelnya --}}
+                        <tbody>
+                            @forelse ($draftedLaporan as $drafted)
+                                <tr class="bg-[#f7f7f7]">
+                                    <td class="px-4 py-2 text-center">{{ $loop->iteration }}</td>
+                                    <td class="px-4 py-2 text-center">{{ $drafted->semester ?? '-' }}</td>
+                                    <td class="px-4 py-2 text-center">
+                                        {{ $drafted->periodeSemester?->tahun_akademik ?? '-' }} {{ $drafted->periodeSemester?->semester }}
+                                    </td>
+                                    <td class="px-4 py-2 text-center">{{ $drafted->status }}</td>
+                                    <td class="px-4 py-2 text-center">
+                                        {{ $drafted->created_at ? $drafted->created_at->translatedFormat('d F Y') : '-' }}
+                                    </td>
+                                    <td class="px-4 py-2 text-center">
+                                        <a href="{{ route('mahasiswa.isi-monev', $drafted->laporan_id) }}" class="underline">Lihat</a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-4 py-4 text-center">Tidak ada data</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
                     </table>
                 </div>
             </div>
             {{-- Laporan yg terkirim --}}
             <div class="bg-white w-full h-[300px] shadow-md rounded-md p-2">
-                <h2 class="font-semibold mb-3">Laporan Monev Yang Terkirim</h2>
+                <h2 class="font-semibold mb-3 text-lg">Laporan Monev Yang Terkirim</h2>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full rounded-xl">
+                    <table class="min-w-full text-sm">
                         <thead>
                             <tr class="bg-[#E8BE00]">
                                 <th class="px-4 py-2 text-center">No</th>
