@@ -32,7 +32,7 @@
                 @if ($status === 'Draft')
                     {{-- Aksi: dispatch event supaya parent yang pegang modal bisa nangani --}}
                     <td class="px-4 py-2 flex justify-center items-center gap-3">
-                        <button type="button" class="cursor-pointer px-3 py-0.5 text-white bg-[#013F4E] rounded-xl"
+                        <button type="button" class="cursor-pointer px-3 py-0.5 text-white bg-[#013F4E] rounded-xl" if
                             @click="$dispatch('{{ $editEvent }}', {{ json_encode($row) }})">
                             Edit
                         </button>
