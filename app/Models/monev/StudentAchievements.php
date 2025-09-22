@@ -26,7 +26,7 @@ class StudentAchievements extends Model
       'award',
       'place',
       'start_date',
-      'ende_date',
+      'end_date',
       'bukti_url',
       'points',
       'comment',

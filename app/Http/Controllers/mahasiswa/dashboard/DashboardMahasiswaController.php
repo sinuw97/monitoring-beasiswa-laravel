@@ -21,13 +21,17 @@ class DashboardMahasiswaController extends Controller
 
       $dataMahasiswa->makeHidden(['password']);
 
-      // ambil laporan yang masih Draft
-      $draftedLaporan = LaporanMonevMahasiswa::with('periodeSemester')
-      ->where('nim', $dataMahasiswa->nim)
-      ->where('status', 'Draft')
-      ->orderBy('created_at', 'desc')
-      ->get();
+      // AMbil semua laporan
+      $allLaporan = LaporanMonevMahasiswa::where('nim', $mahasiswa->nim)
+          ->whereIn('status', ['Draft', 'Pending'])
+          ->get();
 
-      return view('mahasiswa.dashboard', compact('dataMahasiswa', 'draftedLaporan'));
+      // saring laporan yg status = Draft
+      $draftedLaporan = $allLaporan->where('status', 'Draft');
+
+      // saring laporan yg status = Pending
+      $pendingLaporan = $allLaporan->where('status', 'Pending');
+
+      return view('mahasiswa.dashboard', compact('dataMahasiswa', 'draftedLaporan', 'pendingLaporan'));
     }
 }

@@ -24,7 +24,7 @@ class AcademicActivities extends Model
       'participation',
       'place',
       'start_date',
-      'ende_date',
+      'end_date',
       'bukti_url',
       'points',
       'comment',

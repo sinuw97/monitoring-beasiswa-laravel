@@ -26,7 +26,7 @@
             @endif
 
             <div class="overflow-x-auto mt-4">
-                <table class="min-w-full text-sm">
+                <table class="min-w-full text-sm shadow-lg bg-white border-separate border-spacing-0 m-4">
                     <thead>
                         <tr class="bg-[#E8BE00]">
                             <th class="px-4 py-2 text-center">No</th>
@@ -38,20 +38,31 @@
                     </thead>
                     <tbody>
                         @forelse ($timeline as $row)
-                            <tr class="bg-[#E7E6E6]">
-                                @foreach ($row as $cell)
-                                    <td class="px-4 py-2 text-center">{{ $cell }}</td>
-                                @endforeach
+                            <tr class="bg-[#f8f8f8]">
+                                <td class="px-4 py-2 text-center">{{ $row['no'] }}</td>
+                                <td class="px-4 py-2 text-center">{{ $row['semester'] }}</td>
+                                <td class="px-4 py-2 text-center">{{ $row['periode'] }}</td>
+                                <td class="px-4 py-2 text-center">{{ $row['status'] }}</td>
                                 <td class="px-4 py-2 text-center">
-                                    @if ($cell !== 'Dibuka')
+                                    @if ($row['status'] !== 'Dibuka')
                                         <button type="button"
-                                            class="px-3 py-1 bg-[#E8BE00] text-[#09697E] font-semibold rounded cursor-pointer">Lihat</button>
-                                    @elseif ($cell === 'Dibuka')
-                                        <form action="{{ route('mahasiswa.buat-laporan') }}" method="POST">
-                                            @csrf
-                                            <button type="submit"
-                                                class="px-3 py-1 bg-[#09697E] text-white font-semibold rounded cursor-pointer">Buat</button>
-                                        </form>
+                                            class="px-2 py-1 bg-[#d82222] text-[#f1f1f1] font-bold rounded cursor-default">Tutup</button>
+                                    @else
+                                        @if ($row['aksi'] === 'Buat')
+                                            <form action="{{ route('mahasiswa.buat-laporan', $row['semester_id']) }}"
+                                                method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="px-2 py-1 bg-[#09697E] text-white font-bold rounded cursor-pointer">
+                                                    Buat
+                                                </button>
+                                            </form>
+                                        @else
+                                            <a href="{{ route('mahasiswa.lihat-laporan', $row['laporan_id']) }}"
+                                                class="px-2 py-1 bg-[#007E33] text-white font-bold rounded cursor-pointer">
+                                                Lihat
+                                            </a>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>
