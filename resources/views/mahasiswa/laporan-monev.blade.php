@@ -59,14 +59,17 @@
 
                     {{-- Panggil komponen tabel --}}
                     <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Status']" :columns="['semester', 'ips', 'ipk', 'bukti', 'status']" :rows="$parsingAcademicReports" idKey="id"
-                        editEvent="edit-reports" :status="$laporan->status" />
+                        editEvent="edit-reports" deleteRoute="laporan.academic-reports.delete" :status="$laporan->status"  />
 
-                    @if (!$parsingAcademicReports && $laporan->status === 'Draft')
-                        {{-- Btn tambah data --}}
-                        <button @click="openReports = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
-                            Tambah
-                        </button>
+                    @if ($laporan->status === 'Draft')
+                        @if (!$parsingAcademicReports || count($parsingAcademicReports) === 0)
+                            {{-- Btn tambah data --}}
+                            <button @click="openReports = true"
+                                class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                                Tambah
+                            </button>
+                        @endif
+
                         {{-- Modal tambah data --}}
                         <x-modal title="Tambah data IPS dan IPK" show="openReports">
                             <form method="POST"
@@ -122,7 +125,8 @@
                         {{-- Modal edit data --}}
                         <x-modal title="Edit data IPS dan IPK" show="openEditReports">
                             <form
-                                x-bind:action="'{{ route('laporan.academic-reports.update', ':id') }}'.replace(':id', editDataReports
+                                x-bind:action="'{{ route('laporan.academic-reports.update', ':id') }}'.replace(':id',
+                                    editDataReports
                                     .id)"
                                 method="POST" enctype="multipart/form-data">
                                 @csrf
@@ -166,6 +170,8 @@
                                 </div>
                             </form>
                         </x-modal>
+                        {{-- Delete Modal --}}
+                        <x-modal-delete deleteRoute="laporan.academic-reports.delete"/>
                     @endif
                 </div>
 
@@ -194,7 +200,7 @@
                         'bukti',
                         'status',
                     ]" :rows="$parsingAcademicActivities" idKey="id"
-                        editEvent="edit-academic" :status="$laporan->status" />
+                        editEvent="edit-academic" deleteRoute="laporan.academic-activities.delete" :status="$laporan->status" />
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openAcademic = true"
@@ -379,7 +385,7 @@
                         'bukti',
                         'status',
                     ]" :rows="$parsingOrganizationActivities" idKey="id"
-                        editEvent="edit-org" :status="$laporan->status" />
+                        editEvent="edit-org" deleteRoute="laporan.org-activities.delete" :status="$laporan->status" />
 
                     @if ($laporan->status === 'Draft')
                         {{-- Btn --}}
@@ -580,7 +586,7 @@
                         'bukti',
                         'status',
                     ]" :rows="$parsingCommitteeActivities" idKey="id"
-                        editEvent="edit-committee" :status="$laporan->status" />
+                        editEvent="edit-committee" deleteRoute="laporan.committee-activities.hapus" :status="$laporan->status" />
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openCommittee = true"
@@ -736,7 +742,7 @@
                         'bukti',
                         'status',
                     ]" :rows="$parsingAchievements" idKey="id"
-                        editEvent="edit-achievement" :status="$laporan->status" />
+                        editEvent="edit-achievement" deleteRoute="laporan.achievements.hapus" :status="$laporan->status" />
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openAchievement = true"
@@ -935,7 +941,7 @@
                         'bukti',
                         'status',
                     ]" :rows="$parsingIndependentActivities" idKey="id"
-                        editEvent="edit-independent" :status="$laporan->status" />
+                        editEvent="edit-independent" deleteRoute="laporan.independent-activities.hapus" :status="$laporan->status" />
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openIndependent = true"
@@ -1068,7 +1074,8 @@
                     </div>
 
                     @if ($parsingEvaluations && $laporan->sttaus === 'Draft')
-                        <button x-data='{ eval: @json($parsingEvaluations) }'
+                        <div class="flex gap-4">
+                            <button x-data='{ eval: @json($parsingEvaluations) }'
                             @click="
                                 openEditEvaluation = true;
                                 editDataEvaluation = eval;
@@ -1076,7 +1083,16 @@
                             class="border border-black mt-2 px-2 rounded-lg">
                             Edit
                         </button>
-                    @elseif (!$parsingEvaluations && $laporan->sttaus === 'Draft')
+                        <button
+                            @click="
+                                openEditEvaluation = true;
+                                editDataEvaluation = eval;
+                            "
+                            class="border border-black mt-2 px-2 rounded-lg">
+                            Hapus
+                        </button>
+                        </div>
+                    @elseif (!$parsingEvaluations || $laporan->sttaus === 'Draft')
                         <button @click="openEvaluation = true"
                             class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
                             Tambah
@@ -1148,7 +1164,7 @@
                     </p>
 
                     <x-tabel :headers="['No', 'Semester', 'Target IPS', 'Target IPK', 'Status']" :columns="['semester', 'target-ips', 'target-ipk', 'status']" :rows="$parsingNextReports" idKey="id"
-                        editEvent="edit-target-rep" :status="$laporan->status" />
+                        editEvent="edit-target-rep" deleteRoute="laporan.next-semester-reports.hapus" :status="$laporan->status" />
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetRep = true"
@@ -1259,7 +1275,7 @@
                     </p>
 
                     <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Status']" :columns="['activity-name', 'strategy', 'status']" :rows="$parsingNextAcademicActivities" idKey="id"
-                        editEvent="edit-target-academic" :status="$laporan->status" />
+                        editEvent="edit-target-academic" deleteRoute="laporan.next-smt-activities.hapus" :status="$laporan->status" />
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetAcademic = true"
@@ -1332,7 +1348,7 @@
                     <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Prestasi</p>
 
                     <x-tabel :headers="['No', 'Nama Prestasi', 'Tingkat', 'Raihan', 'Status']" :columns="['achievements-name', 'level', 'award', 'status']" :rows="$parsingNextAchievements" idKey="id"
-                        editEvent="edit-target-achievement" :status="$laporan->status" />
+                        editEvent="edit-target-achievement" deleteRoute="laporan.next-smt-achievements.hapus" :status="$laporan->status" />
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetAchievement = true"
@@ -1411,7 +1427,7 @@
                     <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Kegiatan Mandiri</p>
 
                     <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Keikutsertaan', 'Status']" :columns="['activity-name', 'strategy', 'participation', 'status']" :rows="$parsingNextIndependentActivities" idKey="id"
-                        editEvent="edit-target-independent" :status="$laporan->status" />
+                        editEvent="edit-target-independent" deleteRoute="laporan.next-smt-independent.hapus" :status="$laporan->status" />
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetIndependent = true"

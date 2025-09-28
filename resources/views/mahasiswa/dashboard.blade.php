@@ -124,7 +124,7 @@
                                     {{ $drafted->periodeSemester?->semester }}
                                 </td>
                                 <td class="px-4 py-2 text-center">
-                                    <span class="bg-green-300 px-2 py-0.5 rounded-lg">{{ $drafted->status }}</span>
+                                    <span class="bg-green-400 px-2 py-0.5 rounded-lg">{{ $drafted->status }}</span>
                                 </td>
                                 <td class="px-4 py-2 text-center">
                                     {{ $drafted->created_at ? $drafted->created_at->translatedFormat('d F Y') : '-' }}

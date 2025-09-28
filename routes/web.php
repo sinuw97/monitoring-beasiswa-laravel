@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\admin\auth\AuthAdminController;
+use App\Http\Controllers\auth\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\mahasiswa\auth\AuthMahasiswaController;
 use App\Http\Controllers\mahasiswa\dashboard\DashboardMahasiswaController;
+use App\Http\Controllers\mahasiswa\monev\HapusDataMonevController;
 use App\Http\Controllers\mahasiswa\monev\PengisianMonevController;
 
 Route::get('/', function () {
@@ -47,6 +49,19 @@ Route::prefix('mahasiswa')->group(function () {
 
         // Ajukan laporan
         Route::put('/laporan/{laporanId}/ajukan-laporan', [PengisianMonevController::class, 'ajukanLaporanMonev'])->name('laporan.ajukan');
+        
+        // Hapus
+        Route::delete('/laporan/academic-reports/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataAcademicReport'])->name('laporan.academic-reports.delete');
+        Route::delete('/laporan/academic-activities/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataAcademicActivities'])->name('laporan.academic-activities.delete');
+        Route::delete('/laporan/org-activities/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataOrganizationActivities'])->name('laporan.org-activities.delete');
+        Route::delete('/laporan/committee-activities/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataCommitteeActivities'])->name('laporan.committee-activities.hapus');
+        Route::delete('/laporan/achievements/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataAchievement'])->name('laporan.achievements.hapus');
+        Route::delete('/laporan/independent-activities/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataIndependentActivities'])->name('laporan.independent-activities.hapus');
+        Route::delete('/laporan/evaluations/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataEvaluasi'])->name('laporan.evaluations.hapus');
+        Route::delete('/laporan/next-semester-report/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataNextReport'])->name('laporan.next-semester-reports.hapus');
+        Route::delete('/laporan/next-semester-activities/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataNextActivities'])->name('laporan.next-smt-activities.hapus');
+        Route::delete('/laporan/next-semester-achievements/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataNextAchievement'])->name('laporan.next-smt-achievements.hapus');
+        Route::delete('/laporan/next-semester-independent/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataNextIndependent'])->name('laporan.next-smt-independent.hapus');
     });
 });
 
@@ -59,3 +74,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard');
     });
 });
+
+Route::get('/google/auth', [GoogleAuthController::class, 'redirectToGoogle']);
+Route::get('/google/callback', [GoogleAuthController::class, 'handlegoogleCallback']);  

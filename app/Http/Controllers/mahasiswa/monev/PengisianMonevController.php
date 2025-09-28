@@ -18,8 +18,10 @@ use App\Models\monev\TargetIdependentActivities;
 use App\Models\monev\TargetNextSemester;
 use App\Models\semester\Periode;
 use App\Models\users\DetailMahasiswa;
+use App\Services\GoogleDriveService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class PengisianMonevController extends Controller
 {
@@ -84,7 +86,7 @@ class PengisianMonevController extends Controller
         $cekLaporanMhs = LaporanMonevMahasiswa::where('nim', $dataMahasiswa->nim)
             ->where('semester_id', $semesterId)
             ->first();
-        if($cekLaporanMhs) {
+        if ($cekLaporanMhs) {
             return back()->with('error', 'Laporan sudah dibuat!');
         }
 
@@ -324,8 +326,32 @@ class PengisianMonevController extends Controller
             'semester' => 'required|integer|min:1|max:8',
             'ips' => 'required|numeric|between:0,4',
             'ipk' => 'required|numeric|between:0,4',
-            'bukti'    => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
+
+        // service GDrive
+        $drive = new GoogleDriveService();
+        $parentFolderId = config('filesystems.disks.google.folderId');
+        $nim = $dataMahasiswa->nim;
+        // cek apkh folder mhs ada?
+        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+        if ($existingFolder) {
+            $nimFolderId = $existingFolder->id;
+        } else {
+            $folder = $drive->createFolder($nim, $parentFolderId);
+            $nimFolderId = $folder->id;
+        }
+
+        $file = $request->file('bukti');
+        $uploaded = $drive->uploadFile(
+            $file->getRealPath(),
+            $file->getClientOriginalName(),
+            $nimFolderId
+        );
+
+        $drive->setPublicPermission($uploaded->id);
+        $fileLink = $uploaded->webViewLink;
 
         AcademicReports::create([
             'laporan_id' => $laporanId,
@@ -333,7 +359,7 @@ class PengisianMonevController extends Controller
             'semester'   => $validated['semester'],
             'ips'        => $validated['ips'],
             'ipk'        => $validated['ipk'],
-            'bukti_url'  => 'Tidak Ada', //Sementara ini dulu hehe
+            'bukti_url'  => $fileLink ?? 'Tidak Ada',
             'status'     => 'Draft',
         ]);
 
@@ -350,8 +376,32 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
+
+        // service GDrive
+        $drive = new GoogleDriveService();
+        $parentFolderId = config('filesystems.disks.google.folderId');
+        $nim = $dataMahasiswa->nim;
+        // cek apkh folder mhs ada?
+        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+        if ($existingFolder) {
+            $nimFolderId = $existingFolder->id;
+        } else {
+            $folder = $drive->createFolder($nim, $parentFolderId);
+            $nimFolderId = $folder->id;
+        }
+
+        $file = $request->file('bukti');
+        $uploaded = $drive->uploadFile(
+            $file->getRealPath(),
+            $file->getClientOriginalName(),
+            $nimFolderId
+        );
+
+        $drive->setPublicPermission($uploaded->id);
+        $fileLink = $uploaded->webViewLink;
 
         AcademicActivities::create([
             'laporan_id' => $laporanId,
@@ -362,7 +412,7 @@ class PengisianMonevController extends Controller
             'place' => $validated['tempat'],
             'start_date' => $validated['tanggal-mulai'],
             'end_date' => $validated['tanggal-selesai'],
-            'bukti_url' => 'Tidak Ada',
+            'bukti_url' => $fileLink ?? 'Tidak Ada',
             'status' => 'Draft',
         ]);
 
@@ -380,8 +430,32 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
+
+        // service GDrive
+        $drive = new GoogleDriveService();
+        $parentFolderId = config('filesystems.disks.google.folderId');
+        $nim = $dataMahasiswa->nim;
+        // cek apkh folder mhs ada?
+        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+        if ($existingFolder) {
+            $nimFolderId = $existingFolder->id;
+        } else {
+            $folder = $drive->createFolder($nim, $parentFolderId);
+            $nimFolderId = $folder->id;
+        }
+
+        $file = $request->file('bukti');
+        $uploaded = $drive->uploadFile(
+            $file->getRealPath(),
+            $file->getClientOriginalName(),
+            $nimFolderId
+        );
+
+        $drive->setPublicPermission($uploaded->id);
+        $fileLink = $uploaded->webViewLink;
 
         OrganizationActivities::create([
             'laporan_id' => $laporanId,
@@ -393,7 +467,7 @@ class PengisianMonevController extends Controller
             'place' => $validated['tempat'],
             'start_date' => $validated['tanggal-mulai'],
             'end_date' => $validated['tanggal-selesai'],
-            'bukti_url' => 'Tidak Ada',
+            'bukti_url' => $fileLink ?? 'Tidak Ada',
             'status' => 'Draft',
         ]);
 
@@ -402,7 +476,6 @@ class PengisianMonevController extends Controller
     public function submitKegKomite(Request $request, $laporanId)
     {
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
-        // dd($request->all());
 
         $validated = $request->validate([
             'nama-kegiatan' => 'required|string|min:1|max:255',
@@ -412,8 +485,32 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
+
+        // service GDrive
+        $drive = new GoogleDriveService();
+        $parentFolderId = config('filesystems.disks.google.folderId');
+        $nim = $dataMahasiswa->nim;
+        // cek apkh folder mhs ada?
+        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+        if ($existingFolder) {
+            $nimFolderId = $existingFolder->id;
+        } else {
+            $folder = $drive->createFolder($nim, $parentFolderId);
+            $nimFolderId = $folder->id;
+        }
+
+        $file = $request->file('bukti');
+        $uploaded = $drive->uploadFile(
+            $file->getRealPath(),
+            $file->getClientOriginalName(),
+            $nimFolderId
+        );
+
+        $drive->setPublicPermission($uploaded->id);
+        $fileLink = $uploaded->webViewLink;
 
         CommitteeActivities::create([
             'laporan_id' => $laporanId,
@@ -425,7 +522,7 @@ class PengisianMonevController extends Controller
             'place' => $validated['tempat'],
             'start_date' => $validated['tanggal-mulai'],
             'end_date' => $validated['tanggal-selesai'],
-            'bukti_url' => "Tidak Ada", //Sementara
+            'bukti_url' => $fileLink ?? "Tidak Ada", //Sementara
             'status' => 'Draft',
         ]);
 
@@ -444,8 +541,32 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
+
+        // service GDrive
+        $drive = new GoogleDriveService();
+        $parentFolderId = config('filesystems.disks.google.folderId');
+        $nim = $dataMahasiswa->nim;
+        // cek apkh folder mhs ada?
+        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+        if ($existingFolder) {
+            $nimFolderId = $existingFolder->id;
+        } else {
+            $folder = $drive->createFolder($nim, $parentFolderId);
+            $nimFolderId = $folder->id;
+        }
+
+        $file = $request->file('bukti');
+        $uploaded = $drive->uploadFile(
+            $file->getRealPath(),
+            $file->getClientOriginalName(),
+            $nimFolderId
+        );
+
+        $drive->setPublicPermission($uploaded->id);
+        $fileLink = $uploaded->webViewLink;
 
         StudentAchievements::create([
             'laporan_id' => $laporanId,
@@ -457,7 +578,7 @@ class PengisianMonevController extends Controller
             'place' => $validated['tempat'],
             'start_date' => $validated['tanggal-mulai'],
             'end_date' => $validated['tanggal-selesai'],
-            'bukti_url' => 'Tidak Ada',
+            'bukti_url' => $fileLink ?? 'Tidak Ada',
             'status' => 'Draft',
         ]);
 
@@ -474,8 +595,32 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
+
+        // service GDrive
+        $drive = new GoogleDriveService();
+        $parentFolderId = config('filesystems.disks.google.folderId');
+        $nim = $dataMahasiswa->nim;
+        // cek apkh folder mhs ada?
+        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+        if ($existingFolder) {
+            $nimFolderId = $existingFolder->id;
+        } else {
+            $folder = $drive->createFolder($nim, $parentFolderId);
+            $nimFolderId = $folder->id;
+        }
+
+        $file = $request->file('bukti');
+        $uploaded = $drive->uploadFile(
+            $file->getRealPath(),
+            $file->getClientOriginalName(),
+            $nimFolderId
+        );
+
+        $drive->setPublicPermission($uploaded->id);
+        $fileLink = $uploaded->webViewLink;
 
         IndependentActivities::create([
             'laporan_id' => $laporanId,
@@ -486,7 +631,7 @@ class PengisianMonevController extends Controller
             'place' => $vaalidated['tempat'],
             'start_date' => $vaalidated['tanggal-mulai'],
             'end_date' => $vaalidated['tanggal-selesai'],
-            'bukti_url' => 'Tidak Ada',
+            'bukti_url' => $fileLink ?? 'Tidak Ada',
             'status' => 'Draft',
         ]);
 
@@ -599,18 +744,45 @@ class PengisianMonevController extends Controller
     {
         // Cek data apakaha ada?
         $report = AcademicReports::findOrFail($idData);
+        $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
         $validated = $request->validate([
             'semester' => 'required|integer|min:1|max:8',
             'ips' => 'required|numeric|between:0,4',
             'ipk' => 'required|numeric|between:0,4',
-            'bukti'    => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti'    => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         $report->semester = $validated['semester'];
         $report->ips = $validated['ips'];
         $report->ipk = $validated['ipk'];
-        $report->bukti_url = "Tidak Ada";
+
+        if ($request->hasFile('bukti')) {
+            // service GDrive
+            $drive = new GoogleDriveService();
+            $parentFolderId = config('filesystems.disks.google.folderId');
+            $nim = $dataMahasiswa->nim;
+            // cek apkh folder mhs ada?
+            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+            if ($existingFolder) {
+                $nimFolderId = $existingFolder->id;
+            } else {
+                $folder = $drive->createFolder($nim, $parentFolderId);
+                $nimFolderId = $folder->id;
+            }
+
+            $file = $request->file('bukti');
+            $uploaded = $drive->uploadFile(
+                $file->getRealPath(),
+                $file->getClientOriginalName(),
+                $nimFolderId
+            );
+
+            $drive->setPublicPermission($uploaded->id);
+            $report->bukti_url = $uploaded->webViewLink;
+        }
+
         $report->save();
 
         return redirect()->back()->with('success', 'Data IPS dan IPK berhasil diupdate');
@@ -618,6 +790,7 @@ class PengisianMonevController extends Controller
     public function updateKegAKademik(Request $request, $idData)
     {
         $report = AcademicActivities::findOrFail($idData);
+        $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
         $validated = $request->validate([
             'nama-kegiatan' => 'required|string|min:1|max:255',
@@ -626,7 +799,7 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         $report->activity_name = $validated['nama-kegiatan'];
@@ -635,7 +808,33 @@ class PengisianMonevController extends Controller
         $report->place = $validated['tempat'];
         $report->start_date = $validated['tanggal-mulai'];
         $report->end_date = $validated['tanggal-selesai'];
-        $report->bukti_url = "Tidak Ada";
+
+        if ($request->hasFile('bukti')) {
+            // service GDrive
+            $drive = new GoogleDriveService();
+            $parentFolderId = config('filesystems.disks.google.folderId');
+            $nim = $dataMahasiswa->nim;
+            // cek apkh folder mhs ada?
+            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+            if ($existingFolder) {
+                $nimFolderId = $existingFolder->id;
+            } else {
+                $folder = $drive->createFolder($nim, $parentFolderId);
+                $nimFolderId = $folder->id;
+            }
+
+            $file = $request->file('bukti');
+            $uploaded = $drive->uploadFile(
+                $file->getRealPath(),
+                $file->getClientOriginalName(),
+                $nimFolderId
+            );
+
+            $drive->setPublicPermission($uploaded->id);
+            $report->bukti_url = $uploaded->webViewLink;
+        }
+
         $report->save();
 
         return redirect()->back()->with('success', 'Data Kegiatan Akademik berhasil diupdate');
@@ -643,6 +842,7 @@ class PengisianMonevController extends Controller
     public function updateKegOrg(Request $request, $idData)
     {
         $report = OrganizationActivities::findOrFail($idData);
+        $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
         $validated = $request->validate([
             'nama-ukm' => 'required|string|min:1|max:255',
@@ -652,7 +852,7 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         $report->ukm_name = $validated['nama-ukm'];
@@ -662,7 +862,33 @@ class PengisianMonevController extends Controller
         $report->place = $validated['tempat'];
         $report->start_date = $validated['tanggal-mulai'];
         $report->end_date = $validated['tanggal-selesai'];
-        $report->bukti_url = "Tidak Ada";
+
+        if ($request->hasFile('bukti')) {
+            // service GDrive
+            $drive = new GoogleDriveService();
+            $parentFolderId = config('filesystems.disks.google.folderId');
+            $nim = $dataMahasiswa->nim;
+            // cek apkh folder mhs ada?
+            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+            if ($existingFolder) {
+                $nimFolderId = $existingFolder->id;
+            } else {
+                $folder = $drive->createFolder($nim, $parentFolderId);
+                $nimFolderId = $folder->id;
+            }
+
+            $file = $request->file('bukti');
+            $uploaded = $drive->uploadFile(
+                $file->getRealPath(),
+                $file->getClientOriginalName(),
+                $nimFolderId
+            );
+
+            $drive->setPublicPermission($uploaded->id);
+            $report->bukti_url = $uploaded->webViewLink;
+        }
+
         $report->save();
 
         return redirect()->back()->with('success', 'Data Kegiatan Organisasi berhasil diupdate');
@@ -670,6 +896,7 @@ class PengisianMonevController extends Controller
     public function updateKegKomite(Request $request, $idData)
     {
         $report = CommitteeActivities::findOrFail($idData);
+        $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
         $validated = $request->validate([
             'nama-kegiatan' => 'required|string|min:1|max:255',
@@ -679,7 +906,7 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         $report->activity_name = $validated['nama-kegiatan'];
@@ -689,7 +916,33 @@ class PengisianMonevController extends Controller
         $report->place = $validated['tempat'];
         $report->start_date = $validated['tanggal-mulai'];
         $report->end_date = $validated['tanggal-selesai'];
-        $report->bukti_url = 'Tidak Ada';
+
+        if ($request->hasFile('bukti')) {
+            // service GDrive
+            $drive = new GoogleDriveService();
+            $parentFolderId = config('filesystems.disks.google.folderId');
+            $nim = $dataMahasiswa->nim;
+            // cek apkh folder mhs ada?
+            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+            if ($existingFolder) {
+                $nimFolderId = $existingFolder->id;
+            } else {
+                $folder = $drive->createFolder($nim, $parentFolderId);
+                $nimFolderId = $folder->id;
+            }
+
+            $file = $request->file('bukti');
+            $uploaded = $drive->uploadFile(
+                $file->getRealPath(),
+                $file->getClientOriginalName(),
+                $nimFolderId
+            );
+
+            $drive->setPublicPermission($uploaded->id);
+            $report->bukti_url = $uploaded->webViewLink;
+        }
+
         $report->save();
 
         return redirect()->back()->with('success', 'Data Kegiatan Penugasan berhasil diupdate');
@@ -697,6 +950,7 @@ class PengisianMonevController extends Controller
     public function updateAchievemnts(Request $request, $idData)
     {
         $report = StudentAchievements::findOrFail($idData);
+        $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
         $validated = $request->validate([
             'nama-prestasi' => 'required|string|min:1|max:255',
@@ -707,7 +961,7 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         $report->achievements_name = $validated['nama-prestasi'];
@@ -717,7 +971,33 @@ class PengisianMonevController extends Controller
         $report->place = $validated['tempat'];
         $report->start_date = $validated['tanggal-mulai'];
         $report->end_date = $validated['tanggal-selesai'];
-        $report->bukti_url = 'Tidak Ada';
+
+        if ($request->hasFile('bukti')) {
+            // service GDrive
+            $drive = new GoogleDriveService();
+            $parentFolderId = config('filesystems.disks.google.folderId');
+            $nim = $dataMahasiswa->nim;
+            // cek apkh folder mhs ada?
+            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+            if ($existingFolder) {
+                $nimFolderId = $existingFolder->id;
+            } else {
+                $folder = $drive->createFolder($nim, $parentFolderId);
+                $nimFolderId = $folder->id;
+            }
+
+            $file = $request->file('bukti');
+            $uploaded = $drive->uploadFile(
+                $file->getRealPath(),
+                $file->getClientOriginalName(),
+                $nimFolderId
+            );
+
+            $drive->setPublicPermission($uploaded->id);
+            $report->bukti_url = $uploaded->webViewLink;
+        }
+
         $report->save();
 
         return redirect()->back()->with('success', 'Data Prestasi berhasil diupdate');
@@ -725,6 +1005,7 @@ class PengisianMonevController extends Controller
     public function updateKegMandiri(Request $request, $idData)
     {
         $report = IndependentActivities::findOrFail($idData);
+        $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
         $vaalidated = $request->validate([
             'nama-kegiatan' => 'required|string|min:1|max:255',
@@ -733,7 +1014,7 @@ class PengisianMonevController extends Controller
             'tempat' => 'required|string|min:1|max:255',
             'tanggal-mulai' => 'required',
             'tanggal-selesai' => 'required',
-            'bukti' => 'file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         $report->activity_name = $vaalidated['nama-kegiatan'];
@@ -742,7 +1023,33 @@ class PengisianMonevController extends Controller
         $report->place = $vaalidated['tempat'];
         $report->start_date = $vaalidated['tanggal-mulai'];
         $report->end_date = $vaalidated['tanggal-selesai'];
-        $report->bukti_url = 'idak Ada';
+
+        if ($request->hasFile('bukti')) {
+            // service GDrive
+            $drive = new GoogleDriveService();
+            $parentFolderId = config('filesystems.disks.google.folderId');
+            $nim = $dataMahasiswa->nim;
+            // cek apkh folder mhs ada?
+            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
+
+            if ($existingFolder) {
+                $nimFolderId = $existingFolder->id;
+            } else {
+                $folder = $drive->createFolder($nim, $parentFolderId);
+                $nimFolderId = $folder->id;
+            }
+
+            $file = $request->file('bukti');
+            $uploaded = $drive->uploadFile(
+                $file->getRealPath(),
+                $file->getClientOriginalName(),
+                $nimFolderId
+            );
+
+            $drive->setPublicPermission($uploaded->id);
+            $report->bukti_url = $uploaded->webViewLink;
+        }
+
         $report->save();
 
         return redirect()->back()->with('success', 'Data Kegiatan Mandiri berhasil diupdate');

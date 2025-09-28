@@ -4,7 +4,8 @@
     'rows' => [], // collection atau array of arrays/objects
     'idKey' => 'id', // nama key untuk id tiap row
     // 'rawColumns' => [],
-    'editEvent' => 'edit-row', // default value
+    'editEvent' => 'edit-row', // default
+    'deleteRoute' => '', // default value
     'status' => 'Draft',
 ])
 
@@ -25,7 +26,25 @@
                 <td class="px-4 py-2 text-center">{{ $loop->iteration }}</td>
                 @foreach ($columns as $col)
                     <td class="px-4 py-2 text-center">
-                        {{ data_get($row, $col) ?? '-' }}
+                        @php
+                            $value = data_get($row, $col);
+                        @endphp
+
+                        @if ($col === 'bukti' && $value && $value !== 'Tidak Ada')
+                            <a href="{{ $value }}" target="_blank" class="text-blue-600 underline">
+                                Lihat Bukti
+                            </a>
+                        @elseif ($col === 'status' && $value && $value === 'Draft')
+                            <span class="bg-green-400 px-2 py-1 rounded-md">
+                                {{ $value }}
+                            </span>
+                        @elseif ($col === 'status' && $value && $value === 'Pending')
+                            <span class="bg-[#ffdd44] px-1.5 py-1 rounded-md">
+                                {{ $value }}
+                            </span>
+                        @else
+                            {{ $value ?? '-' }}
+                        @endif
                     </td>
                 @endforeach
 
@@ -38,7 +57,9 @@
                         </button>
 
                         <button type="button" class="cursor-pointer px-3 py-0.5 bg-red-500 text-white rounded-sm"
-                            @click="$dispatch('delete-row', { id: '{{ data_get($row, $idKey) }}' })">
+                            @click="$dispatch('{{ 'delete-row' }}', {
+                                id: '{{ data_get($row, $idKey) }}',
+                                route: '{{ route($deleteRoute, data_get($row, $idKey)) }}'})">
                             Hapus
                         </button>
                     </td>

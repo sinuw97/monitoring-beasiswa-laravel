@@ -13,7 +13,7 @@ class AdminSeeder extends Seeder
         Admin::create([
             'user_id' => 'ADMTSU01',
             'name' => 'Admin Dummy 1',
-            'email' => 'admin123@email.com',
+            'email' => 'tsu-kip-admin@tsu.ac.id',
             'password' => bcrypt('admin123'),
             'avatar' => 'https://ui-avatars.com/api/?name=Admin+Dummy+1&background=random',
         ]);
