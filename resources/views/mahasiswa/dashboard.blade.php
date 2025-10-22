@@ -83,10 +83,16 @@
                     <span>: {{ $dataMahasiswa->detailMahasiswa->status }}</span>
                 </div>
                 {{-- Progress Bar --}}
-                <div class="mt-2 text-center">
-                    <h4>
-                        Progress Laporan
-                    </h4>
+                <div class="mt-6">
+                    <p class="text-sm font-semibold mb-2">Laporan terajukan</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-500 h-2.5 rounded-full"
+                            style="width: {{ min($persentaseLaporan, 100) }}%">
+                        </div>
+                    </div>
+                    <p class="text-xs mt-1">
+                        {{ $laporanValid }}/{{ $totalTargetLaporan }}
+                    </p>
                 </div>
             </div>
         </aside>

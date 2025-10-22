@@ -1,4 +1,4 @@
-{{-- Navbar Mahasiswa --}}
+{{-- Navbar Admin --}}
 <script src="//unpkg.com/alpinejs" defer></script>
 
 <header class="sticky top-0 z-50">
@@ -13,7 +13,7 @@
         <div x-data="{ open: false }"
             class="flex items-center justify-center gap-2 bg-[#f6f6f6] p-1 rounded-xl cursor-pointer">
             <button @click="open = !open" class="flex items-center gap-2 focus:outline-none cursor-pointer">
-                <img src="{{ $mhsAvatar }}" class="w-[25px] h-[25px] rounded-xl" alt="avatar">
+                <img src="{{ $dataAdmin->avatar }}" class="w-[25px] h-[25px] rounded-xl" alt="avatar">
                 {{-- <p class="text-[9pt] text-[#09697E] font-bold">{{ $mhsName ?? 'Mahasiswa' }}</p> --}}
                 <svg class="w-4 h-4 text-[#09697E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />

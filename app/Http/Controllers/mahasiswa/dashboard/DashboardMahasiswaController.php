@@ -10,28 +10,42 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardMahasiswaController extends Controller
 {
-    public function showDashboard() {
-      // ambil data mhs yg login
-      $mahasiswa = Auth::guard('mahasiswa')->user();
+    public function showDashboard()
+    {
+        // Ambil data mahasiswa yang login
+        $mahasiswa = Auth::guard('mahasiswa')->user();
 
-      // ambil data di tabel mahasiswa dan detail
-      $dataMahasiswa = Mahasiswa::with('detailMahasiswa')
-        ->where('nim', $mahasiswa->nim)
-        ->first();
+        // Ambil data lengkap mahasiswa beserta detail
+        $dataMahasiswa = Mahasiswa::with('detailMahasiswa')
+            ->where('nim', $mahasiswa->nim)
+            ->first();
 
-      $dataMahasiswa->makeHidden(['password']);
+        $dataMahasiswa->makeHidden(['password']);
 
-      // AMbil semua laporan
-      $allLaporan = LaporanMonevMahasiswa::where('nim', $mahasiswa->nim)
-          ->whereIn('status', ['Draft', 'Pending'])
-          ->get();
+        // Ambil semua laporan
+        $allLaporan = LaporanMonevMahasiswa::where('nim', $mahasiswa->nim)
+            ->whereIn('status', ['Draft', 'Pending', 'Lolos', 'Rejected', 'Ditolak SP-1'])
+            ->get();
 
-      // saring laporan yg status = Draft
-      $draftedLaporan = $allLaporan->where('status', 'Draft');
+        // Pisahkan laporan berdasarkan status
+        $draftedLaporan = $allLaporan->where('status', 'Draft');
+        $pendingLaporan = $allLaporan->where('status', 'Pending');
+        $lolosLaporan = $allLaporan->where('status', 'Lolos');
 
-      // saring laporan yg status = Pending
-      $pendingLaporan = $allLaporan->where('status', 'Pending');
+        // Progress bar dengan total target 8 laporan
+        $totalTargetLaporan = 8; // jumlah laporan maksimal
+        $laporanValid = $allLaporan->whereIn('status', ['Lolos'])->count(); // dihitung sudah dikirim/valid
+        $persentaseLaporan = ($laporanValid / $totalTargetLaporan) * 100;
 
-      return view('mahasiswa.dashboard', compact('dataMahasiswa', 'draftedLaporan', 'pendingLaporan'));
+        // Kirim data ke view
+        return view('mahasiswa.dashboard', compact(
+            'dataMahasiswa',
+            'draftedLaporan',
+            'lolosLaporan',
+            'pendingLaporan',
+            'laporanValid',
+            'totalTargetLaporan',
+            'persentaseLaporan'
+        ));
     }
 }

@@ -32,8 +32,18 @@
             @endif
 
             <!-- Form -->
-            <form method="POST" action="{{ url('admin/login') }}" class="space-y-4">
+            <form method="POST" action="{{ url('admin/register') }}" class="space-y-4">
                 @csrf
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">User_Id</label>
+                    <input type="text" name="user_id" placeholder="Masukan user_id anda"
+                        class="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Nama</label>
+                    <input type="text" name="name" placeholder="Masukan nama anda"
+                        class="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">Email</label>
                     <input type="text" name="email" placeholder="Masukan email anda"
@@ -44,6 +54,11 @@
                     <input type="password" name="password" placeholder="Masukkan password anda"
                         class="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none">
                 </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Avatar</label>
+                    <input type="password" name="avatar" placeholder="Masukkan avatar anda"
+                        class="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                </div>
 
                 <!-- Tombol Login Admin -->
                 <div class="flex justify-between items-center text-sm">
@@ -52,7 +67,7 @@
 
                 <!-- Tombol Login -->
                 <button type="submit"
-                    class="w-full bg-[#1D7D94] text-white py-2 rounded-md hover:bg-[#176578] transition">Login</button>
+                    class="w-full bg-[#1D7D94] text-white py-2 rounded-md hover:bg-[#176578] transition">Register</button>
             </form>
         </div>
     </div>

@@ -7,6 +7,9 @@ use App\Http\Controllers\mahasiswa\auth\AuthMahasiswaController;
 use App\Http\Controllers\mahasiswa\dashboard\DashboardMahasiswaController;
 use App\Http\Controllers\mahasiswa\monev\HapusDataMonevController;
 use App\Http\Controllers\mahasiswa\monev\PengisianMonevController;
+use App\Http\Controllers\admin\dashboard\DashboardAdminController;
+use App\Http\Controllers\mahasiswa\profile\ProfilMahasiswaController;
+use App\Http\Controllers\mahasiswa\laporan\RiwayatLaporanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,7 +52,7 @@ Route::prefix('mahasiswa')->group(function () {
 
         // Ajukan laporan
         Route::put('/laporan/{laporanId}/ajukan-laporan', [PengisianMonevController::class, 'ajukanLaporanMonev'])->name('laporan.ajukan');
-        
+
         // Hapus
         Route::delete('/laporan/academic-reports/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataAcademicReport'])->name('laporan.academic-reports.delete');
         Route::delete('/laporan/academic-activities/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataAcademicActivities'])->name('laporan.academic-activities.delete');
@@ -62,6 +65,12 @@ Route::prefix('mahasiswa')->group(function () {
         Route::delete('/laporan/next-semester-activities/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataNextActivities'])->name('laporan.next-smt-activities.hapus');
         Route::delete('/laporan/next-semester-achievements/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataNextAchievement'])->name('laporan.next-smt-achievements.hapus');
         Route::delete('/laporan/next-semester-independent/{idData}/hapus', [HapusDataMonevController::class, 'hapusDataNextIndependent'])->name('laporan.next-smt-independent.hapus');
+
+        //Profil
+        Route::get('/profile', [ProfilMahasiswaController::class, 'show'])->name('mahasiswa.profile');
+        Route::get('/mahasiswa/profile/edit', [ProfilMahasiswaController::class, 'edit'])->name('mahasiswa.profile.edit');
+        Route::post('/mahasiswa/profile/update', [ProfilMahasiswaController::class, 'update'])->name('mahasiswa.profile.update');
+        Route::get('/riwayat-laporan', [RiwayatLaporanController::class, 'index'])->name('mahasiswa.riwayat-laporan');
     });
 });
 
@@ -69,11 +78,14 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', [AuthAdminController::class, 'showLogin'])->name('admin.login');
     Route::post('/login', [AuthAdminController::class, 'login']);
     Route::post('/logout', [AuthAdminController::class, 'logout'])->name('admin.logout');
+    Route::get('/register', [AuthAdminController::class, 'showRegister'])->name('admin.register');
+    Route::post('/register', [AuthAdminController::class, 'register'])->name('admin.register.post');
 
     Route::middleware('admin')->group(function () {
-        Route::get('/dashboard');
+        Route::get('/dashboard', [DashboardAdminController::class, 'showDashboard'])->name('admin.dashboard');
+        Route::get('/laporan/{laporanId}', [DashboardAdminController::class, 'showLaporan'])->name('admin.showLaporan');
     });
 });
 
 Route::get('/google/auth', [GoogleAuthController::class, 'redirectToGoogle']);
-Route::get('/google/callback', [GoogleAuthController::class, 'handlegoogleCallback']);  
+Route::get('/google/callback', [GoogleAuthController::class, 'handlegoogleCallback']);
