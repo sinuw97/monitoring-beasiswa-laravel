@@ -130,7 +130,7 @@
                                     {{ $drafted->periodeSemester?->semester }}
                                 </td>
                                 <td class="px-4 py-2 text-center">
-                                    <span class="bg-green-400 px-2 py-0.5 rounded-lg">{{ $drafted->status }}</span>
+                                    <span class="bg-[#cecece] px-2 py-0.5 rounded-lg">{{ $drafted->status }}</span>
                                 </td>
                                 <td class="px-4 py-2 text-center">
                                     {{ $drafted->created_at ? $drafted->created_at->translatedFormat('d F Y') : '-' }}
@@ -172,13 +172,13 @@
                                     {{ $pending->periodeSemester?->semester }}
                                 </td>
                                 <td class="px-4 py-2 text-center">
-                                    <span class="bg-amber-300 px-2 py-0.5 rounded-lg">{{ $pending->status }}</span>
+                                    <span class="bg-[#ffdd44] px-2 py-0.5 rounded-lg">{{ $pending->status }}</span>
                                 </td>
                                 <td class="px-4 py-2 text-center">
                                     {{ $pending->created_at ? $pending->created_at->translatedFormat('d F Y') : '-' }}
                                 </td>
                                 <td class="px-4 py-2 text-center">
-                                    <a href="{{ route('mahasiswa.lihat-laporan', $pending->laporan_id) }}"
+                                    <a href="{{ route('mahasiswa.detail-laporan', $pending->laporan_id) }}"
                                         class="underline">Lihat</a>
                                 </td>
                             </tr>

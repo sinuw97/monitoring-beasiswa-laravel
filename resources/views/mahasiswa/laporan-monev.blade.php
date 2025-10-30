@@ -11,7 +11,7 @@
             display: none !important;
         }
     </style>
-    <title>Isi Monev</title>
+    <title>Isi Laporan Monev</title>
 </head>
 
 <body class="bg-[#F8F6F6]">
@@ -19,8 +19,8 @@
 
     <section class="flex justify-center w-full h-auto">
         <div class="bg-[#fdfdfd] w-[1100px] h-auto p-6">
-            <h2 class="text-xl font-bold mb-2">Laporan Monev</h2>
-            <div class="w-full h-auto bg-blue-200 px-3 py-3 rounded mb-3">
+            <h2 class="text-xl font-bold ml-3 mb-2">Laporan Monev Yang Tersimpan</h2>
+            <div class="h-auto bg-blue-200 ml-3 mr-3 px-3 py-3 rounded mb-3">
                 <p>Nama : {{ $dataMahasiswa->name }}</p>
                 <p>NIM : {{ $dataMahasiswa->nim }}</p>
                 <p>Periode : {{ $laporan->periodeSemester?->tahun_akademik }} {{ $laporan->periodeSemester?->semester }}
@@ -30,11 +30,11 @@
             </div>
 
             @if (session('success'))
-                <div class="bg-green-100 w-auto px-3 py-3 rounded mb-3">
+                <div class="bg-green-100 mx-3 w-auto px-3 py-3 rounded mb-3">
                     {{ session('success') }}
                 </div>
             @elseif (session('error'))
-                <div class="bg-red-200 w-auto px-3 py-3 rounded mb-3">
+                <div class="bg-red-200 w-auto mx-3 px-3 py-3 rounded mb-3">
                     {{ session('fails') }}
                 </div>
             @endif
@@ -51,21 +51,24 @@
 
             <div class="">
                 {{-- Reports --}}
-                <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="overflow-x-auto mb-2 mt-5 cursor-default"
+                <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="mb-3 mt-5 pr-3 cursor-default"
                     x-on:edit-reports.window="editDataReports = $event.detail; openEditReports = true">
-                    <h2 class="text-xl font-bold text-[#013F4E]">A. KEGIATAN AKADEMIK</h2>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Nilai IPS dan IPK Semester Ini
+                    <h2 class="text-xl font-bold text-[#013F4E] ml-3">A. KEGIATAN AKADEMIK</h2>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5 ml-3">Nilai IPS dan IPK Semester Ini
                     </p>
 
-                    {{-- Panggil komponen tabel --}}
-                    <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Status']" :columns="['semester', 'ips', 'ipk', 'bukti', 'status']" :rows="$parsingAcademicReports" idKey="id"
-                        editEvent="edit-reports" deleteRoute="laporan.academic-reports.delete" :status="$laporan->status"  />
+                    <div class="overflow-x-auto">
+                        {{-- Panggil komponen tabel --}}
+                        <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Status']" :columns="['semester', 'ips', 'ipk', 'bukti', 'status']" :rows="$parsingAcademicReports" idKey="id"
+                            editEvent="edit-reports" deleteRoute="laporan.academic-reports.delete" :status="$laporan->status"
+                            style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         @if (!$parsingAcademicReports || count($parsingAcademicReports) === 0)
                             {{-- Btn tambah data --}}
                             <button @click="openReports = true"
-                                class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                                class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                                 Tambah
                             </button>
                         @endif
@@ -81,14 +84,7 @@
                                             class="text-red-500">*</span></label>
                                     <select name="semester"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
+                                        <option value="{{ $laporan->semester }}">{{ $laporan->semester }}</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -116,9 +112,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openReports = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -135,9 +131,7 @@
                                     <label>Semester</label>
                                     <select name="semester" x-model="editDataReports.semester"
                                         class="w-full border rounded px-2 py-1">
-                                        <template x-for="n in 8" :key="n">
-                                            <option x-bind:value="n" x-text="n"></option>
-                                        </template>
+                                        <option value="{{ $laporan->semester }}">{{ $laporan->semester }}</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -161,50 +155,54 @@
                                 {{-- btn --}}
                                 <div>
                                     <button type="button" @click="openEditReports = false"
-                                        class="px-3 py-1 border rounded">
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">
                                         Batal
                                     </button>
-                                    <button type="submit" class="px-3 py-1 rounded bg-[#09697E] text-white">
+                                    <button type="submit"
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">
                                         Simpan
                                     </button>
                                 </div>
                             </form>
                         </x-modal>
                         {{-- Delete Modal --}}
-                        <x-modal-delete deleteRoute="laporan.academic-reports.delete"/>
+                        <x-modal-delete deleteRoute="laporan.academic-reports.delete" />
                     @endif
                 </div>
 
                 {{-- Academic Activities --}}
-                <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="overflow-x-auto mb-2 cursor-default"
+                <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="mb-2 pr-3 cursor-default"
                     x-on:edit-academic.window="editDataAcademy = $event.detail; openEditAcademic = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Akademik</p>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5 ml-3">Kegiatan Akademik</p>
 
-                    <x-tabel :headers="[
-                        'No',
-                        'Nama Kegiatan',
-                        'Tipe Kegiatan',
-                        'Keikutsertaan',
-                        'Tempat',
-                        'Tanggal Mulai',
-                        'Tanggal Selesai',
-                        'Bukti',
-                        'Status',
-                    ]" :columns="[
-                        'activity-name',
-                        'activity-type',
-                        'participation',
-                        'place',
-                        'start-date',
-                        'end-date',
-                        'bukti',
-                        'status',
-                    ]" :rows="$parsingAcademicActivities" idKey="id"
-                        editEvent="edit-academic" deleteRoute="laporan.academic-activities.delete" :status="$laporan->status" />
+                    <div class="overflow-x-auto">
+                        <x-tabel :headers="[
+                            'No',
+                            'Nama Kegiatan',
+                            'Tipe Kegiatan',
+                            'Keikutsertaan',
+                            'Tempat',
+                            'Tanggal Mulai',
+                            'Tanggal Selesai',
+                            'Bukti',
+                            'Status',
+                        ]" :columns="[
+                            'activity-name',
+                            'activity-type',
+                            'participation',
+                            'place',
+                            'start-date',
+                            'end-date',
+                            'bukti',
+                            'status',
+                        ]" :rows="$parsingAcademicActivities" idKey="id"
+                            editEvent="edit-academic" deleteRoute="laporan.academic-activities.delete"
+                            :status="$laporan->status" style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openAcademic = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
 
@@ -225,6 +223,7 @@
                                             class="text-red-500">*</span></label>
                                     <select name="tipe-kegiatan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                                        <option value="" class="italic">Pilih Tipe</option>
                                         <option value="Salam Kampus">Salam Kampus</option>
                                         <option value="Social Training Camp">Social Training Camp</option>
                                         <option value="Asistensi Keagamaan">Asistensi Keagamaan</option>
@@ -242,6 +241,7 @@
                                     </label>
                                     <select name="keikutsertaan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                                        <option value="" class="italic">Pilih Keikutsertaan</option>
                                         <option value="Peserta">Peserta</option>
                                     </select>
                                 </div>
@@ -270,9 +270,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openAcademic = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -299,6 +299,7 @@
                                     <select name="tipe-kegiatan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         x-model="editDataAcademy['activity-type']">
+                                        <option value="" class="italic">Pilih Tipe</option>
                                         <option value="Salam Kampus">Salam Kampus</option>
                                         <option value="Social Training Camp">Social Training Camp</option>
                                         <option value="Asistensi Keagamaan">Asistensi Keagamaan</option>
@@ -317,6 +318,7 @@
                                     <select name="keikutsertaan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         x-model="editDataAcademy['participation']">
+                                        <option value="" class="italic">Pilih Keikutsertaan</option>
                                         <option value="Peserta">Peserta</option>
                                     </select>
                                 </div>
@@ -347,50 +349,52 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditAcademic = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
                     @endif
-
                 </div>
 
                 {{-- Organization Activities --}}
-                <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="overflow-x-auto mb-2 cursor-default"
+                <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="mb-2 pr-3 cursor-default"
                     x-on:edit-org.window="editDataOrg = $event.detail; openEditOrg = true">
-                    <h2 class="text-xl font-bold text-[#013F4E]">B. KEGIATAN NON-AKADEMIK</h2>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Organisasi Mahasiswa</p>
+                    <h2 class="text-xl font-bold text-[#013F4E] ml-3 mt-4">B. KEGIATAN NON-AKADEMIK</h2>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5 ml-3">Kegiatan Organisasi Mahasiswa</p>
 
-                    <x-tabel :headers="[
-                        'No',
-                        'Nama UKM',
-                        'Nama Kegiatan',
-                        'Tingkat',
-                        'Posisi',
-                        'Tempat',
-                        'Tanggal Mulai',
-                        'Tanggal Selesai',
-                        'Bukti',
-                        'Status',
-                    ]" :columns="[
-                        'ukm-name',
-                        'activity-name',
-                        'level',
-                        'position',
-                        'place',
-                        'start-date',
-                        'end-date',
-                        'bukti',
-                        'status',
-                    ]" :rows="$parsingOrganizationActivities" idKey="id"
-                        editEvent="edit-org" deleteRoute="laporan.org-activities.delete" :status="$laporan->status" />
+                    <div class="overflow-x-auto">
+                        <x-tabel :headers="[
+                            'No',
+                            'Nama UKM',
+                            'Nama Kegiatan',
+                            'Tingkat',
+                            'Posisi',
+                            'Tempat',
+                            'Tanggal Mulai',
+                            'Tanggal Selesai',
+                            'Bukti',
+                            'Status',
+                        ]" :columns="[
+                            'ukm-name',
+                            'activity-name',
+                            'level',
+                            'position',
+                            'place',
+                            'start-date',
+                            'end-date',
+                            'bukti',
+                            'status',
+                        ]" :rows="$parsingOrganizationActivities" idKey="id"
+                            editEvent="edit-org" deleteRoute="laporan.org-activities.delete" :status="$laporan->status"
+                            style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         {{-- Btn --}}
                         <button @click="openOrganization = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
 
@@ -466,9 +470,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openOrganization = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -550,9 +554,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditOrg = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -560,37 +564,41 @@
                 </div>
 
                 {{-- Committee Activities --}}
-                <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="overflow-x-auto mb-2 cursor-default"
+                <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="mb-2 pr-3 cursor-default"
                     x-on:edit-committee.window="editDataCommittee = $event.detail; openEditCommittee = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Kepanitiaan Atau Penugasan</p>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Kegiatan Kepanitiaan Atau Penugasan
+                    </p>
 
-                    <x-tabel :headers="[
-                        'No',
-                        'Nama Kegiatan',
-                        'Tipe Kegiatan',
-                        'Keikutsertaan',
-                        'Tingkat',
-                        'Tempat',
-                        'Tanggal Mulai',
-                        'Tanggal Selesai',
-                        'Bukti',
-                        'Status',
-                    ]" :columns="[
-                        'activity-name',
-                        'activity-type',
-                        'participation',
-                        'level',
-                        'place',
-                        'start-date',
-                        'end-date',
-                        'bukti',
-                        'status',
-                    ]" :rows="$parsingCommitteeActivities" idKey="id"
-                        editEvent="edit-committee" deleteRoute="laporan.committee-activities.hapus" :status="$laporan->status" />
+                    <div class="overflow-x-auto">
+                        <x-tabel :headers="[
+                            'No',
+                            'Nama Kegiatan',
+                            'Tipe Kegiatan',
+                            'Keikutsertaan',
+                            'Tingkat',
+                            'Tempat',
+                            'Tanggal Mulai',
+                            'Tanggal Selesai',
+                            'Bukti',
+                            'Status',
+                        ]" :columns="[
+                            'activity-name',
+                            'activity-type',
+                            'participation',
+                            'level',
+                            'place',
+                            'start-date',
+                            'end-date',
+                            'bukti',
+                            'status',
+                        ]" :rows="$parsingCommitteeActivities" idKey="id"
+                            editEvent="edit-committee" deleteRoute="laporan.committee-activities.hapus"
+                            :status="$laporan->status" style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openCommittee = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
 
@@ -606,19 +614,44 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tipe Kegiatan</label>
-                                    <input type="text" name="tipe-kegiatan"
+                                    <select name="tipe-kegiatan" id="tipe-kegiatan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium">Keikutsertaan</label>
-                                    <input type="text" name="keikutsertaan"
-                                        class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                                        <option value="">Pilih Satu</option>
+                                        <option value="Pelatihan Kepemimpinan">Pelatihan Kepemimpinan</option>
+                                        <option value="Panitia Kegiatan Perguruan Tinggi">Panitia Kegiatan Perguruan
+                                            Tinggi</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tingkat</label>
-                                    <input type="text" name="tingkat"
+                                    <select name="tingkat" id="tingkat"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                                        <option value="" class="italic">Pilih Tingkatan</option>
+                                        {{-- utk Kepemimpinan --}}
+                                        <option value="Pra Dasar">Pra Dasar</option>
+                                        <option value="Dasar">Dasar</option>
+                                        <option value="Menengah">Menengah</option>
+                                        <option value="Lanjut">Lanjut</option>
+                                        {{-- utk panitia --}}
+                                        <option value="Internasional">Internasional</option>
+                                        <option value="Nasional">Nasional</option>
+                                        <option value="Regional">Regional</option>
+                                        <option value="Perguruan Tinggi">Perguruan Tinggi</option>
+                                    </select>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="block text-sm font-medium">Keikutsertaan</label>
+                                    <select name="keikutsertaan"
+                                        class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                                        <option value="" class="italic">Pilih Posisi</option>
+                                        <option value="Ketua">Ketua</option>
+                                        <option value="Wakil Ketua">Wakil Ketua</option>
+                                        <option value="Sekretaris">Sekretaris</option>
+                                        <option value="Divisi">Divisi</option>
+                                        <option value="Anggota">Anggota</option>
+                                    </select>
+                                </div>
+
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tempat</label>
                                     <input type="text" name="tempat"
@@ -642,9 +675,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openCommittee = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -664,19 +697,20 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tipe Kegiatan</label>
-                                    <input type="text" name="tipe-kegiatan"
+                                    <input type="text" name="tipe-kegiatan" id="tipe-kegiatan"
                                         x-model="editDataCommittee['activity-type']"
+                                        class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="block text-sm font-medium">Tingkat</label>
+                                    <input type="text" name="tingkat" id="tingkat"
+                                        x-model="editDataCommittee['level']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Keikutsertaan</label>
                                     <input type="text" name="keikutsertaan"
                                         x-model="editDataCommittee['participation']"
-                                        class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tingkat</label>
-                                    <input type="text" name="tingkat" x-model="editDataCommittee['level']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
@@ -704,49 +738,79 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditCommittee = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
+
+                        {{-- JS --}}
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const tipeKegiatan = document.getElementById("tipe-kegiatan");
+                                const tingkat = document.getElementById("tingkat");
+
+                                const data = {
+                                    "Pelatihan Kepemimpinan": ["Pra Dasar", "Dasar", "Menengah", "Lanjut"],
+                                    "Panitia Kegiatan Perguruan Tinggi": ["Internasional", "Nasional", "Regional",
+                                        "Perguruan Tinggi"
+                                    ]
+                                };
+
+                                tipeKegiatan.addEventListener("change", function() {
+                                    const value = this.value;
+                                    tingkat.innerHTML = '<option value="">Pilih Tingkatan</option>';
+
+                                    if (data[value]) {
+                                        data[value].forEach(level => {
+                                            const opt = document.createElement("option");
+                                            opt.value = level;
+                                            opt.textContent = level;
+                                            tingkat.appendChild(opt);
+                                        });
+                                    }
+                                });
+                            });
+                        </script>
                     @endif
                 </div>
 
                 {{-- Achievements --}}
-                <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="overflow-x-auto mb-2 cursor-default"
+                <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="mb-2 pr-3 cursor-default"
                     x-on:edit-achievement.window="editDataAchievement = $event.detail; openEditAchievement = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Prestasi Mahasiswa</p>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Prestasi Mahasiswa</p>
 
-                    <x-tabel :headers="[
-                        'No',
-                        'Nama Prestasi',
-                        'Cakupan',
-                        'Kelompok/Individu',
-                        'Tingkat',
-                        'Juara',
-                        'Tempat',
-                        'Tanggal Mulai',
-                        'Tanggal Selesai',
-                        'Bukti',
-                        'Status',
-                    ]" :columns="[
-                        'achievements-name',
-                        'scope',
-                        'is-group',
-                        'level',
-                        'award',
-                        'place',
-                        'start-date',
-                        'end-date',
-                        'bukti',
-                        'status',
-                    ]" :rows="$parsingAchievements" idKey="id"
-                        editEvent="edit-achievement" deleteRoute="laporan.achievements.hapus" :status="$laporan->status" />
+                    <div class="overflow-x-auto">
+                        <x-tabel :headers="[
+                            'No',
+                            'Nama Prestasi',
+                            'Tipe Prestasi',
+                            'Tingkat',
+                            'Juara',
+                            'Tempat',
+                            'Tanggal Mulai',
+                            'Tanggal Selesai',
+                            'Bukti',
+                            'Status',
+                        ]" :columns="[
+                            'achievements-name',
+                            'achievements-type',
+                            'level',
+                            'award',
+                            'place',
+                            'start-date',
+                            'end-date',
+                            'bukti',
+                            'status',
+                        ]" :rows="$parsingAchievements" idKey="id"
+                            editEvent="edit-achievement" deleteRoute="laporan.achievements.hapus" :status="$laporan->status"
+                            style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openAchievement = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
 
@@ -761,39 +825,73 @@
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Cakupan</label>
-                                    <select name="cakupan"
+                                    <label class="block text-sm font-medium">Tipe Prestasi</label>
+                                    <select name="tipe-prestasi" id="tipe-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
-                                        <option value="" class="italic">Pilih Cakupan</option>
-                                        <option value="Pemerintahan">Pemerintahan</option>
-                                        <option value="Non-Pemerintahan">Non-Pemerintahan</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium">Kelompok/Individu</label>
-                                    <select name="kelompok-individu">
-                                        <option value="1">Kelompok</option>
-                                        <option value="0">Individu</option>
+                                        <option value="" class="italic">Pilih Tipe</option>
+                                        <option value="Kompetisi Pemerintahan Individu">Kompetisi Pemerintahan Individu
+                                        </option>
+                                        <option value="Kompetisi Pemerintahan Kelompok">Kompetisi Pemerintahan Kelompok
+                                        </option>
+                                        <option value="Kompetisi Non-Pemerintahan Individu">Kompetisi Non-Pemerintahan
+                                            Individu</option>
+                                        <option value="Kompetisi Non-Pemerintahan Kelompok">Kompetisi Non-Pemerintahan
+                                            Kelompok</option>
+                                        <option value="Juri/Wasit/Pelatih">Menjadi Juri/Wasit/Pelatih</option>
+                                        <option value="Anggota Dalam Penelitian/Pengabdian">Anggota Dalam
+                                            Penelitian/Pengabdian</option>
+                                        <option value="Kegiatan/Forum Ilmiah">Mengikuti Kegiatan/Forum Ilmiah</option>
+                                        <option value="Karya Yang Didanai">Menghasilkan Karya Yang Didanai</option>
+                                        <option value="Karya Populer Yang Diterbitkan">Menghasilkan Karya Populer Yang
+                                            Diterbitkan</option>
+                                        <option value="Penulis Buku ISBN">Penulis Buku ISBN</option>
+                                        <option value="Paten/Paten Sederhana">Paten/Paten Sederhana</option>
+                                        <option value="Publikasi Jurnal Internasional/Nasional">Publikasi Jurnal
+                                            Internasional/Nasional Bereputasi</option>
+                                        <option value="Ikut Kegiatan Sosial/Kerohanian Mewakili Institusi">Mengikuti
+                                            Kegiatan di Bidang Sosial/Kerohanian yang mewakili institusi di luar
+                                            Perguruan Tinggi</option>
+                                        <option value="Lomba Mewakili Insititusi">Mengikuti Lomba mewakili institusi di
+                                            luar Perguruan Tinggi</option>
+                                        <option value="Pelatihan Keterampilan Di Luar PT">Pelatihan Keterampilan Di
+                                            luar PT</option>
+                                        <option value="Pengakuan Dari Institusi Lain">Pengakuan Dari Institusi Lain
+                                        </option>
+                                        <option value="Lainnya">Lainnya</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tingkat</label>
-                                    <select name="tingkat">
+                                    <select name="tingkat" id="tingkat-prestasi"
+                                        class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                                        {{-- Kompetisi --}}
+                                        <option value="Tidak Ada" class="italic">Pilih Tingkatan</option>
                                         <option value="Internasional">Internasional</option>
                                         <option value="Nasional">Nasional</option>
                                         <option value="Regional">Regional</option>
                                         <option value="Perguruan Tinggi">Perguruan Tinggi</option>
+                                        {{-- Publikasi --}}
+                                        <option value="Nasional Terakreditasi">Nasional Terakreditasi</option>
+                                        <option value="Regional Tidak Terakreditasi">Regional Tidak Terakreditasi
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Raihan</label>
-                                    <select name="raihan"
+                                    <select name="raihan" id="raihan-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
-                                        <option value="" class="italic">Pilih Juara</option>
+                                        <option value="Tidak Ada" class="italic">Pilih Juara</option>
                                         <option value="Juara 1">Juara 1</option>
                                         <option value="Juara 2">Juara 2</option>
                                         <option value="Juara 3">Juara 3</option>
                                         <option value="Juara Harapan">Juara Harapan</option>
+                                        {{-- Forum Ilmiah, Kegiatan Sosial / Kerohanian,  --}}
+                                        <option value="Pembicara">Pembicara</option>
+                                        <option value="Moderator">Moderator</option>
+                                        <option value="Peserta">Peserta</option>
+                                        {{-- Karya Populer/Karya Ilmiah --}}
+                                        <option value="Ketua">Ketua</option>
+                                        <option value="Anggota">Anggota</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -819,9 +917,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openAchievement = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -840,33 +938,57 @@
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Cakupan</label>
-                                    <select name="cakupan"
+                                    <label class="block text-sm font-medium">Tipe Prestasi</label>
+                                    <select name="tipe-prestasi" id="tipe-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
-                                        x-model="editDataAchievement['scope']">
-                                        <option value="" class="italic">Pilih Cakupan</option>
-                                        <option value="Pemerintahan">Pemerintahan</option>
-                                        <option value="Non-Pemerintahan">Non-Pemerintahan</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium">Kelompok/Individu</label>
-                                    <select name="kelompok-individu"
-                                        class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
-                                        x-model="editDataAchievement['is-group']">
-                                        <option value="1">Kelompok</option>
-                                        <option value="0">Individu</option>
+                                        x-model="editDataAchievement['tipe-prestasi']">
+                                        <option value="" class="italic">Pilih Tipe</option>
+                                        <option value="Kompetisi Pemerintahan Individu">Kompetisi Pemerintahan Individu
+                                        </option>
+                                        <option value="Kompetisi Pemerintahan Kelompok">Kompetisi Pemerintahan Kelompok
+                                        </option>
+                                        <option value="Kompetisi Non-Pemerintahan Individu">Kompetisi Non-Pemerintahan
+                                            Individu</option>
+                                        <option value="Kompetisi Non-Pemerintahan Kelompok">Kompetisi Non-Pemerintahan
+                                            Kelompok</option>
+                                        <option value="Juri/Wasit/Pelatih">Menjadi Juri/Wasit/Pelatih</option>
+                                        <option value="Anggota Dalam Penelitian/Pengabdian">Anggota Dalam
+                                            Penelitian/Pengabdian</option>
+                                        <option value="Kegiatan/Forum Ilmiah">Mengikuti Kegiatan/Forum Ilmiah</option>
+                                        <option value="Karya Yang Didanai">Menghasilkan Karya Yang Didanai</option>
+                                        <option value="Karya Populer Yang Diterbitkan">Menghasilkan Karya Populer Yang
+                                            Diterbitkan</option>
+                                        <option value="Penulis Buku ISBN">Penulis Buku ISBN</option>
+                                        <option value="Paten/Paten Sederhana">Paten/Paten Sederhana</option>
+                                        <option value="Publikasi Jurnal Internasional/Nasional">Publikasi Jurnal
+                                            Internasional/Nasional Bereputasi</option>
+                                        <option value="Ikut Kegiatan Sosial/Kerohanian Mewakili Institusi">Mengikuti
+                                            Kegiatan di Bidang Sosial/Kerohanian yang mewakili institusi di luar
+                                            Perguruan Tinggi</option>
+                                        <option value="Lomba Mewakili Insititusi">Mengikuti Lomba mewakili institusi di
+                                            luar Perguruan Tinggi</option>
+                                        <option value="Pelatihan Keterampilan Di Luar PT">Pelatihan Keterampilan Di
+                                            luar PT</option>
+                                        <option value="Pengakuan Dari Institusi Lain">Pengakuan Dari Institusi Lain
+                                        </option>
+                                        <option value="Lainnya">Lainnya</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tingkat</label>
-                                    <select name="tingkat"
+                                    <select name="tingkat" id="tingkat-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         x-model="editDataAchievement['level']">
+                                        {{-- Kompetisi --}}
+                                        <option value="Tidak Ada" class="italic">Pilih Tingkatan</option>
                                         <option value="Internasional">Internasional</option>
                                         <option value="Nasional">Nasional</option>
                                         <option value="Regional">Regional</option>
                                         <option value="Perguruan Tinggi">Perguruan Tinggi</option>
+                                        {{-- Publikasi --}}
+                                        <option value="Nasional Terakreditasi">Nasional Terakreditasi</option>
+                                        <option value="Regional Tidak Terakreditasi">Regional Tidak Terakreditasi
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -874,11 +996,18 @@
                                     <select name="raihan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         x-model="editDataAchievement['award']">
-                                        <option value="" class="italic">Pilih Juara</option>
+                                        <option value="Tidak Ada" class="italic">Pilih Juara</option>
                                         <option value="Juara 1">Juara 1</option>
                                         <option value="Juara 2">Juara 2</option>
                                         <option value="Juara 3">Juara 3</option>
                                         <option value="Juara Harapan">Juara Harapan</option>
+                                        {{-- Forum Ilmiah, Kegiatan Sosial / Kerohanian,  --}}
+                                        <option value="Pembicara">Pembicara</option>
+                                        <option value="Moderator">Moderator</option>
+                                        <option value="Peserta">Peserta</option>
+                                        {{-- Karya Populer/Karya Ilmiah --}}
+                                        <option value="Ketua">Ketua</option>
+                                        <option value="Anggota">Anggota</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
@@ -906,46 +1035,148 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditAchievement = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
-                    @endif
 
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const tipePrestasi = document.getElementById("tipe-prestasi");
+                                const tingkatPrestasi = document.getElementById("tingkat-prestasi");
+                                const raihanPrestasi = document.getElementById("raihan-prestasi");
+
+                                const dataPrestasi = {
+                                    "Kompetisi Pemerintahan Individu": ["Internasional", "Nasional", "Regional",
+                                        "Perguruan Tinggi"
+                                    ],
+                                    "Kompetisi Pemerintahan Kelompok": ["Internasional", "Nasional", "Regional",
+                                        "Perguruan Tinggi"
+                                    ],
+                                    "Kompetisi Non-Pemerintahan Individu": ["Internasional", "Nasional", "Regional",
+                                        "Perguruan Tinggi"
+                                    ],
+                                    "Kompetisi Non-Pemerintahan Kelompok": ["Internasional", "Nasional", "Regional",
+                                        "Perguruan Tinggi"
+                                    ],
+                                    "Juri/Wasit/Pelatih": ["Internasional", "Nasional", "Regional",
+                                        "Perguruan Tinggi"
+                                    ],
+                                    "Anggota Dalam Penelitian/Pengabdian": ["Regional", "Perguruan Tinggi"],
+                                    "Kegiatan/Forum Ilmiah": ["Internasional", "Nasional", "Regional", "Perguruan Tinggi"],
+                                    "Karya Yang Didanai": ["Internasional", "Nasional", "Regional", "Perguruan Tinggi"],
+                                    "Karya Populer Yang Diterbitkan": ["Internasional", "Nasional", "Regional", "Perguruan Tinggi"],
+                                    "Penulis Buku ISBN": ["Nasional"],
+                                    "Paten/Paten Sederhana": ["Nasional"],
+                                    "Publikasi Jurnal Internasional/Nasional": ["Internasional", "Nasional Terakreditasi",
+                                        "Regional Tidak Terakreditasi"
+                                    ],
+                                    "Ikut Kegiatan Sosial/Kerohanian Mewakili Institusi": ["Internasional", "Nasional", "Regional"],
+                                    "Lomba Mewakili Insititusi": ["Internasional", "Nasional", "Regional"],
+                                    "Pelatihan Keterampilan Di Luar PT": ["Perguruan Tinggi"],
+                                    "Pengakuan Dari Institusi Lain": ["Internasional", "Nasional", "Regional"]
+                                };
+
+                                const raihanData = {
+                                    "kompetisi": ["Juara 1", "Juara 2", "Juara 3", "Juara Harapan"],
+                                    "juri/wasit/pelatih": ["Juri", "Wasit", "Pelatih"],
+                                    "forum": ["Pembicara", "Moderator", "Peserta"],
+                                    "karya": ["Ketua", "Anggota"],
+                                };
+
+                                tipePrestasi.addEventListener("change", function() {
+                                    const value = this.value;
+                                    tingkatPrestasi.innerHTML = '<option value="">Pilih Tingkatan</option>';
+
+                                    if (dataPrestasi[value]) {
+                                        dataPrestasi[value].forEach(level => {
+                                            const opt = document.createElement("option");
+                                            opt.value = level;
+                                            opt.textContent = level;
+                                            tingkatPrestasi.appendChild(opt);
+                                        });
+                                    }
+
+                                    // isi raihan prestasi
+                                    raihanPrestasi.innerHTML = '<option value="">Pilih Raihan</option>';
+                                    let listRaihan = [];
+
+                                    if ([
+                                            "Kompetisi Pemerintahan Individu",
+                                            "Kompetisi Pemerintahan Kelompok",
+                                            "Kompetisi Non-Pemerintahan Individu",
+                                            "Kompetisi Non-Pemerintahan Kelompok",
+                                            "Lomba Mewakili Institusi"
+                                        ].includes(value)) {
+                                        listRaihan = raihanData["kompetisi"];
+                                    } else if ([
+                                            "Kegiatan/Forum Ilmiah",
+                                            "Kegiatan Sosial / Kerohanian"
+                                        ].includes(value)) {
+                                        listRaihan = raihanData["forum"];
+                                    } else if ([
+                                            "Karya Yang Didanai",
+                                            "Karya Populer Yang Diterbitkan",
+                                            "Publikasi Jurnal Internasional/Nasional"
+                                        ].includes(value)) {
+                                        listRaihan = raihanData["karya"];
+                                    } else if ([
+                                            "Juri/Wasit/Pelatih"
+                                        ].includes(value)) {
+                                        listRaihan = raihanData['juri/wasit/pelatih']
+                                    } else {
+                                        listRaihan = ["Peserta"];
+                                    }
+
+                                    listRaihan.forEach(r => {
+                                        const opt = document.createElement("option");
+                                        opt.value = r;
+                                        opt.textContent = r;
+                                        raihanPrestasi.appendChild(opt);
+                                    });
+                                });
+                            });
+                        </script>
+                    @endif
                 </div>
 
                 {{-- Independent Activities --}}
-                <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="overflow-x-auto mb-2 cursor-default"
+                <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="mb-2 pr-3 cursor-default"
                     x-on:edit-independent="editDataIndependent = $event.detail; openEditIndependent = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Mandiri Mahasiswa Selama Satu
+                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Kegiatan Mandiri Mahasiswa Selama
+                        Satu
                         Semester</p>
-                    <x-tabel :headers="[
-                        'No',
-                        'Nama Kegiatan',
-                        'Tipe Kegiatan',
-                        'Keikutsertaan',
-                        'Tempat',
-                        'Tanggal Mulai',
-                        'Tanggal Selesai',
-                        'Bukti',
-                        'Status',
-                    ]" :columns="[
-                        'activity-name',
-                        'activity-type',
-                        'participation',
-                        'place',
-                        'start-date',
-                        'end-date',
-                        'bukti',
-                        'status',
-                    ]" :rows="$parsingIndependentActivities" idKey="id"
-                        editEvent="edit-independent" deleteRoute="laporan.independent-activities.hapus" :status="$laporan->status" />
+
+                    <div class="overflow-x-auto">
+                        <x-tabel :headers="[
+                            'No',
+                            'Nama Kegiatan',
+                            'Tipe Kegiatan',
+                            'Keikutsertaan',
+                            'Tempat',
+                            'Tanggal Mulai',
+                            'Tanggal Selesai',
+                            'Bukti',
+                            'Status',
+                        ]" :columns="[
+                            'activity-name',
+                            'activity-type',
+                            'participation',
+                            'place',
+                            'start-date',
+                            'end-date',
+                            'bukti',
+                            'status',
+                        ]" :rows="$parsingIndependentActivities" idKey="id"
+                            editEvent="edit-independent" deleteRoute="laporan.independent-activities.hapus"
+                            :status="$laporan->status" style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openIndependent = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                         {{-- Modal Tambah --}}
@@ -960,13 +1191,27 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tipe Kegiatan</label>
-                                    <input type="text" name="tipe-kegiatan"
+                                    <select type="text" name="tipe-kegiatan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                                        <option value="" class="italic">Pilih Tipe</option>
+                                        <option value="Magang Bersertifikat">Magang Bersertifikat</option>
+                                        <option value="Studi Independent">Studi Independent</option>
+                                        <option value="Kampus Mengajar">Kampus Mengajar</option>
+                                        <option value="IISMA">IISMA</option>
+                                        <option value="Pertukaran Mahasiswa Merdeka">Pertukaran Mahasiswa Merdeka
+                                        </option>
+                                        <option value="KKN Tematik">KKN Tematik</option>
+                                        <option value="Proyek Kemanusiaan">Proyek Kemanusiaan</option>
+                                        <option value="Riset Atau Penelitian">Riset Atau Penelitian</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Keikutsertaan</label>
-                                    <input type="text" name="keikutsertaan"
+                                    <select type="text" name="keikutsertaan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                                        <option value="" class="italic">Pilih Keikutsertaan</option>
+                                        <option value="Peserta">Peserta</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tempat</label>
@@ -991,9 +1236,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openIndependent = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1047,9 +1292,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditIndependent = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1057,7 +1302,7 @@
                 </div>
 
                 {{-- Evaluations --}}
-                <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="overflow-x-auto mb-2 mt-4 cursor-default">
+                <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="pl-3 mb-2 mt-4 cursor-default">
                     <h2 class="text-xl font-bold text-[#013F4E]">C. EVALUASI</h2>
                     {{-- Data yg ditampilkan --}}
                     <div>
@@ -1076,25 +1321,25 @@
                     @if ($parsingEvaluations && $laporan->sttaus === 'Draft')
                         <div class="flex gap-4">
                             <button x-data='{ eval: @json($parsingEvaluations) }'
-                            @click="
+                                @click="
                                 openEditEvaluation = true;
                                 editDataEvaluation = eval;
                             "
-                            class="border border-black mt-2 px-2 rounded-lg">
-                            Edit
-                        </button>
-                        <button
-                            @click="
+                                class="border border-black mt-2 px-2 rounded-lg">
+                                Edit
+                            </button>
+                            <button
+                                @click="
                                 openEditEvaluation = true;
                                 editDataEvaluation = eval;
                             "
-                            class="border border-black mt-2 px-2 rounded-lg">
-                            Hapus
-                        </button>
+                                class="border border-black mt-2 px-2 rounded-lg">
+                                Hapus
+                            </button>
                         </div>
                     @elseif (!$parsingEvaluations || $laporan->sttaus === 'Draft')
                         <button @click="openEvaluation = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                     @endif
@@ -1118,9 +1363,9 @@
 
                             <div class="flex justify-end gap-2 mt-4">
                                 <button type="button" @click="openEvaluation = false"
-                                    class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                    class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                 <button type="submit"
-                                    class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                    class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                             </div>
                         </form>
                     </x-modal>
@@ -1146,29 +1391,32 @@
 
                             <div class="flex justify-end gap-2 mt-4">
                                 <button type="button" @click="openEditEvaluation = false"
-                                    class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                    class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                 <button type="submit"
-                                    class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                    class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                             </div>
                         </form>
                     </x-modal>
                 </div>
 
                 {{-- Target Next SMT --}}
-                <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }" class="overflow-x-auto mb-2 mt-2 cursor-default"
+                <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }" class="mb-2 mt-2 pr-3 cursor-default"
                     x-on:edit-target-rep.window="editDataTargetRep = $event.detail; openEditTargetRep = true">
-                    <h2 class="text-xl font-bold text-[#013F4E]">D. TARGET SEMESTER DEPAN</h2>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Nilai IPS dan IPK
+                    <h2 class="text-xl font-bold text-[#013F4E] mt-4 ml-3">D. TARGET SEMESTER DEPAN</h2>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Rencana Nilai IPS dan IPK
                         Semester
                         Depan
                     </p>
 
-                    <x-tabel :headers="['No', 'Semester', 'Target IPS', 'Target IPK', 'Status']" :columns="['semester', 'target-ips', 'target-ipk', 'status']" :rows="$parsingNextReports" idKey="id"
-                        editEvent="edit-target-rep" deleteRoute="laporan.next-semester-reports.hapus" :status="$laporan->status" />
+                    <div class="overflow-x-auto">
+                        <x-tabel :headers="['No', 'Semester', 'Target IPS', 'Target IPK', 'Status']" :columns="['semester', 'target-ips', 'target-ipk', 'status']" :rows="$parsingNextReports" idKey="id"
+                            editEvent="edit-target-rep" deleteRoute="laporan.next-semester-reports.hapus"
+                            :status="$laporan->status" style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetRep = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                         {{-- Modal Tambah --}}
@@ -1211,9 +1459,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openTargetRep = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1247,14 +1495,15 @@
                                     <label class="block text-sm font-medium">Target IPK <span
                                             class="text-red-500">*</span></label>
                                     <span class="text-[2pt] text-red-500 italic">Maks 4.00</span>
-                                    <input type="number" name="target-ipk" x-model="editDataTargetRep['target-ipk']"
+                                    <input type="number" name="target-ipk"
+                                        x-model="editDataTargetRep['target-ipk']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         step="0.01" min="0" max="4">
                                 </div>
                                 {{-- btn --}}
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditTargetRep = false"
-                                        class="px-3 py-1 border rounded">
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">
                                         Batal
                                     </button>
                                     <button type="submit" class="px-3 py-1 rounded bg-[#09697E] text-white">
@@ -1267,19 +1516,22 @@
                 </div>
 
                 {{-- Target Keg Akademik --}}
-                <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }" class="overflow-x-auto mb-2 cursor-default"
+                <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }" class="mb-2 pr-3 cursor-default"
                     x-on:edit-target-academic.window="editDataTargetAcademic = $event.detail; openEditTargetAcademic = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Kegiatan Akademik
+                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Rencana Kegiatan Akademik
                         Semester
                         Depan
                     </p>
 
-                    <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Status']" :columns="['activity-name', 'strategy', 'status']" :rows="$parsingNextAcademicActivities" idKey="id"
-                        editEvent="edit-target-academic" deleteRoute="laporan.next-smt-activities.hapus" :status="$laporan->status" />
+                    <div class="overflow-x-auto">
+                        <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Status']" :columns="['activity-name', 'strategy', 'status']" :rows="$parsingNextAcademicActivities" idKey="id"
+                            editEvent="edit-target-academic" deleteRoute="laporan.next-smt-activities.hapus"
+                            :status="$laporan->status" style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetAcademic = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                         {{-- Modal tambah --}}
@@ -1305,9 +1557,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openTargetAcademic = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1333,9 +1585,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditTargetAcademic = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1343,16 +1595,19 @@
                 </div>
 
                 {{-- Target Achievements --}}
-                <div x-cloak x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }" class="overflow-x-auto mb-2 cursor-default"
+                <div x-cloak x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }" class="mb-2 pr-3 cursor-default"
                     x-on:edit-target-achievement="editDatatargetAchievement = $event.detail; openEditTargetAchievement = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Prestasi</p>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Rencana Prestasi</p>
 
-                    <x-tabel :headers="['No', 'Nama Prestasi', 'Tingkat', 'Raihan', 'Status']" :columns="['achievements-name', 'level', 'award', 'status']" :rows="$parsingNextAchievements" idKey="id"
-                        editEvent="edit-target-achievement" deleteRoute="laporan.next-smt-achievements.hapus" :status="$laporan->status" />
+                    <div class="overflow-x-auto">
+                        <x-tabel :headers="['No', 'Nama Prestasi', 'Tingkat', 'Raihan', 'Status']" :columns="['achievements-name', 'level', 'award', 'status']" :rows="$parsingNextAchievements" idKey="id"
+                            editEvent="edit-target-achievement" deleteRoute="laporan.next-smt-achievements.hapus"
+                            :status="$laporan->status" style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetAchievement = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                         {{-- Modal Tambah --}}
@@ -1378,9 +1633,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openTargetAchievement = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1412,9 +1667,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditTargetAchievement = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1422,16 +1677,19 @@
                 </div>
 
                 {{-- Target Independent --}}
-                <div x-cloak x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }" class="overflow-x-auto mb-2 cursor-default"
+                <div x-cloak x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }" class="mb-2 pr-3 cursor-default"
                     x-on:edit-target-independent="editDataTargetIndependent = $event.detail; openEditTargetIndependent = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Kegiatan Mandiri</p>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Rencana Kegiatan Mandiri</p>
 
-                    <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Keikutsertaan', 'Status']" :columns="['activity-name', 'strategy', 'participation', 'status']" :rows="$parsingNextIndependentActivities" idKey="id"
-                        editEvent="edit-target-independent" deleteRoute="laporan.next-smt-independent.hapus" :status="$laporan->status" />
+                    <div class="overflow-x-auto">
+                        <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Keikutsertaan', 'Status']" :columns="['activity-name', 'strategy', 'participation', 'status']" :rows="$parsingNextIndependentActivities" idKey="id"
+                            editEvent="edit-target-independent" deleteRoute="laporan.next-smt-independent.hapus"
+                            :status="$laporan->status" style="draft" />
+                    </div>
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetIndependent = true"
-                            class="border border-black mt-2 px-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                         {{-- Modal tambah --}}
@@ -1457,9 +1715,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openTargetIndependent = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1491,9 +1749,9 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditTargetIndependent = false"
-                                        class="px-3 py-1 border rounded hover:bg-gray-100 transition cursor-pointer">Batal</button>
+                                        class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
                                     <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded">Simpan</button>
+                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1506,12 +1764,13 @@
                 @csrf
                 @method('PUT')
                 {{-- btn ajukan dan kembali --}}
-                <div class="mt-4 flex gap-2">
-                    <button type="button" class="button bg-gray-300 px-2 py-1 rounded-md cursor-pointer">
+                <div class="ml-3 mt-4 flex gap-2">
+                    <button type="button"
+                        class="button bg-[#09697E] hover:bg-[#27788a] text-white px-2 py-1 rounded-md cursor-pointer">
                         <a href="{{ route('mahasiswa.dashboard') }}">Kembali</a>
                     </button>
                     <button type="submit"
-                        class="button bg-gray-300 px-2 py-1 rounded-md cursor-pointer">Ajukan</button>
+                        class="button bg-[#44c96a] hover:bg-[#68e28b] px-2 py-1 rounded-md cursor-pointer text-white">Ajukan</button>
                 </div>
             </form>
         </div>

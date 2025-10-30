@@ -15,10 +15,10 @@
 
     <section class="flex justify-center w-full h-auto">
         <div class="bg-[#fdfdfd] w-[1000px] h-auto p-6">
-            <h2 class="text-xl font-bold mb-2">Pengisian Laporan Monev</h2>
+            <h2 class="text-xl font-bold ml-3.5 mb-2">Pengisian Laporan Monev</h2>
 
             @if ($periodeAktif)
-                <div class="w-full h-[50px] bg-blue-200 mb-2 px-3 py-3">
+                <div class="w-auto h-[50px] bg-blue-200 ml-3.5 mb-2 px-3 py-3">
                     <p>
                         Periode {{ $periodeAktif->tahun_akademik }} {{ $periodeAktif->semester }} Telah Dibuka
                     </p>
@@ -49,7 +49,7 @@
                                             class="px-2 py-1 bg-[#d82222] text-[#f1f1f1] font-bold rounded cursor-default">Tutup</button>
                                     @else
                                         @if ($row['aksi'] === 'Buat')
-                                            <form action="{{ route('mahasiswa.buat-laporan', $row['semester_id']) }}"
+                                            <form action="{{ route('mahasiswa.buat-laporan', ['semesterId' => $row['semester_id'], 'semesterSekarang' => $row['semester']]) }}"
                                                 method="POST">
                                                 @csrf
                                                 <button type="submit"
@@ -59,7 +59,7 @@
                                             </form>
                                         @else
                                             <a href="{{ route('mahasiswa.lihat-laporan', $row['laporan_id']) }}"
-                                                class="px-2 py-1 bg-[#007E33] text-white font-bold rounded cursor-pointer">
+                                                class="px-2 py-1 bg-[#1abc50] text-white font-bold rounded cursor-pointer">
                                                 Lihat
                                             </a>
                                         @endif

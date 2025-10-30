@@ -3,14 +3,21 @@
     'columns' => [], // Untuk nama kolomnya ['semester', 'ips', ...]
     'rows' => [], // collection atau array of arrays/objects
     'idKey' => 'id', // nama key untuk id tiap row
-    // 'rawColumns' => [],
     'editEvent' => 'edit-row', // default
     'deleteRoute' => '', // default value
     'status' => 'Draft',
+    'style' => ''
 ])
 
 <table class="min-w-full text-sm shadow-lg bg-white border-separate border-spacing-0 m-4">
     <thead>
+        @if ($style === 'riwayat')
+        <tr class="bg-[#09697E]">
+            @foreach ($headers as $header)
+                <th class="px-4 py-2 text-center text-white">{{ $header }}</th>
+            @endforeach
+        </tr>
+        @elseif ($style === 'draft')
         <tr class="bg-[#E8BE00]">
             @foreach ($headers as $header)
                 <th class="px-4 py-2 text-center">{{ $header }}</th>
@@ -19,6 +26,7 @@
                 <th class="px-4 py-2 text-center">Aksi</th>
             @endif
         </tr>
+        @endif
     </thead>
     <tbody>
         @forelse(($rows ?? []) as $row)
@@ -35,11 +43,19 @@
                                 Lihat Bukti
                             </a>
                         @elseif ($col === 'status' && $value && $value === 'Draft')
-                            <span class="bg-green-400 px-2 py-1 rounded-md">
+                            <span class="bg-[#cecece] px-2 py-1 rounded-xl">
                                 {{ $value }}
                             </span>
                         @elseif ($col === 'status' && $value && $value === 'Pending')
-                            <span class="bg-[#ffdd44] px-1.5 py-1 rounded-md">
+                            <span class="bg-[#ffdd44] px-2 py-1 rounded-xl">
+                                {{ $value }}
+                            </span>
+                        @elseif ($col === 'status' && $value && $value === 'Valid')
+                            <span class="bg-[#44c96a] px-2 py-1 rounded-xl text-[#fbfbfb]">
+                                {{ $value }}
+                            </span>
+                        @elseif ($col === 'status' && $value && $value === 'Rejected')
+                            <span class="bg-[#e73424] px-2 py-1 rounded-xl">
                                 {{ $value }}
                             </span>
                         @else
@@ -50,18 +66,20 @@
 
                 @if ($status === 'Draft')
                     {{-- Aksi: dispatch event supaya parent yang pegang modal bisa nangani --}}
-                    <td class="px-4 py-2 flex justify-center items-center gap-3">
-                        <button type="button" class="cursor-pointer px-3 py-0.5 text-white bg-[#013F4E] rounded-xl" if
-                            @click="$dispatch('{{ $editEvent }}', {{ json_encode($row) }})">
-                            Edit
-                        </button>
+                    <td class="px-4 py-2">
+                        <div class="flex justify-center items-center gap-3">
+                            <button type="button" class="flex justify-center items-center gap-2 cursor-pointer px-3 py-0.5 text-white bg-[#2179ca] hover:bg-[#1c6bb4] rounded-sm"
+                                if @click="$dispatch('{{ $editEvent }}', {{ json_encode($row) }})">
+                                <img src="/icon/edit.png" alt="edit-icon" class="w-[15px] h-[15px]"> Edit
+                            </button>
 
-                        <button type="button" class="cursor-pointer px-3 py-0.5 bg-red-500 text-white rounded-sm"
-                            @click="$dispatch('{{ 'delete-row' }}', {
+                            <button type="button" class="flex justify-center items-center gap-2 cursor-pointer px-3 py-0.5 bg-red-500 hover:bg-red-600 text-white rounded-sm"
+                                @click="$dispatch('{{ 'delete-row' }}', {
                                 id: '{{ data_get($row, $idKey) }}',
                                 route: '{{ route($deleteRoute, data_get($row, $idKey)) }}'})">
-                            Hapus
-                        </button>
+                                <img src="/icon/delete.png" alt="edit-icon" class="w-[15px] h-[15px]"> Hapus
+                            </button>
+                        </div>
                     </td>
                 @endif
             </tr>
@@ -74,3 +92,4 @@
         @endforelse
     </tbody>
 </table>
+

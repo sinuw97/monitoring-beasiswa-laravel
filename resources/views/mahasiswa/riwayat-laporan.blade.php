@@ -17,7 +17,7 @@
     <section class="flex justify-center w-full h-auto">
         <div class="bg-[#fdfdfd] w-[1000px] h-auto p-6 mt-4 rounded-lg shadow">
             <h2 class="text-xl font-bold mb-2 text-[#09697E]">Riwayat Laporan Monev</h2>
-            <p class="text-sm text-gray-600 mb-4">Menampilkan semua laporan yang telah kamu kirim.</p>
+            <p class="text-md text-gray-600 mb-4">Menampilkan semua laporan yang telah kamu kirim.</p>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm shadow-md bg-white border-separate border-spacing-0">
@@ -43,9 +43,9 @@
                                 <td class="px-4 py-2 text-center">
                                     @php
                                         $warnaStatus = match ($laporan->status) {
-                                            'Lolos' => 'bg-green-400 text-white',
-                                            'Pending' => 'bg-yellow-300 text-black',
-                                            'Rejected', 'Ditolak SP-1', 'Ditolak' => 'bg-red-400 text-white',
+                                            'Lolos' => 'bg-[#27d360] text-white',
+                                            'Pending' => 'bg-[#ffdd44] text-black',
+                                            'Rejected', 'Ditolak SP-1', 'Ditolak' => 'bg-[#d13737] text-white',
                                             default => 'bg-gray-300 text-black',
                                         };
                                     @endphp
@@ -57,8 +57,8 @@
                                     {{ $laporan->created_at ? $laporan->created_at->translatedFormat('d F Y') : '-' }}
                                 </td>
                                 <td class="px-4 py-2 text-center">
-                                    <a href="{{ route('mahasiswa.lihat-laporan', $laporan->laporan_id) }}"
-                                        class="px-3 py-1 bg-[#09697E] text-white rounded-md hover:bg-[#0b7f99] transition-all">
+                                    <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
+                                        class="px-3 py-1 bg-[#2179ca] text-white rounded-md hover:bg-[#1c6bb4] transition-all">
                                         Lihat
                                     </a>
                                 </td>

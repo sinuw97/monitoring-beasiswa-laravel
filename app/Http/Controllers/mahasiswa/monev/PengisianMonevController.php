@@ -2,26 +2,16 @@
 
 namespace App\Http\Controllers\mahasiswa\monev;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\monev\AcademicActivities;
-use App\Models\monev\AcademicReports;
-use App\Models\monev\CommitteeActivities;
-use App\Models\monev\Evaluations;
-use App\Models\monev\IndependentActivities;
 use App\Models\monev\LaporanMonevMahasiswa;
-use App\Models\monev\OrganizationActivities;
-use App\Models\monev\StudentAchievements;
-use App\Models\monev\TargetAcademicActivities;
-use App\Models\monev\TargetAchievements;
-use App\Models\monev\TargetIdependentActivities;
-use App\Models\monev\TargetNextSemester;
 use App\Models\semester\Periode;
 use App\Models\users\DetailMahasiswa;
-use App\Services\GoogleDriveService;
+use App\Services\Penilaian\KegAkademikService;
+use App\Services\Penilaian\KegKomiteService;
+use App\Services\Penilaian\KegMandiriService;
+use App\Services\Penilaian\KegOrgService;
+use App\Services\Penilaian\PrestasiService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Storage;
 
 class PengisianMonevController extends Controller
 {
@@ -58,7 +48,7 @@ class PengisianMonevController extends Controller
 
             $timeline[] = [
                 'no' => $i,
-                'laporan_id' => $laporan->laporan_id,
+                'laporan_id' => $laporan->laporan_id ?? null,
                 'semester' => $namaSemester,
                 'periode' => $periodeAkademik ?? null,
                 'status' => $statusPeriode === 'Aktif' ? 'Dibuka' : 'Ditutup',
@@ -69,9 +59,8 @@ class PengisianMonevController extends Controller
 
         return view('mahasiswa.halaman-pengisian-laporan', compact('dataMahasiswa', 'periodeSemester', 'periodeAktif', 'timeline'));
     }
-
     // Membuat laporan monev baru
-    public function buatLaporanBaru($semesterId)
+    public function buatLaporanBaru(string $semesterId, string $semesterSekarang)
     {
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
@@ -80,6 +69,12 @@ class PengisianMonevController extends Controller
             ->where('status', 'Aktif');
         if (!$cekSemesterId) {
             return back()->with('error', 'Periode tidak ada atau sudah ditutup!');
+        }
+
+        // strip semester sekarang, ambil angkanya
+        $semesterAngka = (int) filter_var($semesterSekarang, FILTER_SANITIZE_NUMBER_INT);
+        if ($semesterAngka < 0 || $semesterAngka > 8) {
+            return back()->with('error', 'Semester tidak valid!');
         }
 
         // cek mhs sdh bikin laporan blm?
@@ -99,13 +94,14 @@ class PengisianMonevController extends Controller
             'laporan_id' => $laporanId,
             'nim' => $dataMahasiswa->nim,
             'semester_id' => $semesterId,
+            'semester' => $semesterAngka,
             'status' => 'Draft'
         ]);
 
-        return redirect()->route('mahasiswa.isi-monev', parameters: ['laporan_id' => $laporan->laporan_id]);
+        return redirect()->route('mahasiswa.lihat-laporan', parameters: ['laporanId' => $laporan->laporan_id]);
     }
     // Menampilkan halaman pengisian aktivitas mhs (monev)
-    public function showHalamanIsiMonev($laporanId)
+    public function showHalamanIsiMonev(string $laporanId)
     {
         // ambil data mhs yg login
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
@@ -188,8 +184,7 @@ class PengisianMonevController extends Controller
             return [
                 'id' => $report->id,
                 'achievements-name' => $report->achievements_name,
-                'scope' => $report->scope,
-                'is-group' => $report->is_group ? 1 === 'Kelompok' : 'Individu',
+                'achievements-type' => $report->achievements_type,
                 'level' => $report->level,
                 'award' => $report->award,
                 'place' => $report->place,
@@ -266,9 +261,8 @@ class PengisianMonevController extends Controller
         ));
     }
     // Mengajukan laporan menjadi Pending
-    public function ajukanLaporanMonev($laporanId)
+    public function ajukanLaporanMonev(string $laporanId)
     {
-
         // ambil data mhs yg login
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
         // ambil data monev mhs
@@ -294,6 +288,56 @@ class PengisianMonevController extends Controller
             return back()->with('error', 'Laporan tidak ditemukan.');
         }
 
+        // inisiasi service
+        $penilaianKegAkademik = app(KegAkademikService::class);
+        $penilaianKegOrganisasi = app(KegOrgService::class);
+        $penilaianKegKomite = app(KegKomiteService::class);
+        $penilaianPrestasi = app(PrestasiService::class);
+        $penilaianKegMandiri = app(KegMandiriService::class);
+
+
+        // ==== Hitung nilai Kegiatan Akademik ====
+        foreach ($laporan->academicActivities as $item) {
+            $nilai = $penilaianKegAkademik->hitung($item->activity_type ?? '');
+            $item->update(['points' => $nilai]);
+        }
+
+        // ==== Hitung nilai Kegiatan Organisasi ====
+        foreach ($laporan->organizationActivities as $item) {
+            $nilai = $penilaianKegOrganisasi->hitung(
+                $item->position ?? '',
+                $item->level ?? ''
+            );
+            $item->update(['points' => $nilai]);
+        }
+
+        // ==== Hitung nilai Kegiatan Komite ====
+        foreach ($laporan->committeeActivities as $item) {
+            $nilai = $penilaianKegKomite->hitung(
+                $item->activity_type ?? '',
+                $item->level ?? '',
+                $item->participation ?? ''
+            );
+            $item->update(['points' => $nilai]);
+        }
+
+        // ==== Hitung nilai Prestasi ====
+        foreach ($laporan->studentAchievements as $item) {
+            $nilai = $penilaianPrestasi->hitung(
+                $item->achievements_type ?? '',
+                $item->level ?? '',
+                $item->award ?? ''
+            );
+            $item->update(['points' => $nilai]);
+        }
+
+        // ==== Hitung nilai Kegiatan Mandiri ====
+        foreach ($laporan->independentActivities as $item) {
+            $nilai = $penilaianKegMandiri->hitung($item->activity_type ?? '');
+            $item->update(['points' => $nilai]);
+        }
+
+
         // update status tabel laporan mahasiswa
         $laporan->update(['status' => 'Pending']);
 
@@ -315,829 +359,6 @@ class PengisianMonevController extends Controller
             $laporan->$relation()->update(['status' => 'Pending']);
         }
 
-        return back()->with('success', 'Laporan berhasil diajukan dengan status Pending.');
-    }
-
-    public function submitNilaiIPKnIPS(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'semester' => 'required|integer|min:1|max:8',
-            'ips' => 'required|numeric|between:0,4',
-            'ipk' => 'required|numeric|between:0,4',
-            'bukti' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        ]);
-
-        // service GDrive
-        $drive = new GoogleDriveService();
-        $parentFolderId = config('filesystems.disks.google.folderId');
-        $nim = $dataMahasiswa->nim;
-        // cek apkh folder mhs ada?
-        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-        if ($existingFolder) {
-            $nimFolderId = $existingFolder->id;
-        } else {
-            $folder = $drive->createFolder($nim, $parentFolderId);
-            $nimFolderId = $folder->id;
-        }
-
-        $file = $request->file('bukti');
-        $uploaded = $drive->uploadFile(
-            $file->getRealPath(),
-            $file->getClientOriginalName(),
-            $nimFolderId
-        );
-
-        $drive->setPublicPermission($uploaded->id);
-        $fileLink = $uploaded->webViewLink;
-
-        AcademicReports::create([
-            'laporan_id' => $laporanId,
-            'nim'        => $dataMahasiswa->nim,
-            'semester'   => $validated['semester'],
-            'ips'        => $validated['ips'],
-            'ipk'        => $validated['ipk'],
-            'bukti_url'  => $fileLink ?? 'Tidak Ada',
-            'status'     => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data IPK dan IPS berhasil ditambah!');
-    }
-    public function submitKegAKademik(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'tipe-kegiatan' => 'required|string|min:1|max:255',
-            'keikutsertaan' => 'required|string|min:1|max:100',
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        // service GDrive
-        $drive = new GoogleDriveService();
-        $parentFolderId = config('filesystems.disks.google.folderId');
-        $nim = $dataMahasiswa->nim;
-        // cek apkh folder mhs ada?
-        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-        if ($existingFolder) {
-            $nimFolderId = $existingFolder->id;
-        } else {
-            $folder = $drive->createFolder($nim, $parentFolderId);
-            $nimFolderId = $folder->id;
-        }
-
-        $file = $request->file('bukti');
-        $uploaded = $drive->uploadFile(
-            $file->getRealPath(),
-            $file->getClientOriginalName(),
-            $nimFolderId
-        );
-
-        $drive->setPublicPermission($uploaded->id);
-        $fileLink = $uploaded->webViewLink;
-
-        AcademicActivities::create([
-            'laporan_id' => $laporanId,
-            'nim'        => $dataMahasiswa->nim,
-            'activity_name' => $validated['nama-kegiatan'],
-            'activity_type' => $validated['tipe-kegiatan'],
-            'participation' => $validated['keikutsertaan'],
-            'place' => $validated['tempat'],
-            'start_date' => $validated['tanggal-mulai'],
-            'end_date' => $validated['tanggal-selesai'],
-            'bukti_url' => $fileLink ?? 'Tidak Ada',
-            'status' => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data Kegiatan Akademik berhasil ditambah!');
-    }
-    public function submitKegOrg(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-ukm' => 'required|string|min:1|max:255',
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'tingkat' => 'required|string|min:1|max:100',
-            'posisi' => 'required|string|min:1|max:100',
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        // service GDrive
-        $drive = new GoogleDriveService();
-        $parentFolderId = config('filesystems.disks.google.folderId');
-        $nim = $dataMahasiswa->nim;
-        // cek apkh folder mhs ada?
-        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-        if ($existingFolder) {
-            $nimFolderId = $existingFolder->id;
-        } else {
-            $folder = $drive->createFolder($nim, $parentFolderId);
-            $nimFolderId = $folder->id;
-        }
-
-        $file = $request->file('bukti');
-        $uploaded = $drive->uploadFile(
-            $file->getRealPath(),
-            $file->getClientOriginalName(),
-            $nimFolderId
-        );
-
-        $drive->setPublicPermission($uploaded->id);
-        $fileLink = $uploaded->webViewLink;
-
-        OrganizationActivities::create([
-            'laporan_id' => $laporanId,
-            'nim'        => $dataMahasiswa->nim,
-            'ukm_name' => $validated['nama-ukm'],
-            'activity_name' => $validated['nama-kegiatan'],
-            'level' => $validated['tingkat'],
-            'position' => $validated['posisi'],
-            'place' => $validated['tempat'],
-            'start_date' => $validated['tanggal-mulai'],
-            'end_date' => $validated['tanggal-selesai'],
-            'bukti_url' => $fileLink ?? 'Tidak Ada',
-            'status' => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data Kegiatan Akademik berhasil ditambah!');
-    }
-    public function submitKegKomite(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'tipe-kegiatan' => 'required|string|min:1|max:255',
-            'keikutsertaan' => 'required|string|min:1|max:100',
-            'tingkat' => 'required|string|min:1|max:100',
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        // service GDrive
-        $drive = new GoogleDriveService();
-        $parentFolderId = config('filesystems.disks.google.folderId');
-        $nim = $dataMahasiswa->nim;
-        // cek apkh folder mhs ada?
-        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-        if ($existingFolder) {
-            $nimFolderId = $existingFolder->id;
-        } else {
-            $folder = $drive->createFolder($nim, $parentFolderId);
-            $nimFolderId = $folder->id;
-        }
-
-        $file = $request->file('bukti');
-        $uploaded = $drive->uploadFile(
-            $file->getRealPath(),
-            $file->getClientOriginalName(),
-            $nimFolderId
-        );
-
-        $drive->setPublicPermission($uploaded->id);
-        $fileLink = $uploaded->webViewLink;
-
-        CommitteeActivities::create([
-            'laporan_id' => $laporanId,
-            'nim'        => $dataMahasiswa->nim,
-            'activity_name' => $validated['nama-kegiatan'],
-            'activity_type' => $validated['tipe-kegiatan'],
-            'participation' => $validated['keikutsertaan'],
-            'level' => $validated['tingkat'],
-            'place' => $validated['tempat'],
-            'start_date' => $validated['tanggal-mulai'],
-            'end_date' => $validated['tanggal-selesai'],
-            'bukti_url' => $fileLink ?? "Tidak Ada", //Sementara
-            'status' => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data Kegiatan Kepanitiaan atau Penugasan berhasil ditambah!');
-    }
-    public function submitAchievemnts(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-prestasi' => 'required|string|min:1|max:255',
-            'cakupan' => ['required', Rule::in(['Pemerintahan', 'Non-Pemerintahan'])],
-            'kelompok-individu' => 'required|in:0,1',
-            'tingkat' => ['required', Rule::in(['Internasional', 'Nasional', 'Regional', 'Perguruan Tinggi'])],
-            'raihan' => ['required', Rule::in(['Juara 1', 'Juara 2', 'Juara 3', 'Juara Harapan'])],
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        // service GDrive
-        $drive = new GoogleDriveService();
-        $parentFolderId = config('filesystems.disks.google.folderId');
-        $nim = $dataMahasiswa->nim;
-        // cek apkh folder mhs ada?
-        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-        if ($existingFolder) {
-            $nimFolderId = $existingFolder->id;
-        } else {
-            $folder = $drive->createFolder($nim, $parentFolderId);
-            $nimFolderId = $folder->id;
-        }
-
-        $file = $request->file('bukti');
-        $uploaded = $drive->uploadFile(
-            $file->getRealPath(),
-            $file->getClientOriginalName(),
-            $nimFolderId
-        );
-
-        $drive->setPublicPermission($uploaded->id);
-        $fileLink = $uploaded->webViewLink;
-
-        StudentAchievements::create([
-            'laporan_id' => $laporanId,
-            'nim' => $dataMahasiswa->nim,
-            'achievements_name' => $validated['nama-prestasi'],
-            'scope' => $validated['cakupan'],
-            'level' => $validated['tingkat'],
-            'award' => $validated['raihan'],
-            'place' => $validated['tempat'],
-            'start_date' => $validated['tanggal-mulai'],
-            'end_date' => $validated['tanggal-selesai'],
-            'bukti_url' => $fileLink ?? 'Tidak Ada',
-            'status' => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data Prestasi Mahasiswa berhasil ditambah!');
-    }
-    public function submitKegMandiri(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $vaalidated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'tipe-kegiatan' => 'required|string|min:1|max:255',
-            'keikutsertaan' => 'required|string|min:1|max:255',
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        // service GDrive
-        $drive = new GoogleDriveService();
-        $parentFolderId = config('filesystems.disks.google.folderId');
-        $nim = $dataMahasiswa->nim;
-        // cek apkh folder mhs ada?
-        $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-        if ($existingFolder) {
-            $nimFolderId = $existingFolder->id;
-        } else {
-            $folder = $drive->createFolder($nim, $parentFolderId);
-            $nimFolderId = $folder->id;
-        }
-
-        $file = $request->file('bukti');
-        $uploaded = $drive->uploadFile(
-            $file->getRealPath(),
-            $file->getClientOriginalName(),
-            $nimFolderId
-        );
-
-        $drive->setPublicPermission($uploaded->id);
-        $fileLink = $uploaded->webViewLink;
-
-        IndependentActivities::create([
-            'laporan_id' => $laporanId,
-            'nim' => $dataMahasiswa->nim,
-            'activity_name' => $vaalidated['nama-kegiatan'],
-            'activity_type' => $vaalidated['tipe-kegiatan'],
-            'participation' => $vaalidated['keikutsertaan'],
-            'place' => $vaalidated['tempat'],
-            'start_date' => $vaalidated['tanggal-mulai'],
-            'end_date' => $vaalidated['tanggal-selesai'],
-            'bukti_url' => $fileLink ?? 'Tidak Ada',
-            'status' => 'Draft',
-        ]);
-
-        return  redirect()->back()->with('success', 'Data Kegiatan Mandiri berhasil ditambahkan!');
-    }
-    public function submitEvaluasi(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'faktor-pendukung' => 'required|string',
-            'faktor-penghambat' => 'required|string'
-        ]);
-
-        Evaluations::create([
-            'laporan_id' => $laporanId,
-            'nim' => $dataMahasiswa->nim,
-            'support_factors' => $validated['faktor-pendukung'],
-            'barrier_factors' => $validated['faktor-penghambat'],
-            'status' => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data evaluasi berhasil ditambahkan!');
-    }
-    public function submitTargetIPSnIPK(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'semester' => 'required|integer|min:1|max:8',
-            'target-ips' => 'required|numeric|between:0,4',
-            'target-ipk' => 'required|numeric|between:0,4',
-        ]);
-
-        TargetNextSemester::create([
-            'laporan_id' => $laporanId,
-            'nim' => $dataMahasiswa->nim,
-            'semester' => $validated['semester'],
-            'target_ips' => $validated['target-ips'],
-            'target_ipk' => $validated['target-ipk'],
-            'status' => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data Target IPK dan IPS berhasl ditambah!');
-    }
-    public function submitTargetKegAkademik(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'rencana-strategi' => 'required|string|min:1|max:255',
-        ]);
-
-        TargetAcademicActivities::create([
-            'laporan_id' => $laporanId,
-            'nim' => $dataMahasiswa->nim,
-            'activity_name' => $validated['nama-kegiatan'],
-            'strategy' => $validated['rencana-strategi'],
-            'status' => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data Target Kegiatan Akademik berhasil ditambahkan!');
-    }
-    public function submitTargetAchievements(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-prestasi' => 'required|string|min:1|max:255',
-            'tingkat' => 'required|string|min:1|max:255',
-            'raihan' => 'required|string|min:1|max:100',
-        ]);
-
-        TargetAchievements::create([
-            'laporan_id' => $laporanId,
-            'nim' => $dataMahasiswa->nim,
-            'achievements_name' => $validated['nama-prestasi'],
-            'level' => $validated['tingkat'],
-            'award' => $validated['raihan'],
-            'status' => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data Target Prestasi berhasil ditambahkan!');
-    }
-    public function submitTargetKegMandiri(Request $request, $laporanId)
-    {
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'rencana-strategi' => 'required|string|min:1|max:255',
-            'keikutsertaan' => 'required|string|min:1|max:100',
-        ]);
-
-        TargetIdependentActivities::create([
-            'laporan_id' => $laporanId,
-            'nim' => $dataMahasiswa->nim,
-            'activity_name' => $validated['nama-kegiatan'],
-            'strategy' => $validated['rencana-strategi'],
-            'participation' => $validated['keikutsertaan'],
-            'status' => 'Draft',
-        ]);
-
-        return redirect()->back()->with('success', 'Data Target Kegiatan Mandiri berhasil ditambah!');
-    }
-
-    // Edit
-    public function updateNilaiIPKnIPS(Request $request, $idData)
-    {
-        // Cek data apakaha ada?
-        $report = AcademicReports::findOrFail($idData);
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'semester' => 'required|integer|min:1|max:8',
-            'ips' => 'required|numeric|between:0,4',
-            'ipk' => 'required|numeric|between:0,4',
-            'bukti'    => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        $report->semester = $validated['semester'];
-        $report->ips = $validated['ips'];
-        $report->ipk = $validated['ipk'];
-
-        if ($request->hasFile('bukti')) {
-            // service GDrive
-            $drive = new GoogleDriveService();
-            $parentFolderId = config('filesystems.disks.google.folderId');
-            $nim = $dataMahasiswa->nim;
-            // cek apkh folder mhs ada?
-            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-            if ($existingFolder) {
-                $nimFolderId = $existingFolder->id;
-            } else {
-                $folder = $drive->createFolder($nim, $parentFolderId);
-                $nimFolderId = $folder->id;
-            }
-
-            $file = $request->file('bukti');
-            $uploaded = $drive->uploadFile(
-                $file->getRealPath(),
-                $file->getClientOriginalName(),
-                $nimFolderId
-            );
-
-            $drive->setPublicPermission($uploaded->id);
-            $report->bukti_url = $uploaded->webViewLink;
-        }
-
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data IPS dan IPK berhasil diupdate');
-    }
-    public function updateKegAKademik(Request $request, $idData)
-    {
-        $report = AcademicActivities::findOrFail($idData);
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'tipe-kegiatan' => 'required|string|min:1|max:255',
-            'keikutsertaan' => 'required|string|min:1|max:100',
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        $report->activity_name = $validated['nama-kegiatan'];
-        $report->activity_type = $validated['tipe-kegiatan'];
-        $report->participation = $validated['keikutsertaan'];
-        $report->place = $validated['tempat'];
-        $report->start_date = $validated['tanggal-mulai'];
-        $report->end_date = $validated['tanggal-selesai'];
-
-        if ($request->hasFile('bukti')) {
-            // service GDrive
-            $drive = new GoogleDriveService();
-            $parentFolderId = config('filesystems.disks.google.folderId');
-            $nim = $dataMahasiswa->nim;
-            // cek apkh folder mhs ada?
-            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-            if ($existingFolder) {
-                $nimFolderId = $existingFolder->id;
-            } else {
-                $folder = $drive->createFolder($nim, $parentFolderId);
-                $nimFolderId = $folder->id;
-            }
-
-            $file = $request->file('bukti');
-            $uploaded = $drive->uploadFile(
-                $file->getRealPath(),
-                $file->getClientOriginalName(),
-                $nimFolderId
-            );
-
-            $drive->setPublicPermission($uploaded->id);
-            $report->bukti_url = $uploaded->webViewLink;
-        }
-
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Kegiatan Akademik berhasil diupdate');
-    }
-    public function updateKegOrg(Request $request, $idData)
-    {
-        $report = OrganizationActivities::findOrFail($idData);
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-ukm' => 'required|string|min:1|max:255',
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'tingkat' => 'required|string|min:1|max:100',
-            'posisi' => 'required|string|min:1|max:100',
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        $report->ukm_name = $validated['nama-ukm'];
-        $report->activity_name = $validated['nama-kegiatan'];
-        $report->level = $validated['tingkat'];
-        $report->position = $validated['posisi'];
-        $report->place = $validated['tempat'];
-        $report->start_date = $validated['tanggal-mulai'];
-        $report->end_date = $validated['tanggal-selesai'];
-
-        if ($request->hasFile('bukti')) {
-            // service GDrive
-            $drive = new GoogleDriveService();
-            $parentFolderId = config('filesystems.disks.google.folderId');
-            $nim = $dataMahasiswa->nim;
-            // cek apkh folder mhs ada?
-            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-            if ($existingFolder) {
-                $nimFolderId = $existingFolder->id;
-            } else {
-                $folder = $drive->createFolder($nim, $parentFolderId);
-                $nimFolderId = $folder->id;
-            }
-
-            $file = $request->file('bukti');
-            $uploaded = $drive->uploadFile(
-                $file->getRealPath(),
-                $file->getClientOriginalName(),
-                $nimFolderId
-            );
-
-            $drive->setPublicPermission($uploaded->id);
-            $report->bukti_url = $uploaded->webViewLink;
-        }
-
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Kegiatan Organisasi berhasil diupdate');
-    }
-    public function updateKegKomite(Request $request, $idData)
-    {
-        $report = CommitteeActivities::findOrFail($idData);
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'tipe-kegiatan' => 'required|string|min:1|max:255',
-            'keikutsertaan' => 'required|string|min:1|max:100',
-            'tingkat' => 'required|string|min:1|max:100',
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        $report->activity_name = $validated['nama-kegiatan'];
-        $report->activity_type = $validated['tipe-kegiatan'];
-        $report->participation = $validated['keikutsertaan'];
-        $report->level = $validated['tingkat'];
-        $report->place = $validated['tempat'];
-        $report->start_date = $validated['tanggal-mulai'];
-        $report->end_date = $validated['tanggal-selesai'];
-
-        if ($request->hasFile('bukti')) {
-            // service GDrive
-            $drive = new GoogleDriveService();
-            $parentFolderId = config('filesystems.disks.google.folderId');
-            $nim = $dataMahasiswa->nim;
-            // cek apkh folder mhs ada?
-            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-            if ($existingFolder) {
-                $nimFolderId = $existingFolder->id;
-            } else {
-                $folder = $drive->createFolder($nim, $parentFolderId);
-                $nimFolderId = $folder->id;
-            }
-
-            $file = $request->file('bukti');
-            $uploaded = $drive->uploadFile(
-                $file->getRealPath(),
-                $file->getClientOriginalName(),
-                $nimFolderId
-            );
-
-            $drive->setPublicPermission($uploaded->id);
-            $report->bukti_url = $uploaded->webViewLink;
-        }
-
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Kegiatan Penugasan berhasil diupdate');
-    }
-    public function updateAchievemnts(Request $request, $idData)
-    {
-        $report = StudentAchievements::findOrFail($idData);
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $validated = $request->validate([
-            'nama-prestasi' => 'required|string|min:1|max:255',
-            'cakupan' => ['required', Rule::in(['Pemerintahan', 'Non-Pemerintahan'])],
-            'kelompok-individu' => 'required|in:0,1',
-            'tingkat' => ['required', Rule::in(['Internasional', 'Nasional', 'Regional', 'Perguruan Tinggi'])],
-            'raihan' => ['required', Rule::in(['Juara 1', 'Juara 2', 'Juara 3', 'Juara Harapan'])],
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        $report->achievements_name = $validated['nama-prestasi'];
-        $report->scope = $validated['kelompok-individu'];
-        $report->level = $validated['tingkat'];
-        $report->award = $validated['raihan'];
-        $report->place = $validated['tempat'];
-        $report->start_date = $validated['tanggal-mulai'];
-        $report->end_date = $validated['tanggal-selesai'];
-
-        if ($request->hasFile('bukti')) {
-            // service GDrive
-            $drive = new GoogleDriveService();
-            $parentFolderId = config('filesystems.disks.google.folderId');
-            $nim = $dataMahasiswa->nim;
-            // cek apkh folder mhs ada?
-            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-            if ($existingFolder) {
-                $nimFolderId = $existingFolder->id;
-            } else {
-                $folder = $drive->createFolder($nim, $parentFolderId);
-                $nimFolderId = $folder->id;
-            }
-
-            $file = $request->file('bukti');
-            $uploaded = $drive->uploadFile(
-                $file->getRealPath(),
-                $file->getClientOriginalName(),
-                $nimFolderId
-            );
-
-            $drive->setPublicPermission($uploaded->id);
-            $report->bukti_url = $uploaded->webViewLink;
-        }
-
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Prestasi berhasil diupdate');
-    }
-    public function updateKegMandiri(Request $request, $idData)
-    {
-        $report = IndependentActivities::findOrFail($idData);
-        $dataMahasiswa = Auth::guard('mahasiswa')->user();
-
-        $vaalidated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'tipe-kegiatan' => 'required|string|min:1|max:255',
-            'keikutsertaan' => 'required|string|min:1|max:255',
-            'tempat' => 'required|string|min:1|max:255',
-            'tanggal-mulai' => 'required',
-            'tanggal-selesai' => 'required',
-            'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
-        $report->activity_name = $vaalidated['nama-kegiatan'];
-        $report->activity_type = $vaalidated['tipe-kegiatan'];
-        $report->participation = $vaalidated['keikutsertaan'];
-        $report->place = $vaalidated['tempat'];
-        $report->start_date = $vaalidated['tanggal-mulai'];
-        $report->end_date = $vaalidated['tanggal-selesai'];
-
-        if ($request->hasFile('bukti')) {
-            // service GDrive
-            $drive = new GoogleDriveService();
-            $parentFolderId = config('filesystems.disks.google.folderId');
-            $nim = $dataMahasiswa->nim;
-            // cek apkh folder mhs ada?
-            $existingFolder = $drive->getFolderByName($nim, $parentFolderId);
-
-            if ($existingFolder) {
-                $nimFolderId = $existingFolder->id;
-            } else {
-                $folder = $drive->createFolder($nim, $parentFolderId);
-                $nimFolderId = $folder->id;
-            }
-
-            $file = $request->file('bukti');
-            $uploaded = $drive->uploadFile(
-                $file->getRealPath(),
-                $file->getClientOriginalName(),
-                $nimFolderId
-            );
-
-            $drive->setPublicPermission($uploaded->id);
-            $report->bukti_url = $uploaded->webViewLink;
-        }
-
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Kegiatan Mandiri berhasil diupdate');
-    }
-    public function updateEvaluasi(Request $request, $idData)
-    {
-
-        $report = Evaluations::findOrFail($idData);
-
-        $validated = $request->validate([
-            'faktor-pendukung' => 'required|string',
-            'faktor-penghambat' => 'required|string'
-        ]);
-
-        $report->support_factors = $validated['faktor-pendukung'];
-        $report->barrier_factors = $validated['faktor-penghambat'];
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Evaluasi berhasil diupdate');
-    }
-    public function updateTargetIPSnIPK(Request $request, $idData)
-    {
-
-        $report = TargetNextSemester::findOrFail($idData);
-
-        $validated = $request->validate([
-            'semester' => 'required|integer|min:1|max:8',
-            'target-ips' => 'required|numeric|between:0,4',
-            'target-ipk' => 'required|numeric|between:0,4',
-        ]);
-
-        $report->semester = $validated['semester'];
-        $report->target_ips = $validated['target-ips'];
-        $report->target_ipk = $validated['target-ipk'];
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Target IPK dan IPS berhasil diupdate');
-    }
-    public function updateTargetKegAkademik(Request $request, $idData)
-    {
-
-        $report = TargetAcademicActivities::findOrFail($idData);
-
-        $validated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'rencana-strategi' => 'required|string|min:1|max:255',
-        ]);
-
-        $report->activity_name = $validated['nama-kegiatan'];
-        $report->strategy = $validated['rencana-strategi'];
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Target Kegiatan Akademik berhasil diupdate');
-    }
-    public function updateTargetAchievements(Request $request, $idData)
-    {
-
-        $report = TargetAchievements::findOrFail($idData);
-
-        $validated = $request->validate([
-            'nama-prestasi' => 'required|string|min:1|max:255',
-            'tingkat' => 'required|string|min:1|max:255',
-            'raihan' => 'required|string|min:1|max:100',
-        ]);
-
-        $report->achievements_name = $validated['nama-prestasi'];
-        $report->level = $validated['tingkat'];
-        $report->award = $validated['raihan'];
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Target Kegiatan Akademik berhasil diupdate');
-    }
-    public function updateTargetKegMandiri(Request $request, $idData)
-    {
-
-        $report = TargetIdependentActivities::findOrFail($idData);
-
-        $validated = $request->validate([
-            'nama-kegiatan' => 'required|string|min:1|max:255',
-            'rencana-strategi' => 'required|string|min:1|max:255',
-            'keikutsertaan' => 'required|string|min:1|max:100',
-        ]);
-
-        $report->activity_name = $validated['nama-kegiatan'];
-        $report->strategy = $validated['rencana-strategi'];
-        $report->participation = $validated['keikutsertaan'];
-        $report->save();
-
-        return redirect()->back()->with('success', 'Data Target Kegiatan Akademik berhasil diupdate');
+        return redirect()->route('mahasiswa.detail-laporan')->with('success', 'Laporan Berhasil Diajukan Dengan Status Pending');
     }
 }
