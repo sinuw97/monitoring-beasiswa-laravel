@@ -104,11 +104,21 @@ Route::prefix('admin')->group(function () {
         Route::post('/dashboard', [DashboardAdminController::class, 'addPeriode'])->name('admin.dashboard.addPeriode');
         Route::delete('/dashboard/{id}', [DashboardAdminController::class, 'deletePeriode'])->name('admin.dashboard.deletePeriode');
         Route::put('/dashboard/{id}', [DashboardAdminController::class, 'editPeriode'])->name('admin.dashboard.editPeriode');
-        Route::get('/laporan/{laporanId}', [DashboardAdminController::class, 'showLaporan'])->name('admin.showLaporan');
-        Route::get('/laporan-monev', [LaporanMonevController::class, 'index'])->name('admin.laporan-monev');
+        Route::get('/laporan', [LaporanMonevController::class, 'index'])->name('admin.laporan');
+        Route::get('/laporan/{id}', [LaporanMonevController::class, 'show'])->name('admin.show');
+        Route::put('/laporan/{id}', [LaporanMonevController::class, 'update'])->name('admin.update');
+        Route::put('/laporan/{id}/academic-reports/{idAcademicReports}', [LaporanMonevController::class, 'academicReports'])->name('admin.adacademic-reports');
+        Route::put('/laporan/{id}/academic-activities/{idAcademicActivities}', [LaporanMonevController::class, 'adacademicActivities'])->name('admin.adacademic-activities');
+        Route::put('/laporan/{id}/organization-activities/{idOrganizationActivities}', [LaporanMonevController::class, 'organizationActivities'])->name('admin.organization-activities');
+        Route::put('/laporan/{id}/committee-activities/{idCommitteeActivities}', [LaporanMonevController::class, 'committeeActivities'])->name('admin.committee-activities');
+        Route::put('/laporan/{id}/student-achievements/{idStudentAchievements}', [LaporanMonevController::class, 'studentAchievements'])->name('admin.student-achievements');
+        Route::put('/laporan/{id}/independent-activities/{idIndependentActivities}', [LaporanMonevController::class, 'independentActivities'])->name('admin.independent-activities');
+        Route::put('/laporan/{id}/evaluations/{idEvaluations}', [LaporanMonevController::class, 'evaluations'])->name('admin.evaluations');
         Route::get('/data-mahasiswa', [DataMahasiswaController::class, 'index'])->name('admin.data-mahasiswa');
+        Route::post('/data-mahasiswa', [DataMahasiswaController::class, 'store'])->name('admin.data-mahasiswa.store');
         Route::get('/data-mahasiswa/edit/{id}', [DataMahasiswaController::class, 'edit'])->name('admin.data-mahasiswa.edit');
         Route::put('/data-mahasiswa/edit/{id}', [DataMahasiswaController::class, 'update'])->name('admin.data-mahasiswa.update');
+        Route::delete('/data-mahasiswa/{id}', [DataMahasiswaController::class, 'destroy'])->name('admin.data-mahasiswa.destroy');
     });
 });
 

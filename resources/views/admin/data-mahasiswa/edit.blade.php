@@ -37,31 +37,32 @@
                 <div>
                     <label class="block text-gray-600">Program Studi</label>
                     <input type="text" name="prodi" class="w-full border rounded-md px-3 py-2"
-                        value="{{ $dataMahasiswa->detailMahasiswa->prodi }}">
+                        value="{{ $dataMahasiswa->detailMahasiswa->prodi ?? '' }}">
                 </div>
 
                 <div>
                     <label class="block text-gray-600">Jenis Beasiswa</label>
                     <input type="text" name="jenis_beasiswa" class="w-full border rounded-md px-3 py-2"
-                        value="{{ $dataMahasiswa->detailMahasiswa->jenis_beasiswa }}">
+                        value="{{ $dataMahasiswa->detailMahasiswa->jenis_beasiswa ?? '' }}">
                 </div>
 
                 <div>
                     <label class="block text-gray-600">Angkatan</label>
                     <input type="text" name="angkatan" class="w-full border rounded-md px-3 py-2"
-                        value="{{ $dataMahasiswa->detailMahasiswa->angkatan }}">
+                        value="{{ $dataMahasiswa->detailMahasiswa->angkatan ?? '' }}">
                 </div>
 
                 <div>
                     <label class="block text-gray-600">Kelas</label>
                     <input type="text" name="kelas" class="w-full border rounded-md px-3 py-2"
-                        value="{{ $dataMahasiswa->detailMahasiswa->kelas }}">
+                        value="{{ $dataMahasiswa->detailMahasiswa->kelas ?? ''}}">
                 </div>
 
                 <div>
                     <label class="block text-gray-600">Status</label>
                     <select name="status" class="w-full border rounded-md px-3 py-2">
-                        <option value="" {{ $dataMahasiswa->detailMahasiswa->status != 'Aktif' && $dataMahasiswa->detailMahasiswa->status != 'Non-Aktif' ? 'selected' : ''}}>
+                        @if ($dataMahasiswa->detailMahasiswa->status)
+                            <option value="" {{ $dataMahasiswa->detailMahasiswa->status != 'Aktif' && $dataMahasiswa->detailMahasiswa->status != 'Non-Aktif' ? 'selected' : ''}}>
                             Pilih Keaktifan
                         </option>
                         <option value="Aktif" {{ $dataMahasiswa->detailMahasiswa->status == 'Aktif' ? 'selected' : ''}}>
@@ -70,6 +71,7 @@
                         <option value="Non-Aktif" {{ $dataMahasiswa->detailMahasiswa->status == 'Non-Aktif' ? 'selected' : ''}}>
                             Non-Aktif
                         </option>
+                        @endif
                     </select>
                 </div>
 
@@ -77,14 +79,18 @@
                     <label class="block text-gray-600">Jenis Kelamin</label>
                     <div class="flex gap-4 mt-1">
                         <label class="flex items-center gap-2">
-                            <input type="radio" name="jenis_kelamin"
+                            @if ($dataMahasiswa->detailMahasiswa->jenis_kelamin)
+                                <input type="radio" name="jenis_kelamin"
                                 {{ $dataMahasiswa->detailMahasiswa->jenis_kelamin == 'Laki-Laki' ? 'checked' : '' }} value="Laki-Laki">
                             Laki-laki
+                            @endif
                         </label>
                         <label class="flex items-center gap-2">
+                            @if ($dataMahasiswa->detailMahasiswa->jenis_kelamin)
                             <input type="radio" name="jenis_kelamin"
                                 {{ $dataMahasiswa->detailMahasiswa->jenis_kelamin == 'Perempuan' ? 'checked' : '' }} value="Perempuan">
                             Perempuan
+                            @endif
                         </label>
                     </div>
                 </div>

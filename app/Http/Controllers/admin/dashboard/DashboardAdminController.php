@@ -21,7 +21,7 @@ class DashboardAdminController extends Controller
 
         $dataAdmin->makeHidden(['password']);
         $jmlMahasiswwa = Mahasiswa::count();
-        $jmlLaporan= LaporanMonevMahasiswa::join('periode', 'laporan_mahasiswa.semester_id', '=', 'periode.semester_id')->where('periode.status', '=', 'Aktif')->count();
+        $jmlLaporan= LaporanMonevMahasiswa::join('periode', 'laporan_mahasiswa.semester_id', '=', 'periode.semester_id')->where('periode.status', '=', 'Aktif')->where('laporan_mahasiswa.status', '!=', 'Draft')->count();
         $dataPeriode = Periode::orderBy('semester_id', 'desc')->paginate(10);
 
         return view('admin.dashboard', compact(['dataAdmin'], ['jmlMahasiswwa'], ['dataPeriode'], ['jmlLaporan']));

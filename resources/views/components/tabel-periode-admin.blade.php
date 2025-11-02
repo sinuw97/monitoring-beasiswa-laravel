@@ -23,7 +23,7 @@
                     <th class="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold uppercase tracking-wider whitespace-nowrap">Tanggal Mulai</th>
                     <th class="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold uppercase tracking-wider whitespace-nowrap">Tanggal Selesai</th>
                     <th class="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold uppercase tracking-wider whitespace-nowrap">Status</th>
-                    <th class="px-3 sm:px-4 py-2 sm:py-3 text-center font-semibold uppercase tracking-wider whitespace-nowrap">Aksi</th>
+                    <th class="px-8 sm:px-16 py-3 text-center font-semibold uppercase tracking-wider whitespace-nowrap">Aksi</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-100">
@@ -49,24 +49,26 @@
                             @endif
                         </td>
                         <td class="px-3 sm:px-4 py-2 sm:py-3 text-center">
-                            <div class="flex flex-col sm:flex-row justify-center items-center gap-2">
+                            <div class="grid justify-center grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
                                 <form method="POST"
+                                    class="w-full"
                                     action="{{ url('/admin/dashboard/'.$periode->semester_id) }}"
                                     onsubmit="return confirm('{{ $periode->status == 'Aktif' ? 'Nonaktifkan' : 'Aktifkan' }} periode akademik {{ $periode->tahun_akademik.' '.$periode->semester }}?')">
                                     @csrf
                                     @method('put')
                                     <button
-                                        class="bg-[#09697E] hover:bg-[#075263] text-white px-3 py-1 rounded text-[10px] sm:text-xs md:text-sm cursor-pointer w-full sm:w-auto">
+                                        class="w-full bg-[#09697E] hover:bg-[#075263] text-white px-3 py-2 rounded text-xs cursor-pointer">
                                         Edit
                                     </button>
                                 </form>
                                 <form method="POST"
+                                    class="w-full"
                                     action="{{ url('/admin/dashboard/'.$periode->semester_id) }}"
                                     onsubmit="return confirm('Hapus periode akademik {{ $periode->tahun_akademik.' '.$periode->semester }}?')">
                                     @csrf
                                     @method('delete')
                                     <button
-                                        class="bg-[#000000] hover:bg-gray-800 text-white px-3 py-1 rounded text-[10px] sm:text-xs md:text-sm cursor-pointer w-full sm:w-auto">
+                                        class="w-full bg-[#000000] hover:bg-gray-800 text-white px-3 py-2 rounded text-xs cursor-pointer">
                                         Hapus
                                     </button>
                                 </form>

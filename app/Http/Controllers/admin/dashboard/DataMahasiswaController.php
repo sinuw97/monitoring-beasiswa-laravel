@@ -84,6 +84,43 @@ class DataMahasiswaController extends Controller
     public function store(Request $request)
     {
         //
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'email' => 'required|email|unique:users,email',
+        //     'nim' => 'required|string|max:8|unique:mahasiswa.nim',
+        //     'angkatan' => 'required|string|max:4',
+        //     'prodi' => 'required|string|max:255',
+        //     'kelas' => 'required|string|max:50',
+        //     'jenis_beasiswa' => 'required|string|max:50',
+        //     'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
+        //     'no_hp' => 'required|string|max:15',
+        //     'alamat' => 'required|string|max:500',
+        //     'status' => 'required|string|max:50',
+        // ]);
+
+        Mahasiswa::create([
+            'avatar' => 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name),
+            'name' => $request->name,
+            'email' => $request->email,
+            'nim' => $request->nim,
+            'angkatan' => '20'.$request->angkatan,
+            'password' => bcrypt($request->nim),
+        ]);
+
+        DetailMahasiswa::create([
+            'nim' => $request->nim,
+            'prodi' => $request->prodi,
+            'kelas' => $request->kelas,
+            'no_hp' => $request->no_hp,
+            'jenis_beasiswa' => $request->jenis_beasiswa,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'angkatan' => '20'.$request->angkatan,
+            'status' => $request->status,
+            'alamat' => $request->alamat
+        ]);
+
+        return redirect('/admin/data-mahasiswa')->with('success', 'Data mahasiswa berhasil ditambahkan.');
+
     }
 
     /**
@@ -110,6 +147,10 @@ class DataMahasiswaController extends Controller
         $dataAdmin->makeHidden(['password']);
 
         $dataMahasiswa = Mahasiswa::join('detail_mahasiswa', 'mahasiswa.nim', '=', 'detail_mahasiswa.nim')->select('detail_mahasiswa.*', 'mahasiswa.*')->where('mahasiswa.nim', '=', $id)->first();
+
+        if(!$dataMahasiswa){
+            $dataMahasiswa = Mahasiswa::where('mahasiswa.nim', '=', $id)->first();
+        }
 
         return view('admin.data-mahasiswa.edit', ['dataMahasiswa' => $dataMahasiswa, 'dataAdmin' => $dataAdmin]);
     }
@@ -163,5 +204,12 @@ class DataMahasiswaController extends Controller
     public function destroy(string $id)
     {
         //
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        $detailMahasiswa = DetailMahasiswa::findOrFail($id);
+
+        $mahasiswa->delete();
+        $detailMahasiswa->delete();
+
+        return redirect('/admin/data-mahasiswa')->with('success', 'Data mahasiswa berhasil dihapus.');
     }
 }
