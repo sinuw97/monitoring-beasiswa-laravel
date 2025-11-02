@@ -592,9 +592,9 @@
                             {{ $report['status'] }}
                         </span>
                     </td>
-                    <td class="px-6 py-4">
+                    <td class="flex px-6 py-4">
                         {{-- **Tombol Aksi: Menggunakan Anchor Tag untuk memicu Modal** --}}
-                        <a href="#editModal-{{ $report['id'] }}" class="font-medium bg-indigo-100 rounded-lg py-2 px-4 hover:bg-indigo-400 hover:text-white">
+                        <a href="#editModal-{{ $report['id'] }}" class="mx-auto font-medium bg-indigo-100 rounded-lg py-2 px-4 hover:bg-indigo-400 hover:text-white">
                             Edit
                         </a>
                     </td>
