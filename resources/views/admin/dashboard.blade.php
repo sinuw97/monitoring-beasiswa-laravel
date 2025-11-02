@@ -1,63 +1,63 @@
 @extends('admin.layout')
 
 @section('content')
-  <h2>Hello, {{ $dataAdmin->name }}</h2>
-  <h1>Selamat Datang di Dashboard Admin</h1>
-  <form method="POST" action="{{ url('admin/logout') }}">
-    @csrf
-    <button class="bg-red-400 px-2 py-1 cursor-pointer" type="submit">
-      Logout
-    </button>
-  </form>
+    {{-- Konten Utama --}}
+    <main class="min-h-screen flex-1 p-2 sm:p-6 bg-gray-50">
+        <div class="max-w-5xl mx-auto">
+            {{-- Card Info Admin --}}
+            <div class="bg-white shadow-lg rounded-xl p-6 border-l-4 border-[#E8BE00] mb-2 sm:mb-8">
+                <h2 class="text-xl font-semibold text-[#09697E] mb-4">Informasi Akun</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+                    <div>
+                        <p class="text-gray-500">User ID</p>
+                        <p class="font-bold text-[#000000]">{{ $dataAdmin->user_id }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Nama</p>
+                        <p class="font-bold text-[#000000]">{{ $dataAdmin->name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Email</p>
+                        <p class="font-bold text-[#000000]">{{ $dataAdmin->email }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Tanggal akun dibuat</p>
+                        <p class="font-bold text-[#000000]">{{ \Carbon\Carbon::parse($dataAdmin->created_at)->format('d M Y') }}</p>
+                    </div>
+                </div>
+            </div>
 
-    <table class="min-w-full">
-        <thead class="bg-white border-b">
-        <tr>
-            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                NO
-            </th>
-            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                ID LAPORAN
-            </th>
-            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                SEMESTER
-            </th>
-            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                NAMA MAHASISWA
-            </th>
-            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                STATUS
-            </th>
-            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                AKSI
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($dataLaporan as $laporan)
-            <tr class="bg-white border-b">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {{$loop->iteration + $dataLaporan->firstItem() - 1 }}
-                </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    {{$laporan->laporan_id}}
-                </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    {{$laporan->semester_id}}
-                </td>
-                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    {{$laporan->name}}
-                </td>
-                <td class="text-sm  font-light px-6 py-4 whitespace-nowrap {{$laporan->status == 'Draft' ? 'text-grey-500' : ($laporan->status == 'Ditolak' || $laporan->status == 'Ditolak SP-1' || $laporan->status == 'Ditolak SP-2' || $laporan->status == 'Ditolak SP-3' ? 'text-red-500' : ($laporan->status == 'Lolos' ? 'text-green-500' : 'text-yellow-500'))}}">
-                    <span class="py-1 px-2 rounded-full {{$laporan->status == 'Draft' ? 'bg-grey-100 border border-gray-500' : ($laporan->status == 'Ditolak' || $laporan->status == 'Ditolak SP-1' || $laporan->status == 'Ditolak SP-2' || $laporan->status == 'Ditolak SP-3' ? 'bg-red-100 border border-red-500' : ($laporan->status == 'Lolos' ? 'bg-green-100 border border-green-500' : 'bg-yellow-100 border border-yellow-500'))}}">{{$laporan->status}}</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <a href="/admin/laporan/{{ $laporan->laporan_id }}" class="text-indigo-600 hover:text-indigo-900">Lihat Laporan</a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+            {{-- Statistik / Menu --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-6">
+                <div class="bg-[#09697E] text-white rounded-lg p-5 flex flex-col justify-between shadow hover:scale-[1.02] transition">
+                    <div>
+                        <h3 class="text-lg font-semibold">Tahun Ajaran</h3>
+                        <p class="text-3xl font-bold mt-2">Ganjil 2025/2026</p>
+                    </div>
+                </div>
+                <div class="bg-[#E8BE00] text-[#000000] rounded-lg p-5 flex flex-col justify-between shadow hover:scale-[1.02] transition">
+                    <div>
+                        <h3 class="text-lg font-semibold">Jumlah Mahasiswa</h3>
+                        <p class="text-3xl font-bold mt-2">{{ $jmlMahasiswwa }}</p>
+                    </div>
+                    <a href="#" class="text-sm text-[#09697E] mt-3 hover:underline">Lihat Detail</a>
+                </div>
+                <div class="bg-[#000000] text-white rounded-lg p-5 flex flex-col justify-between shadow hover:scale-[1.02] transition">
+                    <div>
+                        <h3 class="text-lg font-semibold">Jumlah Laporan Terajukan</h3>
+                        <p class="text-3xl font-bold mt-2">{{ $jmlLaporan }}</p>
+                    </div>
+                    <a href="#" class="text-sm text-[#E8BE00] mt-3 hover:underline">Lihat Detail</a>
+                </div>
+            </div>
+        </div>
 
-    {{ $dataLaporan->links() }}
+        @if(session('success'))
+            <div class="bg-fff text-black shadow-lg rounded-xl max-w-5xl mx-auto p-6 border-l-4 border-[#09697E] mt-2 sm:mt-8">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @include('components.tabel-periode-admin')
+    </main>
 @endsection

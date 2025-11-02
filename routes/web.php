@@ -13,6 +13,8 @@ use App\Http\Controllers\mahasiswa\auth\AuthMahasiswaController;
 use App\Http\Controllers\mahasiswa\dashboard\DashboardMahasiswaController;
 use App\Http\Controllers\mahasiswa\monev\PengisianMonevController;
 use App\Http\Controllers\admin\dashboard\DashboardAdminController;
+use App\Http\Controllers\admin\dashboard\DataMahasiswaController;
+use App\Http\Controllers\admin\dashboard\LaporanMonevController;
 use App\Http\Controllers\mahasiswa\laporan\DetailLaporanMonevController;
 use App\Http\Controllers\mahasiswa\profile\ProfilMahasiswaController;
 use App\Http\Controllers\mahasiswa\laporan\RiwayatLaporanController;
@@ -36,7 +38,7 @@ Route::prefix('mahasiswa')->group(function () {
         Route::get('/halaman-pengisian-monev', [PengisianMonevController::class, 'showHalaman'])->name('mahasiswa.laporan-monev');
         Route::post('/buat-laporan/{semesterId}/{semesterSekarang}', [PengisianMonevController::class, 'buatLaporanBaru'])->name('mahasiswa.buat-laporan');
         Route::get('/laporan/{laporanId}', [PengisianMonevController::class, 'showHalamanIsiMonev'])->name('mahasiswa.lihat-laporan');
-        
+
         // Riwayat Laporan
         Route::get('/riwayat-laporan/{laporanId}',[DetailLaporanMonevController::class, 'showHalamanDetailLaporan'])->name('mahasiswa.detail-laporan');
 
@@ -52,7 +54,7 @@ Route::prefix('mahasiswa')->group(function () {
         Route::post('/isi-monev/{laporanId}/next-semester-activities',[TargetAcademicActMonevController::class,'submitTargetKegAkademik'])->name('laporan.next-smt-activities.store');
         Route::post('/isi-monev/{laporanId}/next-semester-achievements',[TargetAchievementsMonevController::class,'submitTargetAchievements'])->name('laporan.next-smt-achievements.store');
         Route::post('/isi-monev/{laporanId}/next-semester-independent',[TargetIndeActMonevController::class,'submitTargetKegMandiri'])->name('laporan.next-smt-independent.store');
-        
+
         // Edit data
         Route::put('/laporan/academic-reports/{idData}', [NilaiIPSnIPKMonevController::class, 'updateNilaiIPKnIPS'])->name('laporan.academic-reports.update');
         Route::put('/laporan/academic-activities/{idData}', [AcademicActMonevController::class, 'updateKegAKademik'])->name('laporan.academic-activities.update');
@@ -99,7 +101,14 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware('admin')->group(function () {
         Route::get('/dashboard', [DashboardAdminController::class, 'showDashboard'])->name('admin.dashboard');
+        Route::post('/dashboard', [DashboardAdminController::class, 'addPeriode'])->name('admin.dashboard.addPeriode');
+        Route::delete('/dashboard/{id}', [DashboardAdminController::class, 'deletePeriode'])->name('admin.dashboard.deletePeriode');
+        Route::put('/dashboard/{id}', [DashboardAdminController::class, 'editPeriode'])->name('admin.dashboard.editPeriode');
         Route::get('/laporan/{laporanId}', [DashboardAdminController::class, 'showLaporan'])->name('admin.showLaporan');
+        Route::get('/laporan-monev', [LaporanMonevController::class, 'index'])->name('admin.laporan-monev');
+        Route::get('/data-mahasiswa', [DataMahasiswaController::class, 'index'])->name('admin.data-mahasiswa');
+        Route::get('/data-mahasiswa/edit/{id}', [DataMahasiswaController::class, 'edit'])->name('admin.data-mahasiswa.edit');
+        Route::put('/data-mahasiswa/edit/{id}', [DataMahasiswaController::class, 'update'])->name('admin.data-mahasiswa.update');
     });
 });
 

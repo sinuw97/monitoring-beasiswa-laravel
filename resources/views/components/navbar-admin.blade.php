@@ -4,10 +4,10 @@
 <header class="sticky top-0 z-50">
     <nav class="flex text-[11pt] bg-[#FEFEFE] px-7 py-2 justify-between items-center">
         <img src="/icon/icon-monitoring.svg" alt="e-monitoring" class="w-[120px]">
-        <ul class="flex items-center gap-10 text-[#09697E] font-bold">
-            <li><a href="{{ route('mahasiswa.dashboard') }}">Dashboard</a></li>
-            <li><a href="{{ route('mahasiswa.laporan-monev') }}">Laporan Monev</a></li>
-            <li><a href="{{ route('mahasiswa.riwayat-laporan') }}">Riwayat Laporan</a></li>
+        <ul class="hidden sm:flex items-center gap-10 text-[#09697E] font-bold">
+            <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ route('admin.data-mahasiswa') }}">Data Mahasiswa</a></li>
+            <li><a href="{{ route('admin.laporan-monev') }}">Laporan Monev</a></li>
         </ul>
         {{-- Dropdown disini --}}
         <div x-data="{ open: false }"
@@ -22,6 +22,10 @@
 
             <div x-show="open" @click.away="open = false" x-transition
                 class="absolute right-0 top-10 mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                <a href="{{ route('admin.data-mahasiswa') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Data Mahasiswa</a>
+                <a href="{{ route('admin.laporan-monev') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Laporan Monev</a>
+                <div class="h-[1px] w-full bg-gray-300"></div>
                 <a href="{{ route('mahasiswa.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     <div class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="user"
@@ -33,7 +37,7 @@
                         Profil Saya
                     </div>
                 </a>
-                <form method="POST" action="{{ url('mahasiswa/logout') }}">
+                <form method="POST" action="{{ url('admin/logout') }}">
                     @csrf
                     <button type="submit"
                         class="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-[#FF0303] hover:bg-gray-100">

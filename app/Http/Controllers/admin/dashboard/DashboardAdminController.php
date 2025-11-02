@@ -7,22 +7,24 @@ use App\Http\Controllers\Controller;
 use App\Models\monev\LaporanMonevMahasiswa;
 use App\Models\users\Admin;
 use App\Models\users\Mahasiswa;
+use App\Models\semester\Periode;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DashboardAdminController extends Controller
 {
     public function showDashboard() {
         $admin = Auth::guard('admin')->user();
-
         $dataAdmin = Admin::where('email', $admin->email)
             ->where('user_id', $admin->user_id)
             ->first();
 
         $dataAdmin->makeHidden(['password']);
+        $jmlMahasiswwa = Mahasiswa::count();
+        $jmlLaporan= LaporanMonevMahasiswa::join('periode', 'laporan_mahasiswa.semester_id', '=', 'periode.semester_id')->where('periode.status', '=', 'Aktif')->count();
+        $dataPeriode = Periode::orderBy('semester_id', 'desc')->paginate(10);
 
-        $dataLaporan = LaporanMonevMahasiswa::join('mahasiswa', 'laporan_mahasiswa.nim', '=', 'mahasiswa.nim')->paginate(20);
-
-        return view('admin.dashboard', compact(['dataAdmin'], ['dataLaporan']));
+        return view('admin.dashboard', compact(['dataAdmin'], ['jmlMahasiswwa'], ['dataPeriode'], ['jmlLaporan']));
     }
 
     public function showLaporan($laporanId){
@@ -184,5 +186,56 @@ class DashboardAdminController extends Controller
             'parsingNextAchievements',
             'parsingNextIndependentActivities',
         ));
+    }
+
+    public function addPeriode(){
+        $admin = Auth::guard('admin')->user();
+
+        $firstDataPeriode = Periode::orderBy('semester_id', 'desc')->first();
+        $secondDataPeriode = Periode::orderBy('semester_id', 'desc')->skip(1)->take(1)->first();
+
+        if($firstDataPeriode->tahun_akademik !== $secondDataPeriode->tahun_akademik){
+            Periode::create([
+                'semester_id' => substr($firstDataPeriode->semester_id, 0, -1).'2',
+                'tahun_akademik' => $firstDataPeriode->tahun_akademik,
+                'semester' => 'Genap',
+                'tanggal_mulai' => null,
+                'tanggal_selesai' => null,
+                'status' => 'Non-Aktif',
+            ]);
+        }else{
+            $tahun = (int) substr($firstDataPeriode->tahun_akademik, 0, -5) + 1;
+            Periode::create([
+                'semester_id' => 'SM'.$tahun.'01',
+                'tahun_akademik' => $tahun.'/'.$tahun+1,
+                'semester' => 'Ganjil',
+                'tanggal_mulai' => null,
+                'tanggal_selesai' => null,
+                'status' => 'Non-Aktif',
+            ]);
+        }
+
+        return redirect('/admin/dashboard')->with('success', 'Periode berhasil ditambahkan.');
+    }
+
+    public function deletePeriode($id){
+        Periode::where('semester_id', $id)->delete();
+
+        return redirect('/admin/dashboard')->with('success', 'Periode berhasil dihapus.');
+    }
+
+    public function editPeriode($id){
+        $data = Periode::where('semester_id', $id)->first();
+        $dataActive = Periode::where('status', '=', 'Aktif')->first();
+
+        $date = Carbon::now();
+
+        $dataActive->update(['tanggal_selesai' => $date]);
+
+        Periode::query()->update(['status' => 'Non-Aktif']);
+
+        $data->update(['status' => 'Aktif', 'tanggal_mulai' => $date]);
+
+        return redirect('/admin/dashboard')->with('success', 'Periode berhasil diubah.');
     }
 }
