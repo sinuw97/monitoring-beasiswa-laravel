@@ -58,11 +58,15 @@
         </div>
 
         {{-- Button --}}
-        <div class="flex items-end">
+        <div class="flex items-end gap-2">
             <button type="submit"
                 class="w-full bg-[#09697E] hover:bg-[#075263] text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                Terapkan
+                Filter
             </button>
+            <a href="{{ url('/admin/data-mahasiswa') }}"
+                class="w-full bg-gray-400 hover:bg-gray-500 text-center text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                Reset
+            </a>
         </div>
     </form>
 

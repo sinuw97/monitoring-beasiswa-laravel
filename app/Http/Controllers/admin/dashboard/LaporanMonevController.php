@@ -26,9 +26,8 @@ class LaporanMonevController extends Controller
     /**
      * Display a listing of the resource.
     */
-    public function index()
+    public function index(Request $request)
     {
-        //
         $admin = Auth::guard('admin')->user();
 
         $dataAdmin = Admin::where('email', $admin->email)
@@ -37,14 +36,62 @@ class LaporanMonevController extends Controller
 
         $dataAdmin->makeHidden(['password']);
 
+        // Ambil periode aktif
         $periode = Periode::where('status', '=', 'Aktif')->first();
         $tahun = substr($periode->tahun_akademik, 0, 4);
-        $semester = $periode->semester == 'Ganjil' ? '01' : '02';
+        $semesterKode = $periode->semester == 'Ganjil' ? '01' : '02';
+        $semesterId = 'SM' . $tahun . $semesterKode;
 
-        $dataLaporan = LaporanMonevMahasiswa::join('mahasiswa','laporan_mahasiswa.nim', '=', 'mahasiswa.nim')->where('semester_id', '=', 'SM'.$tahun.$semester)->paginate(50);
+        // Ambil filter dan search dari request
+        $angkatan = $request->angkatan;
+        $status = $request->status;
+        $periodeFilter = $request->periode;
+        $search = $request->search;
 
-        return view('admin.laporan.index', ['dataAdmin'=>$dataAdmin, 'dataLaporan' => $dataLaporan]);
+        // Query dasar
+        $query = LaporanMonevMahasiswa::join('mahasiswa', 'laporan_mahasiswa.nim', '=', 'mahasiswa.nim')
+            ->where('semester_id', '=', $periodeFilter ?? $semesterId);
+
+        // Filter angkatan
+        if (!empty($angkatan)) {
+            $query->whereRaw('LEFT(mahasiswa.nim, 2) = ?', [$angkatan]);
+        }
+
+        // Filter status
+        if (!empty($status)) {
+            $query->where('laporan_mahasiswa.status', '=', $status);
+        }
+
+        // Search by NIM or Nama
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('mahasiswa.nim', 'like', "%{$search}%")
+                ->orWhere('mahasiswa.name', 'like', "%{$search}%");
+            });
+        }
+
+        // Ambil data dengan pagination
+        $dataLaporan = $query->select('laporan_mahasiswa.*', 'mahasiswa.*')
+            ->paginate(50)
+            ->appends($request->query());
+
+        // Ambil semua periode untuk filter dropdown
+        $daftarPeriode = Periode::orderBy('tahun_akademik', 'desc')->get();
+
+        // Ambil daftar angkatan
+        $daftarAngkatan = Mahasiswa::selectRaw('LEFT(nim, 2) as angkatan')
+        ->distinct()
+        ->get();
+
+        return view('admin.laporan.index', [
+            'dataAdmin' => $dataAdmin,
+            'dataLaporan' => $dataLaporan,
+            'periode' => $periode,
+            'daftarPeriode' => $daftarPeriode,
+            'daftarAngkatan' => $daftarAngkatan,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
