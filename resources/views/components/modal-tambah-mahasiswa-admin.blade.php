@@ -9,24 +9,24 @@
         <form method="POST" action="{{ url('/admin/data-mahasiswa') }}" class="w-full">
             @csrf
             <div class="flex w-full flex-row gap-2">
-            <div class="w-full">
+            <div class="flex w-full flex-col gap-2">
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">NIM</label>
                 <input type="text" name="nim" required
-                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
+                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm" placeholder="Nomor Induk Mahasiswa">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
                 <input type="text" name="name" required
-                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
+                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm" placeholder="Nama Lengkap Mahasiswa">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <input type="email" name="email" required
-                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
+                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm" placeholder="Email Mahasiswa">
             </div>
 
             <div>
@@ -35,10 +35,10 @@
                         class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
                     <option value="">Pilih Program Studi</option>
                     @php
-                        $prodiList = ['Teknik Informatika', 'Sistem Informasi', 'Manajemen', 'Akuntansi'];
+                        $prodiList = ['S1 Informatika', 'S1 Sistem Informasi', 'D3 Teknik Komputer', 'D3 Manajemen Akuntansi'];
                     @endphp
                     @foreach($prodiList as $prodi)
-                        <option value="{{ strtolower(str_replace(' ', '_', $prodi)) }}">{{ $prodi }}</option>
+                        <option value="{{ $prodi }}">{{ $prodi }}</option>
                     @endforeach
                 </select>
             </div>
@@ -52,23 +52,18 @@
                         $classList = ['Pagi', 'Malam', 'Karyawan'];
                     @endphp
                     @foreach($classList as $class)
-                        <option value="{{ strtolower($class) }}">{{ $class }}</option>
+                        <option value="{{$class}}">{{ $class }}</option>
                     @endforeach
                 </select>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Angkatan</label>
-                <select name="angkatan" required
-                         class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
-                    <option value="">Pilih Angkatan</option>
-                    @foreach($angkatanList as $angkatan)
-                        <option value="{{ $angkatan }}">20{{ $angkatan }}</option>
-                    @endforeach
-                </select>
+                <input type="text" name="angkatan" required
+                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm" placeholder="Tahun masuk">
             </div>
             </div>
-            <div class="w-full">
+            <div class="flex w-full flex-col gap-2">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Beasiswa</label>
                 <select name="jenis_beasiswa" required
@@ -96,13 +91,13 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">No HP</label>
                 <input type="tel" name="no_hp" required
-                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
+                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm" placeholder="Nomor Handphone">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
                 <textarea name="alamat" required rows="2"
-                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm"></textarea>
+                       class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm" placeholder="Alamat Lengkap Mahasiswa"></textarea>
             </div>
 
             <div>

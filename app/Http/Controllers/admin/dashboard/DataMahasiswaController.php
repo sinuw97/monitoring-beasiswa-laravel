@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\users\Admin;
 use App\Models\users\DetailMahasiswa;
 use App\Models\users\Mahasiswa;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -83,43 +84,32 @@ class DataMahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'email' => 'required|email|unique:users,email',
-        //     'nim' => 'required|string|max:8|unique:mahasiswa.nim',
-        //     'angkatan' => 'required|string|max:4',
-        //     'prodi' => 'required|string|max:255',
-        //     'kelas' => 'required|string|max:50',
-        //     'jenis_beasiswa' => 'required|string|max:50',
-        //     'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
-        //     'no_hp' => 'required|string|max:15',
-        //     'alamat' => 'required|string|max:500',
-        //     'status' => 'required|string|max:50',
-        // ]);
+        try{
+            Mahasiswa::create([
+                'avatar' => 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name),
+                'name' => $request->name,
+                'email' => $request->email,
+                'nim' => $request->nim,
+                'angkatan' => '20'.$request->angkatan,
+                'password' => bcrypt($request->nim),
+            ]);
 
-        Mahasiswa::create([
-            'avatar' => 'https://ui-avatars.com/api/?name='.str_replace(' ', '+', $request->name),
-            'name' => $request->name,
-            'email' => $request->email,
-            'nim' => $request->nim,
-            'angkatan' => '20'.$request->angkatan,
-            'password' => bcrypt($request->nim),
-        ]);
+            DetailMahasiswa::create([
+                'nim' => $request->nim,
+                'prodi' => $request->prodi,
+                'kelas' => $request->kelas,
+                'no_hp' => $request->no_hp,
+                'jenis_beasiswa' => $request->jenis_beasiswa,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'angkatan' => '20'.$request->angkatan,
+                'status' => $request->status,
+                'alamat' => $request->alamat
+            ]);
 
-        DetailMahasiswa::create([
-            'nim' => $request->nim,
-            'prodi' => $request->prodi,
-            'kelas' => $request->kelas,
-            'no_hp' => $request->no_hp,
-            'jenis_beasiswa' => $request->jenis_beasiswa,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'angkatan' => '20'.$request->angkatan,
-            'status' => $request->status,
-            'alamat' => $request->alamat
-        ]);
-
-        return redirect('/admin/data-mahasiswa')->with('success', 'Data mahasiswa berhasil ditambahkan.');
+            return redirect('/admin/data-mahasiswa')->with('success', 'Data mahasiswa berhasil ditambahkan.');
+        }catch(Exception $e){
+            return redirect('/admin/data-mahasiswa')->with('error', 'Gagal menambahkan data mahasiswa.');
+        }
 
     }
 
@@ -204,8 +194,20 @@ class DataMahasiswaController extends Controller
     public function destroy(string $id)
     {
         //
-        $mahasiswa = Mahasiswa::findOrFail($id);
-        $detailMahasiswa = DetailMahasiswa::findOrFail($id);
+        // Cari Mahasiswa berdasarkan kolom 'nim', bukan primary key default
+        $mahasiswa = Mahasiswa::where('nim', $id)->firstOrFail();
+
+        // Cari DetailMahasiswa berdasarkan kolom 'nim'
+        // Asumsi di DetailMahasiswa, 'nim' adalah foreign key yang unik.
+        // Jika DetailMahasiswa juga menggunakan 'nim' sebagai primary key:
+        // $detailMahasiswa = DetailMahasiswa::findOrFail($nim);
+        // Jika DetailMahasiswa menggunakan primary key default 'id':
+        $detailMahasiswa = DetailMahasiswa::where('nim', $id)->firstOrFail();
+
+        // Atau yang lebih aman:
+        // $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+        // $detailMahasiswa = DetailMahasiswa::where('nim', $mahasiswa->nim)->firstOrFail();
+
 
         $mahasiswa->delete();
         $detailMahasiswa->delete();

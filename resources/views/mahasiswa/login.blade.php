@@ -45,11 +45,6 @@
                         class="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-teal-500 focus:outline-none">
                 </div>
 
-                 <!-- Tombol Login Admin -->
-                <div class="flex justify-between items-center">
-                    <a href="{{ url('admin/login') }}" class="text-sm text-gray-500 hover:text-[#176578]">Login Sebagai Admin</a>
-                </div>
-
                 <!-- Tombol Login -->
                 <button type="submit"
                     class="w-full bg-[#1D7D94] text-white py-2 rounded-md hover:bg-[#176578] transition">Login</button>

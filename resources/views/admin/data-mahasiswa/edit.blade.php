@@ -61,7 +61,7 @@
                 <div>
                     <label class="block text-gray-600">Status</label>
                     <select name="status" class="w-full border rounded-md px-3 py-2">
-                        @if ($dataMahasiswa->detailMahasiswa->status)
+                        @if ($dataMahasiswa?->detailMahasiswa->status)
                             <option value="" {{ $dataMahasiswa->detailMahasiswa->status != 'Aktif' && $dataMahasiswa->detailMahasiswa->status != 'Non-Aktif' ? 'selected' : ''}}>
                             Pilih Keaktifan
                         </option>
