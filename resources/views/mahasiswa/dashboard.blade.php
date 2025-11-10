@@ -86,8 +86,7 @@
                 <div class="mt-6">
                     <p class="text-sm font-semibold mb-2">Laporan terajukan</p>
                     <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-500 h-2.5 rounded-full"
-                            style="width: {{ min($persentaseLaporan, 100) }}%">
+                        <div class="bg-blue-500 h-2.5 rounded-full" style="width: {{ min($persentaseLaporan, 100) }}%">
                         </div>
                     </div>
                     <p class="text-xs mt-1">
@@ -102,9 +101,12 @@
             <div class="mb-5">
                 <h1 class="font-bold text-2xl">Dashboard Mahasiswa</h1>
                 <p>Selamat Datang, {{ $dataMahasiswa->name }}</p>
-                <button class="mt-2 bg-[#1D7D94] w-[150px] rounded-2xl text-[#F5F5F5] py-0.5 cursor-pointer">
-                    Buat Laporan
-                </button>
+                <a href="{{ route('mahasiswa.laporan-monev') }}">
+                    <button
+                        class="mt-2 bg-[#1D7D94] hover:bg-[#175e70] w-[150px] rounded-2xl text-[#F5F5F5] py-0.5 cursor-pointer">
+                        Buat Laporan
+                    </button>
+                </a>
             </div>
             {{-- Laporan yg disimpan --}}
             <div class="bg-white w-full h-[300px] shadow-md rounded-md p-2 mb-5">
@@ -122,7 +124,7 @@
                     </thead>
                     <tbody>
                         @forelse ($draftedLaporan as $drafted)
-                            <tr class="bg-[#f8f8f8]"">
+                            <tr class="odd:bg-[#f8f8f8] even:bg-[#f2f2f2] hover:bg-[#f1f1f1]"">
                                 <td class="px-4 py-2 text-center">{{ $loop->iteration }}</td>
                                 <td class="px-4 py-2 text-center">{{ $drafted->semester ?? '-' }}</td>
                                 <td class="px-4 py-2 text-center">
@@ -137,7 +139,8 @@
                                 </td>
                                 <td class="px-4 py-2 text-center">
                                     <a href="{{ route('mahasiswa.lihat-laporan', $drafted->laporan_id) }}"
-                                        class="underline">Lihat</a>
+                                        class="px-3 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
+                                        Lihat</a>
                                 </td>
                             </tr>
                         @empty
@@ -164,7 +167,7 @@
                     </thead>
                     <tbody>
                         @forelse ($pendingLaporan as $pending)
-                            <tr class="bg-[#f8f8f8]">
+                            <tr class="odd:bg-[#f8f8f8] even:bg-[#f2f2f2] hover:bg-[#f1f1f1]">
                                 <td class="px-4 py-2 text-center">{{ $loop->iteration }}</td>
                                 <td class="px-4 py-2 text-center">{{ $pending->semester ?? '-' }}</td>
                                 <td class="px-4 py-2 text-center">
@@ -179,7 +182,9 @@
                                 </td>
                                 <td class="px-4 py-2 text-center">
                                     <a href="{{ route('mahasiswa.detail-laporan', $pending->laporan_id) }}"
-                                        class="underline">Lihat</a>
+                                        class="px-3 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
+                                        Lihat
+                                    </a>
                                 </td>
                             </tr>
                         @empty

@@ -58,7 +58,7 @@
                                 </td>
                                 <td class="px-4 py-2 text-center">
                                     <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
-                                        class="px-3 py-1 bg-[#2179ca] text-white rounded-md hover:bg-[#1c6bb4] transition-all">
+                                        class="px-3 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
                                         Lihat
                                     </a>
                                 </td>

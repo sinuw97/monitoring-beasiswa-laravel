@@ -30,7 +30,7 @@
     </thead>
     <tbody>
         @forelse(($rows ?? []) as $row)
-            <tr class="bg-[#f8f8f8]">
+            <tr class="odd:bg-[#f8f8f8] even:bg-[#f2f2f2] hover:bg-[#f1f1f1]">
                 <td class="px-4 py-2 text-center">{{ $loop->iteration }}</td>
                 @foreach ($columns as $col)
                     <td class="px-4 py-2 text-center">
