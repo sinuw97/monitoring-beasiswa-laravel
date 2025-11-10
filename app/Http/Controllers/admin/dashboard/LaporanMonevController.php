@@ -143,6 +143,16 @@ class LaporanMonevController extends Controller
 
         $dataMahasiswa = Mahasiswa::where('nim', '=', $laporan->nim)->first();
 
+        $totalPoints = 0;
+
+        // Gunakan metode 'sum' pada koleksi Eloquent untuk menghitung total points
+        // Jika kolom 'points' belum ada di database, ini akan mengembalikan 0.
+        $totalPoints += $academicActivities->sum('points');
+        $totalPoints += $organizationActivities->sum('points');
+        $totalPoints += $committeeActivities->sum('points');
+        $totalPoints += $studentAchievements->sum('points');
+        $totalPoints += $independentActivities->sum('points');
+
         // return dd($parsingAcademicReports);
 
         return view('admin.laporan.show', compact(
@@ -160,6 +170,7 @@ class LaporanMonevController extends Controller
             'targetAcademicActivities',
             'targetAchievements',
             'targetIdependentActivities',
+            'totalPoints',
         ));
     }
 

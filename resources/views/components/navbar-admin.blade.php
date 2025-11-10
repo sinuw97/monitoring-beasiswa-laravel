@@ -22,10 +22,10 @@
 
             <div x-show="open" @click.away="open = false" x-transition
                 class="absolute right-0 top-10 mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
-                <a href="{{ route('admin.data-mahasiswa') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Data Mahasiswa</a>
-                <a href="{{ route('admin.laporan') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Laporan Monev</a>
-                <div class="h-[1px] w-full bg-gray-300"></div>
+                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 md:hidden md:invisible">Dashboard</a>
+                <a href="{{ route('admin.data-mahasiswa') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 md:hidden md:invisible">Data Mahasiswa</a>
+                <a href="{{ route('admin.laporan') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 md:hidden md:invisible">Laporan Monev</a>
+                <div class="h-[1px] w-full bg-gray-300 hidden invisible"></div>
                 <a href="{{ route('mahasiswa.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     <div class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="user"

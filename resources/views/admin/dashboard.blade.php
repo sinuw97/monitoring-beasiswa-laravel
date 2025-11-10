@@ -4,6 +4,16 @@
     {{-- Konten Utama --}}
     <main class="min-h-screen flex-1 p-2 sm:p-6 bg-gray-50">
         <div class="max-w-5xl mx-auto">
+            @if (session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative my-4" role="alert">
+                    <strong class="font-bold">Berhasil!</strong>
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                    {{-- Tombol untuk menutup alert (opsional) --}}
+                    <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" onclick="this.parentElement.style.display='none';">
+                        <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.854l-2.651 2.995a1.2 1.2 0 1 1-1.697-1.697l2.651-2.995-2.651-2.995a1.2 1.2 0 1 1 1.697-1.697l2.651 2.995 2.651-2.995a1.2 1.2 0 1 1 1.697 1.697l-2.651 2.995 2.651 2.995a1.2 1.2 0 0 1 0 1.697z"/></svg>
+                    </span>
+                </div>
+            @endif
             {{-- Card Info Admin --}}
             <div class="bg-white shadow-lg rounded-xl p-6 border-l-4 border-[#E8BE00] mb-2 sm:mb-8">
                 <h2 class="text-xl font-semibold text-[#09697E] mb-4">Informasi Akun</h2>
@@ -51,12 +61,6 @@
                 </div>
             </div>
         </div>
-
-        @if(session('success'))
-            <div class="bg-fff text-black shadow-lg rounded-xl max-w-5xl mx-auto p-6 border-l-4 border-[#09697E] mt-2 sm:mt-8">
-                {{ session('success') }}
-            </div>
-        @endif
 
         @include('components.tabel-periode-admin')
     </main>

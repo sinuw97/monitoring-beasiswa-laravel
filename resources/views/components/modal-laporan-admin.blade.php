@@ -9,7 +9,7 @@
         {{-- Header Modal --}}
         <div class="flex items-center justify-between p-4 border-b">
             <h3 class="text-xl font-semibold text-gray-900">
-                Edit Laporan Semester {{ $report['semester'] }}
+                Edit Laporan {{ $type }}
             </h3>
             {{-- Tombol Tutup: Kembali ke URL tanpa fragment (#) --}}
             <a href="#" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">

@@ -194,24 +194,16 @@ class DataMahasiswaController extends Controller
     public function destroy(string $id)
     {
         //
-        // Cari Mahasiswa berdasarkan kolom 'nim', bukan primary key default
-        $mahasiswa = Mahasiswa::where('nim', $id)->firstOrFail();
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        $detailMahasiswa = DetailMahasiswa::where('nim', $mahasiswa->nim)->first();
 
-        // Cari DetailMahasiswa berdasarkan kolom 'nim'
-        // Asumsi di DetailMahasiswa, 'nim' adalah foreign key yang unik.
-        // Jika DetailMahasiswa juga menggunakan 'nim' sebagai primary key:
-        // $detailMahasiswa = DetailMahasiswa::findOrFail($nim);
-        // Jika DetailMahasiswa menggunakan primary key default 'id':
-        $detailMahasiswa = DetailMahasiswa::where('nim', $id)->firstOrFail();
-
-        // Atau yang lebih aman:
-        // $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
-        // $detailMahasiswa = DetailMahasiswa::where('nim', $mahasiswa->nim)->firstOrFail();
-
+        if ($detailMahasiswa) {
+            $detailMahasiswa->delete();
+        }
 
         $mahasiswa->delete();
-        $detailMahasiswa->delete();
 
-        return redirect('/admin/data-mahasiswa')->with('success', 'Data mahasiswa berhasil dihapus.');
+        return redirect()->route('admin.data-mahasiswa')
+            ->with('success', 'Data mahasiswa berhasil dihapus.');
     }
 }
