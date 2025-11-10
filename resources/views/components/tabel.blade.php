@@ -70,14 +70,14 @@
                         <div class="flex justify-center items-center gap-3">
                             <button type="button" class="flex justify-center items-center gap-2 cursor-pointer px-3 py-0.5 text-white bg-[#2179ca] hover:bg-[#1c6bb4] rounded-sm"
                                 if @click="$dispatch('{{ $editEvent }}', {{ json_encode($row) }})">
-                                <img src="/icon/edit.png" alt="edit-icon" class="w-[15px] h-[15px]"> Edit
+                                <img src="/icon/edit.svg" alt="edit-icon" class="w-[15px] h-[15px]"> Edit
                             </button>
 
                             <button type="button" class="flex justify-center items-center gap-2 cursor-pointer px-3 py-0.5 bg-red-500 hover:bg-red-600 text-white rounded-sm"
                                 @click="$dispatch('{{ 'delete-row' }}', {
                                 id: '{{ data_get($row, $idKey) }}',
                                 route: '{{ route($deleteRoute, data_get($row, $idKey)) }}'})">
-                                <img src="/icon/delete.png" alt="edit-icon" class="w-[15px] h-[15px]"> Hapus
+                                <img src="/icon/delete.svg" alt="edit-icon" class="w-[15px] h-[15px]"> Hapus
                             </button>
                         </div>
                     </td>

@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> --}} @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         [x-cloak] {
             display: none !important;
@@ -17,10 +16,11 @@
 <body class="bg-[#F8F6F6]">
     <x-navbar-mhs mhsAvatar='{{ $dataMahasiswa->avatar }}' />
 
-    <section class="flex justify-center w-full h-auto">
-        <div class="bg-[#fdfdfd] w-[1100px] h-auto p-6">
-            <h2 class="text-xl font-bold ml-3 mb-2">Laporan Monev Yang Tersimpan</h2>
-            <div class="h-auto bg-blue-200 ml-3 mr-3 px-3 py-3 rounded mb-3">
+    <section class="flex justify-center w-full h-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="bg-[#fdfdfd] w-full max-w-[1100px] lg:max-w-[1100px] xl:max-w-[1200px] h-auto p-4 sm:p-6 shadow-lg">
+            <h2 class="text-xl text-[#013F4E] font-bold mb-2">Laporan Monev Yang Tersimpan</h2>
+            <div class="h-auto bg-[#abdaff] border-l-4 border-[#1385DC] text-[#013F4E] px-3 py-3 rounded mb-3">
                 <p>Nama : {{ $dataMahasiswa->name }}</p>
                 <p>NIM : {{ $dataMahasiswa->nim }}</p>
                 <p>Periode : {{ $laporan->periodeSemester?->tahun_akademik }} {{ $laporan->periodeSemester?->semester }}
@@ -30,17 +30,17 @@
             </div>
 
             @if (session('success'))
-                <div class="bg-green-100 mx-3 w-auto px-3 py-3 rounded mb-3">
+                <div class="bg-green-100 border-l-4 border-green-600 text-[#013F4E] w-full px-3 py-3 rounded mb-3">
                     {{ session('success') }}
                 </div>
             @elseif (session('error'))
-                <div class="bg-red-200 w-auto mx-3 px-3 py-3 rounded mb-3">
+                <div class="bg-red-200 border-l-4 border-red-600 text-red-700 w-full px-3 py-3 rounded mb-3">
                     {{ session('fails') }}
                 </div>
             @endif
 
             @if ($errors->any())
-                <div class="bg-red-100 text-red-700 p-2 rounded mb-3">
+                <div class="bg-red-200 border-l-4 border-red-600 text-red-700 p-2 rounded mb-3">
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>- {{ $error }}</li>
@@ -49,15 +49,15 @@
                 </div>
             @endif
 
-            <div class="">
+            <div>
                 {{-- Reports --}}
-                <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="mb-3 mt-5 pr-3 cursor-default"
+                <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="mb-3 mt-5 cursor-default"
                     x-on:edit-reports.window="editDataReports = $event.detail; openEditReports = true">
-                    <h2 class="text-xl font-bold text-[#013F4E] ml-3">A. KEGIATAN AKADEMIK</h2>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5 ml-3">Nilai IPS dan IPK Semester Ini
+                    <h2 class="text-xl font-bold text-[#013F4E]">A. KEGIATAN AKADEMIK</h2>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Nilai IPS dan IPK Semester Ini
                     </p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         {{-- Panggil komponen tabel --}}
                         <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Status']" :columns="['semester', 'ips', 'ipk', 'bukti', 'status']" :rows="$parsingAcademicReports" idKey="id"
                             editEvent="edit-reports" deleteRoute="laporan.academic-reports.delete" :status="$laporan->status"
@@ -68,7 +68,7 @@
                         @if (!$parsingAcademicReports || count($parsingAcademicReports) === 0)
                             {{-- Btn tambah data --}}
                             <button @click="openReports = true"
-                                class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                                class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer shadow-sm">
                                 Tambah
                             </button>
                         @endif
@@ -128,32 +128,34 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
-                                    <label>Semester</label>
+                                    <label>Semester
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="semester" x-model="editDataReports.semester"
                                         class="w-full border rounded px-2 py-1">
                                         <option value="{{ $laporan->semester }}">{{ $laporan->semester }}</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label>IPS</label>
+                                    <label>IPS <span class="text-red-500">*</span></label>
                                     <input type="number" name="ips" x-model="editDataReports.ips"
                                         class="w-full border rounded px-2 py-1" step="0.01" min="0"
                                         max="4">
                                 </div>
                                 <div class="mb-3">
-                                    <label>IPK</label>
+                                    <label>IPK<span class="text-red-500">*</span></label>
                                     <input type="number" name="ipk" x-model="editDataReports.ipk"
                                         class="w-full border rounded px-2 py-1" step="0.01" min="0"
                                         max="4">
                                 </div>
                                 <div class="mb-3">
-                                    <label>Bukti</label>
+                                    <label>Bukti <span class="text-red-500">*</span></label>
                                     <input type="file" name="bukti" class="w-full border rounded px-2 py-1">
                                     <div class="text-sm mt-1" x-show="editDataReports.bukti">
                                     </div>
                                 </div>
                                 {{-- btn --}}
-                                <div>
+                                <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditReports = false"
                                         class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">
                                         Batal
@@ -171,11 +173,11 @@
                 </div>
 
                 {{-- Academic Activities --}}
-                <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="mb-2 pr-3 cursor-default"
+                <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="mb-2 cursor-default"
                     x-on:edit-academic.window="editDataAcademy = $event.detail; openEditAcademic = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5 ml-3">Kegiatan Akademik</p>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Akademik</p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         <x-tabel :headers="[
                             'No',
                             'Nama Kegiatan',
@@ -202,7 +204,7 @@
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openAcademic = true"
-                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer shadow-sm">
                             Tambah
                         </button>
 
@@ -246,17 +248,23 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -323,18 +331,24 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat" x-model="editDataAcademy['place']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai"
                                         x-model="editDataAcademy['start-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai"
                                         x-model="editDataAcademy['end-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
@@ -359,12 +373,12 @@
                 </div>
 
                 {{-- Organization Activities --}}
-                <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="mb-2 pr-3 cursor-default"
+                <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="mb-2 cursor-default"
                     x-on:edit-org.window="editDataOrg = $event.detail; openEditOrg = true">
-                    <h2 class="text-xl font-bold text-[#013F4E] ml-3 mt-4">B. KEGIATAN NON-AKADEMIK</h2>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5 ml-3">Kegiatan Organisasi Mahasiswa</p>
+                    <h2 class="text-xl font-bold text-[#013F4E] mt-4">B. KEGIATAN NON-AKADEMIK</h2>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Organisasi Mahasiswa</p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         <x-tabel :headers="[
                             'No',
                             'Nama UKM',
@@ -394,7 +408,7 @@
                     @if ($laporan->status === 'Draft')
                         {{-- Btn --}}
                         <button @click="openOrganization = true"
-                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer shadow-sm">
                             Tambah
                         </button>
 
@@ -425,8 +439,8 @@
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tingkat <span
-                                            class="text-red-500">*</span></label>
+                                    <label class="block text-sm font-medium">Tingkat
+                                        <span class="text-red-500">*</span></label>
                                     <select name="tingkat"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Tingkat</option>
@@ -447,17 +461,23 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -531,17 +551,23 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat" x-model="editDataOrg['place']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai" x-model="editDataOrg['start-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai" x-model="editDataOrg['end-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -564,12 +590,12 @@
                 </div>
 
                 {{-- Committee Activities --}}
-                <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="mb-2 pr-3 cursor-default"
+                <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="mb-2 cursor-default"
                     x-on:edit-committee.window="editDataCommittee = $event.detail; openEditCommittee = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Kegiatan Kepanitiaan Atau Penugasan
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Kepanitiaan Atau Penugasan
                     </p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         <x-tabel :headers="[
                             'No',
                             'Nama Kegiatan',
@@ -598,7 +624,7 @@
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openCommittee = true"
-                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer shadow-sm">
                             Tambah
                         </button>
 
@@ -608,12 +634,16 @@
                                 action="{{ route('laporan.committee-activities.store', $laporan->laporan_id) }}">
                                 @csrf
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Kegiatan</label>
+                                    <label class="block text-sm font-medium">Nama Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-kegiatan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tipe Kegiatan</label>
+                                    <label class="block text-sm font-medium">Tipe Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="tipe-kegiatan" id="tipe-kegiatan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="">Pilih Satu</option>
@@ -623,7 +653,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tingkat</label>
+                                    <label class="block text-sm font-medium">Tingkat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="tingkat" id="tingkat"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Tingkatan</option>
@@ -640,7 +672,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Keikutsertaan</label>
+                                    <label class="block text-sm font-medium">Keikutsertaan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="keikutsertaan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Posisi</option>
@@ -651,24 +685,31 @@
                                         <option value="Anggota">Anggota</option>
                                     </select>
                                 </div>
-
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Bukti</label>
+                                    <label class="block text-sm font-medium">Bukti
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -690,48 +731,64 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Kegiatan</label>
+                                    <label class="block text-sm font-medium">Nama Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-kegiatan"
                                         x-model="editDataCommittee['activity-name']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tipe Kegiatan</label>
+                                    <label class="block text-sm font-medium">Tipe Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tipe-kegiatan" id="tipe-kegiatan"
                                         x-model="editDataCommittee['activity-type']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tingkat</label>
+                                    <label class="block text-sm font-medium">Tingkat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tingkat" id="tingkat"
                                         x-model="editDataCommittee['level']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Keikutsertaan</label>
+                                    <label class="block text-sm font-medium">Keikutsertaan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="keikutsertaan"
                                         x-model="editDataCommittee['participation']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat" x-model="editDataCommittee['place']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai"
                                         x-model="editDataCommittee['start-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai"
                                         x-model="editDataCommittee['end-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Bukti</label>
+                                    <label class="block text-sm font-medium">Bukti
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -745,7 +802,7 @@
                             </form>
                         </x-modal>
 
-                        {{-- JS --}}
+                        {{-- JS (dipertahankan) --}}
                         <script>
                             document.addEventListener("DOMContentLoaded", function() {
                                 const tipeKegiatan = document.getElementById("tipe-kegiatan");
@@ -777,11 +834,11 @@
                 </div>
 
                 {{-- Achievements --}}
-                <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="mb-2 pr-3 cursor-default"
+                <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="mb-2 cursor-default"
                     x-on:edit-achievement.window="editDataAchievement = $event.detail; openEditAchievement = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Prestasi Mahasiswa</p>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Prestasi Mahasiswa</p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         <x-tabel :headers="[
                             'No',
                             'Nama Prestasi',
@@ -810,7 +867,7 @@
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openAchievement = true"
-                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer shadow-sm">
                             Tambah
                         </button>
 
@@ -820,12 +877,16 @@
                                 action="{{ route('laporan.achievements.store', $laporan->laporan_id) }}">
                                 @csrf
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Prestasi</label>
+                                    <label class="block text-sm font-medium">Nama Prestasi
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tipe Prestasi</label>
+                                    <label class="block text-sm font-medium">Tipe Prestasi
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="tipe-prestasi" id="tipe-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Tipe</option>
@@ -861,7 +922,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tingkat</label>
+                                    <label class="block text-sm font-medium">Tingkat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="tingkat" id="tingkat-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         {{-- Kompetisi --}}
@@ -877,7 +940,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Raihan</label>
+                                    <label class="block text-sm font-medium">Raihan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="raihan" id="raihan-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="Tidak Ada" class="italic">Pilih Juara</option>
@@ -895,22 +960,30 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Bukti</label>
+                                    <label class="block text-sm font-medium">Bukti
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -932,13 +1005,17 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Prestasi</label>
+                                    <label class="block text-sm font-medium">Nama Prestasi
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-prestasi"
                                         x-model="editDataAchievement['achievements-name']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tipe Prestasi</label>
+                                    <label class="block text-sm font-medium">Tipe Prestasi
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="tipe-prestasi" id="tipe-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         x-model="editDataAchievement['tipe-prestasi']">
@@ -975,7 +1052,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tingkat</label>
+                                    <label class="block text-sm font-medium">Tingkat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="tingkat" id="tingkat-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         x-model="editDataAchievement['level']">
@@ -992,7 +1071,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Raihan</label>
+                                    <label class="block text-sm font-medium">Raihan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="raihan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         x-model="editDataAchievement['award']">
@@ -1011,24 +1092,32 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat" x-model="editDataAchievement['place']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai"
                                         x-model="editDataAchievement['start-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai"
                                         x-model="editDataAchievement['end-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Bukti</label>
+                                    <label class="block text-sm font-medium">Bukti
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -1143,13 +1232,13 @@
                 </div>
 
                 {{-- Independent Activities --}}
-                <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="mb-2 pr-3 cursor-default"
+                <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="mb-2 cursor-default"
                     x-on:edit-independent="editDataIndependent = $event.detail; openEditIndependent = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Kegiatan Mandiri Mahasiswa Selama
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Mandiri Mahasiswa Selama
                         Satu
                         Semester</p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         <x-tabel :headers="[
                             'No',
                             'Nama Kegiatan',
@@ -1176,7 +1265,7 @@
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openIndependent = true"
-                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer shadow-sm">
                             Tambah
                         </button>
                         {{-- Modal Tambah --}}
@@ -1185,12 +1274,16 @@
                                 action="{{ route('laporan.independent-activities.store', $laporan->laporan_id) }}">
                                 @csrf
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Kegiatan</label>
+                                    <label class="block text-sm font-medium">Nama Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-kegiatan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tipe Kegiatan</label>
+                                    <label class="block text-sm font-medium">Tipe Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select type="text" name="tipe-kegiatan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Tipe</option>
@@ -1206,7 +1299,9 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Keikutsertaan</label>
+                                    <label class="block text-sm font-medium">Keikutsertaan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <select type="text" name="keikutsertaan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Keikutsertaan</option>
@@ -1214,22 +1309,30 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Bukti</label>
+                                    <label class="block text-sm font-medium">Bukti
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -1250,42 +1353,56 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Kegiatan</label>
+                                    <label class="block text-sm font-medium">Nama Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-kegiatan"
                                         x-model="editDataIndependent['activity-name']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tipe Kegiatan</label>
+                                    <label class="block text-sm font-medium">Tipe Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tipe-kegiatan"
                                         x-model="editDataIndependent['activity-type']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Keikutsertaan</label>
+                                    <label class="block text-sm font-medium">Keikutsertaan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="keikutsertaan"
                                         x-model="editDataIndependent['participation']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tempat</label>
+                                    <label class="block text-sm font-medium">Tempat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tempat" x-model="editDataIndependent['place']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Mulai</label>
+                                    <label class="block text-sm font-medium">Tanggal Mulai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-mulai"
                                         x-model="editDataIndependent['start-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tanggal Selesai</label>
+                                    <label class="block text-sm font-medium">Tanggal Selesai
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="date" name="tanggal-selesai"
                                         x-model="editDataIndependent['end-date']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Bukti</label>
+                                    <label class="block text-sm font-medium">Bukti
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -1302,44 +1419,45 @@
                 </div>
 
                 {{-- Evaluations --}}
-                <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="pl-3 mb-2 mt-4 cursor-default">
+                <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="mb-2 mt-4 cursor-default">
                     <h2 class="text-xl font-bold text-[#013F4E]">C. EVALUASI</h2>
                     {{-- Data yg ditampilkan --}}
                     <div>
-                        <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Pendukung</p>
+                        <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Pendukung
+                            <span class="text-red-500">*</span>
+                        </p>
                         <textarea name="faktor-pendukung" id="faktor-pendukung"
-                            class="resize-none px-2 py-0.5 w-[450px] h-[200px] cursor-default shadow-md border border-[#c0c0c0] focus:outline-none focus:ring-0"
+                            class="resize-none px-2 py-0.5 w-full sm:w-full md:w-[450px] h-[200px] cursor-default shadow-md border border-[#c0c0c0] focus:outline-none focus:ring-0"
                             readonly>{{ $parsingEvaluations->support_factors ?? '-' }}</textarea>
                     </div>
                     <div>
-                        <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Penghambat</p>
+                        <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Penghambat
+                            <span class="text-red-500">*</span>
+                        </p>
                         <textarea name="faktor-pendukung" id=""
-                            class="resize-none px-2 py-0.5 w-[450px] h-[200px] cursor-default shadow-md border border-[#c0c0c0] focus:outline-none focus:ring-0"
+                            class="resize-none px-2 py-0.5 w-full sm:w-full md:w-[450px] h-[200px] cursor-default shadow-md border border-[#c0c0c0] focus:outline-none focus:ring-0"
                             readonly>{{ $parsingEvaluations->barrier_factors ?? '-' }}</textarea>
                     </div>
 
-                    @if ($parsingEvaluations && $laporan->sttaus === 'Draft')
-                        <div class="flex gap-4">
+                    @if ($parsingEvaluations && $laporan->status === 'Draft')
+                        <div class="flex gap-4 mt-2">
                             <button x-data='{ eval: @json($parsingEvaluations) }'
                                 @click="
                                 openEditEvaluation = true;
                                 editDataEvaluation = eval;
                             "
-                                class="border border-black mt-2 px-2 rounded-lg">
+                                class="px-3 py-0.5 text-white bg-[#2179ca] hover:bg-[#1c6bb4] rounded-sm cursor-poin">
                                 Edit
                             </button>
-                            <button
-                                @click="
-                                openEditEvaluation = true;
-                                editDataEvaluation = eval;
-                            "
-                                class="border border-black mt-2 px-2 rounded-lg">
+                            <button x-data='{ eval: @json($parsingEvaluations) }'
+                                @click="$dispatch('delete-row', { id: eval.id, route: '{{ route('laporan.evaluations.hapus', ':id') }}'.replace(':id', eval.id) })"
+                                class="px-3 py-0.5 bg-red-500 hover:bg-red-600 text-white rounded-sm cursor-pointer">
                                 Hapus
                             </button>
                         </div>
-                    @elseif (!$parsingEvaluations || $laporan->sttaus === 'Draft')
+                    @elseif (!$parsingEvaluations || $laporan->status === 'Draft')
                         <button @click="openEvaluation = true"
-                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer shadow-sm">
                             Tambah
                         </button>
                     @endif
@@ -1352,7 +1470,7 @@
                                 <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Pendukung</p>
                                 <textarea name="faktor-pendukung" id="faktor-pendukung"
                                     class="resize-none px-2 py-0.5 w-full h-[200px] cursor-pointer shadow-md border border-[#c0c0c0] focus:outline-none focus:ring-0"
-                                    placeholder="Tuliskan faktor pendukungmu disini...">x</textarea>
+                                    placeholder="Tuliskan faktor pendukungmu disini..."></textarea>
                             </div>
                             <div class="mb-3">
                                 <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Penghambat</p>
@@ -1400,15 +1518,15 @@
                 </div>
 
                 {{-- Target Next SMT --}}
-                <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }" class="mb-2 mt-2 pr-3 cursor-default"
+                <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }" class="mb-2 mt-2 cursor-default"
                     x-on:edit-target-rep.window="editDataTargetRep = $event.detail; openEditTargetRep = true">
-                    <h2 class="text-xl font-bold text-[#013F4E] mt-4 ml-3">D. TARGET SEMESTER DEPAN</h2>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Rencana Nilai IPS dan IPK
+                    <h2 class="text-xl font-bold text-[#013F4E] mt-4">D. TARGET SEMESTER DEPAN</h2>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Nilai IPS dan IPK
                         Semester
                         Depan
                     </p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         <x-tabel :headers="['No', 'Semester', 'Target IPS', 'Target IPK', 'Status']" :columns="['semester', 'target-ips', 'target-ipk', 'status']" :rows="$parsingNextReports" idKey="id"
                             editEvent="edit-target-rep" deleteRoute="laporan.next-semester-reports.hapus"
                             :status="$laporan->status" style="draft" />
@@ -1416,7 +1534,7 @@
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetRep = true"
-                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                         {{-- Modal Tambah --}}
@@ -1487,7 +1605,8 @@
                                     <label class="block text-sm font-medium">Target IPS <span
                                             class="text-red-500">*</span></label>
                                     <span class="text-[2pt] text-red-500 italic">Maks 4.00</span>
-                                    <input type="number" name="target-ips" x-model="editDataTargetRep['target-ips']"
+                                    <input type="number" name="target-ips"
+                                        x-model="editDataTargetRep['target-ips']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         step="0.01" min="0" max="4">
                                 </div>
@@ -1516,14 +1635,14 @@
                 </div>
 
                 {{-- Target Keg Akademik --}}
-                <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }" class="mb-2 pr-3 cursor-default"
+                <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }" class="mb-2 cursor-default"
                     x-on:edit-target-academic.window="editDataTargetAcademic = $event.detail; openEditTargetAcademic = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Rencana Kegiatan Akademik
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Kegiatan Akademik
                         Semester
                         Depan
                     </p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Status']" :columns="['activity-name', 'strategy', 'status']" :rows="$parsingNextAcademicActivities" idKey="id"
                             editEvent="edit-target-academic" deleteRoute="laporan.next-smt-activities.hapus"
                             :status="$laporan->status" style="draft" />
@@ -1531,7 +1650,7 @@
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetAcademic = true"
-                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                         {{-- Modal tambah --}}
@@ -1595,11 +1714,11 @@
                 </div>
 
                 {{-- Target Achievements --}}
-                <div x-cloak x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }" class="mb-2 pr-3 cursor-default"
+                <div x-cloak x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }" class="mb-2 cursor-default"
                     x-on:edit-target-achievement="editDatatargetAchievement = $event.detail; openEditTargetAchievement = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Rencana Prestasi</p>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Prestasi</p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         <x-tabel :headers="['No', 'Nama Prestasi', 'Tingkat', 'Raihan', 'Status']" :columns="['achievements-name', 'level', 'award', 'status']" :rows="$parsingNextAchievements" idKey="id"
                             editEvent="edit-target-achievement" deleteRoute="laporan.next-smt-achievements.hapus"
                             :status="$laporan->status" style="draft" />
@@ -1607,7 +1726,7 @@
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetAchievement = true"
-                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                         {{-- Modal Tambah --}}
@@ -1616,17 +1735,23 @@
                                 action="{{ route('laporan.next-smt-achievements.store', $laporan->laporan_id) }}">
                                 @csrf
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Prestasi</label>
+                                    <label class="block text-sm font-medium">Nama Prestasi
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-prestasi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tingkat</label>
+                                    <label class="block text-sm font-medium">Tingkat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tingkat"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Raihan</label>
+                                    <label class="block text-sm font-medium">Raihan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="raihan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -1647,19 +1772,25 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Prestasi</label>
+                                    <label class="block text-sm font-medium">Nama Prestasi
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-prestasi"
                                         x-model="editDatatargetAchievement['achievements-name']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Tingkat</label>
+                                    <label class="block text-sm font-medium">Tingkat
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="tingkat"
                                         x-model="editDatatargetAchievement['level']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Raihan</label>
+                                    <label class="block text-sm font-medium">Raihan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="raihan"
                                         x-model="editDatatargetAchievement['award']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
@@ -1677,11 +1808,11 @@
                 </div>
 
                 {{-- Target Independent --}}
-                <div x-cloak x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }" class="mb-2 pr-3 cursor-default"
+                <div x-cloak x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }" class="mb-2 cursor-default"
                     x-on:edit-target-independent="editDataTargetIndependent = $event.detail; openEditTargetIndependent = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold ml-3 mb-0.5">Rencana Kegiatan Mandiri</p>
+                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Kegiatan Mandiri</p>
 
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto w-full">
                         <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Keikutsertaan', 'Status']" :columns="['activity-name', 'strategy', 'participation', 'status']" :rows="$parsingNextIndependentActivities" idKey="id"
                             editEvent="edit-target-independent" deleteRoute="laporan.next-smt-independent.hapus"
                             :status="$laporan->status" style="draft" />
@@ -1689,7 +1820,7 @@
 
                     @if ($laporan->status === 'Draft')
                         <button @click="openTargetIndependent = true"
-                            class="bg-[#dfdfdf] ml-3 mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
+                            class="bg-[#dfdfdf] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#eeeeee] transition cursor-pointer">
                             Tambah
                         </button>
                         {{-- Modal tambah --}}
@@ -1698,17 +1829,23 @@
                                 action="{{ route('laporan.next-smt-independent.store', $laporan->laporan_id) }}">
                                 @csrf
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Kegiatan</label>
+                                    <label class="block text-sm font-medium">Nama Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-kegiatan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Rencana/Strategi</label>
+                                    <label class="block text-sm font-medium">Rencana/Strategi
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="rencana-strategi"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Keikutsertaan</label>
+                                    <label class="block text-sm font-medium">Keikutsertaan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="keikutsertaan"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
@@ -1729,19 +1866,25 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Nama Kegiatan</label>
+                                    <label class="block text-sm font-medium">Nama Kegiatan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="nama-kegiatan"
                                         x-model="editDataTargetIndependent['activity-name']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Rencana/Strategi</label>
+                                    <label class="block text-sm font-medium">Rencana/Strategi
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="rencana-strategi"
                                         x-model="editDataTargetIndependent['strategy']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="block text-sm font-medium">Keikutsertaan</label>
+                                    <label class="block text-sm font-medium">Keikutsertaan
+                                        <span class="text-red-500">*</span>
+                                    </label>
                                     <input type="text" name="keikutsertaan"
                                         x-model="editDataTargetIndependent['participation']"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
@@ -1764,13 +1907,13 @@
                 @csrf
                 @method('PUT')
                 {{-- btn ajukan dan kembali --}}
-                <div class="ml-3 mt-4 flex gap-2">
+                <div class="mt-4 flex gap-2">
                     <button type="button"
                         class="button bg-[#09697E] hover:bg-[#27788a] text-white px-2 py-1 rounded-md cursor-pointer">
                         <a href="{{ route('mahasiswa.dashboard') }}">Kembali</a>
                     </button>
                     <button type="submit"
-                        class="button bg-[#44c96a] hover:bg-[#68e28b] px-2 py-1 rounded-md cursor-pointer text-white">Ajukan</button>
+                        class="button bg-[#3BC456] hover:bg-[#3FAA54] px-2 py-1 rounded-md cursor-pointer text-white">Ajukan</button>
                 </div>
             </form>
         </div>

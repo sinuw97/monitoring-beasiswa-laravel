@@ -14,17 +14,17 @@
         <x-navbar-mhs mhsName='{{ $dataMahasiswa->name }}' mhsAvatar='{{ $dataMahasiswa->avatar }}' />
 
         {{-- Main Content --}}
-        <main class="flex flex-1 px-10 py-6 gap-6">
+        <main class="flex flex-col lg:flex-row flex-1 px-4 sm:px-6 lg:px-10 py-6 gap-6">
             {{-- Sidebar --}}
-            <aside class="w-1/4 bg-white shadow rounded-md p-6">
+            <aside class="w-full lg:w-1/4 bg-white shadow rounded-md p-6">
                 <div class="flex flex-col items-center text-center mb-6">
                     <div
                         class="flex items-center justify-center w-20 h-20 bg-gray-300 rounded-full text-xl font-bold text-white">
-                        {{ strtoupper(substr($dataMahasiswa->name,0,2)) }}
+                        {{ strtoupper(substr($dataMahasiswa->name, 0, 2)) }}
                     </div>
                     <h2 class="mt-3 font-semibold">{{ $dataMahasiswa->name }}</h2>
                 </div>
-                <div class="flex mt-2 items-center gap-0.5">
+                <div class="flex mt-2 items-center gap-0.5 flex-wrap">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="award-alt"
                         class="w-[15px] h-[15px]">
                         <path fill="#09697E"
@@ -34,7 +34,7 @@
                     <p class="mr-2">NIM</p>
                     <span>: {{ $dataMahasiswa->nim }}</span>
                 </div>
-                <div class="flex border-[#909090] border-b pb-2 items-center gap-0.5">
+                <div class="flex border-[#909090] border-b pb-2 items-center gap-0.5 flex-wrap">
                     <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 24 24" id="calendar-alt"
                         class="w-[15px] h-[15px]">
                         <path fill="#09697E"
@@ -99,7 +99,7 @@
             <section class="flex-1 bg-white shadow rounded-md p-6">
                 <h2 class="font-bold text-lg mb-4">Data Mahasiswa</h2>
 
-                <div class="grid grid-cols-2 gap-4 text-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                     <div>
                         <label class="block text-gray-600">Nama</label>
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
@@ -117,8 +117,8 @@
                     </div>
                     <div>
                         <label class="block text-gray-600">Role</label>
-                        <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
-                            value="student" disabled>
+                        <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100" value="student"
+                            disabled>
                     </div>
                     <div>
                         <label class="block text-gray-600">Program Studi</label>
@@ -140,9 +140,9 @@
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
                             value="{{ $dataMahasiswa->detailMahasiswa->kelas }}" disabled>
                     </div>
-                    <div class="col-span-2">
+                    <div class="col-span-1 sm:col-span-2">
                         <label class="block text-gray-600">Jenis Kelamin</label>
-                        <div class="flex gap-4 mt-1">
+                        <div class="flex gap-4 mt-1 flex-wrap">
                             <label class="flex items-center gap-2">
                                 <input type="radio" disabled
                                     {{ $dataMahasiswa->detailMahasiswa->jenis_kelamin == 'Laki-laki' ? 'checked' : '' }}>
@@ -168,8 +168,8 @@
 
                 <div class="mt-6">
                     <a href="{{ route('mahasiswa.profile.edit') }}" class="bg-blue-600 text-white px-4 py-2 rounded">
-                    Edit Profil
-                    </a>    
+                        Edit Profil
+                    </a>
                 </div>
             </section>
         </main>
