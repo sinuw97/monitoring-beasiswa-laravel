@@ -29,36 +29,60 @@ class PengisianMonevController extends Controller
         // jumlah semester S1/D3
         $totalSmt = str_contains($prodi, 'S1') ? 8 : 6;
 
-        // ambil periode semester
+        // query ke periode
         $periodeSemester = Periode::all()->toArray();
-
-        // ambil periode yg aktif
-        $periodeAktif = Periode::where('status', 'Aktif')->first();
+        $periodeAktifBanner = Periode::where('status', 'Aktif')->first();
 
         $timeline = [];
+
         for ($i = 1; $i <= $totalSmt; $i++) {
+
+            $periode = $periodeSemester[$i - 1] ?? null;
             $namaSemester = "Semester " . $i;
-            $periodeAkademik = $periodeSemester[$i - 1]['tahun_akademik'] . " " . $periodeSemester[$i - 1]['semester'];
-            $statusPeriode = $periodeSemester[$i - 1]['status'];
 
-            // apakah mhs ini sdh buat laporan?
-            $laporan = LaporanMonevMahasiswa::where('nim', $dataMahasiswa->nim)
-                ->where('semester_id', $periodeAktif['semester_id'])
-                ->first();
+            if ($periode) {
+                $periodeAkademik = $periode['tahun_akademik'] . " " . $periode['semester'];
+                $statusPeriode = $periode['status'];
+                $semesterId = $periode['semester_id'];
 
-            $timeline[] = [
-                'no' => $i,
-                'laporan_id' => $laporan->laporan_id ?? null,
-                'semester' => $namaSemester,
-                'periode' => $periodeAkademik ?? null,
-                'status' => $statusPeriode === 'Aktif' ? 'Dibuka' : 'Ditutup',
-                'aksi' => $laporan ? 'Lihat' : 'Buat',
-                'semester_id' => $periodeAktif['semester_id'],
-            ];
+                //  Cek laporan hanya jika statusnya Aktif atau Aktif-Khusus
+                if (in_array($statusPeriode, ['Aktif', 'Aktif-Khusus'])) {
+                    $laporan = LaporanMonevMahasiswa::where('nim', $dataMahasiswa->nim)
+                        ->where('semester_id', $semesterId)
+                        ->first();
+                } else {
+                    $laporan = null;
+                }
+
+                $timeline[] = [
+                    'no' => $i,
+                    'laporan_id' => $laporan->laporan_id ?? null,
+                    'semester' => $namaSemester,
+                    'periode' => $periodeAkademik,
+                    // Aktif dan Aktif-Khusus sama-sama Dibuka
+                    'status' => in_array($statusPeriode, ['Aktif', 'Aktif-Khusus']) ? 'Dibuka' : 'Ditutup',
+                    // kalau dibuka dan laporan belum ada → Buat
+                    'aksi' => $laporan ? 'Lihat' : (in_array($statusPeriode, ['Aktif', 'Aktif-Khusus']) ? 'Buat' : '-'),
+                    // semester_id ngikut periode masing-masing, bukan lagi periodeAktif
+                    'semester_id' => $semesterId,
+                ];
+            } else {
+                // jika belum ada di tabel periode (misal semester 7/8 belum dibuat admin)
+                $timeline[] = [
+                    'no' => $i,
+                    'laporan_id' => null,
+                    'semester' => $namaSemester,
+                    'periode' => null,
+                    'status' => 'Ditutup',
+                    'aksi' => '-',
+                    'semester_id' => null,
+                ];
+            }
         }
 
-        return view('mahasiswa.halaman-pengisian-laporan', compact('dataMahasiswa', 'periodeSemester', 'periodeAktif', 'timeline'));
+        return view('mahasiswa.halaman-pengisian-laporan', compact('dataMahasiswa', 'periodeSemester', 'timeline', 'periodeAktifBanner'));
     }
+
     // Membuat laporan monev baru
     public function buatLaporanBaru(string $semesterId, string $semesterSekarang)
     {

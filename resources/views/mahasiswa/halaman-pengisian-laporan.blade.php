@@ -17,10 +17,11 @@
         <div class="bg-[#fdfdfd] w-[1000px] h-auto p-6">
             <h2 class="text-xl font-bold ml-3.5 mb-2">Pengisian Laporan Monev</h2>
 
-            @if ($periodeAktif)
-                <div class="w-auto h-[50px] bg-blue-200 ml-3.5 mb-2 px-3 py-3">
-                    <p>
-                        Periode {{ $periodeAktif->tahun_akademik }} {{ $periodeAktif->semester }} Telah Dibuka
+            @if ($periodeAktifBanner)
+                <div class="bg-blue-100 border-l-4 border-blue-600 text-blue-800 p-4 rounded-lg mx-4 mb-4">
+                    <p class="font-semibold">
+                        Periode {{ $periodeAktifBanner->tahun_akademik }} {{ $periodeAktifBanner->semester }} sedang
+                        Dibuka
                     </p>
                 </div>
             @endif
@@ -44,22 +45,28 @@
                                 <td class="px-4 py-2 text-center">{{ $row['periode'] }}</td>
                                 <td class="px-4 py-2 text-center">{{ $row['status'] }}</td>
                                 <td class="px-4 py-2 text-center">
-                                    @if ($row['status'] !== 'Dibuka')
+                                    @if ($row['status'] === 'Ditutup')
                                         <button type="button"
-                                            class="px-2 py-1 bg-[#d82222] text-[#f1f1f1] font-bold rounded cursor-default">Tutup</button>
-                                    @else
+                                            class="px-2 py-1 bg-red-600 text-white font-bold rounded cursor-default opacity-60">
+                                            Tutup
+                                        </button>
+                                    @elseif ($row['status'] === 'Dibuka')
                                         @if ($row['aksi'] === 'Buat')
-                                            <form action="{{ route('mahasiswa.buat-laporan', ['semesterId' => $row['semester_id'], 'semesterSekarang' => $row['semester']]) }}"
+                                            <form
+                                                action="{{ route('mahasiswa.buat-laporan', [
+                                                    'semesterId' => $row['semester_id'],
+                                                    'semesterSekarang' => $row['semester'],
+                                                ]) }}"
                                                 method="POST">
                                                 @csrf
                                                 <button type="submit"
-                                                    class="px-2 py-1 bg-[#09697E] text-white font-bold rounded cursor-pointer">
+                                                    class="px-2 py-1 bg-blue-700 text-white font-bold rounded hover:bg-blue-800">
                                                     Buat
                                                 </button>
                                             </form>
-                                        @else
-                                            <a href="{{ route('mahasiswa.lihat-laporan', $row['laporan_id']) }}"
-                                                class="px-2 py-1 bg-[#1abc50] text-white font-bold rounded cursor-pointer">
+                                        @elseif ($row['aksi'] === 'Lihat')
+                                            <a href="{{ route('mahasiswa.detail-laporan', $row['laporan_id']) }}"
+                                                class="px-2 py-1 bg-green-600 text-white font-bold rounded hover:bg-green-700">
                                                 Lihat
                                             </a>
                                         @endif
@@ -68,7 +75,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ count($timrline) }}" class="px-4 py-4 text-center ">
+                                <td colspan="{{ count($timeline) }}" class="px-4 py-4 text-center ">
                                     Tidak ada data
                                 </td>
                             </tr>
