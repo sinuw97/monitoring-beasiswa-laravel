@@ -99,21 +99,28 @@
             <section class="flex-1 bg-white shadow rounded-md p-6">
                 <h2 class="font-bold text-lg mb-4">Data Mahasiswa</h2>
 
+                {{-- Tampilkan pesan sukses --}}
+                @if (session('success'))
+                    <div class="bg-green-100 border-l-4 border-green-700 text-green-600 p-2 rounded mb-3">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                     <div>
                         <label class="block text-gray-600">Nama</label>
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
-                            value="{{ $dataMahasiswa->name }}" disabled>
+                            value="{{ $dataMahasiswa->name ?? "-" }}" disabled>
                     </div>
                     <div>
                         <label class="block text-gray-600">Email</label>
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
-                            value="{{ $dataMahasiswa->email }}" disabled>
+                            value="{{ $dataMahasiswa->email ?? "-" }}" disabled>
                     </div>
                     <div>
                         <label class="block text-gray-600">NIM</label>
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
-                            value="{{ $dataMahasiswa->nim }}" disabled>
+                            value="{{ $dataMahasiswa->nim ?? "-" }}" disabled>
                     </div>
                     <div>
                         <label class="block text-gray-600">Role</label>
@@ -123,33 +130,33 @@
                     <div>
                         <label class="block text-gray-600">Program Studi</label>
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
-                            value="{{ $dataMahasiswa->detailMahasiswa->prodi }}" disabled>
+                            value="{{ $dataMahasiswa->detailMahasiswa->prodi ?? "-" }}" disabled>
                     </div>
                     <div>
                         <label class="block text-gray-600">Jenis Beasiswa</label>
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
-                            value="{{ $dataMahasiswa->detailMahasiswa->jenis_beasiswa }}" disabled>
+                            value="{{ $dataMahasiswa->detailMahasiswa->jenis_beasiswa ?? "-" }}" disabled>
                     </div>
                     <div>
                         <label class="block text-gray-600">Angkatan</label>
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
-                            value="{{ $dataMahasiswa->detailMahasiswa->angkatan }}" disabled>
+                            value="{{ $dataMahasiswa->detailMahasiswa->angkatan ?? "-" }}" disabled>
                     </div>
                     <div>
                         <label class="block text-gray-600">Kelas</label>
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
-                            value="{{ $dataMahasiswa->detailMahasiswa->kelas }}" disabled>
+                            value="{{ $dataMahasiswa->detailMahasiswa->kelas ?? "-" }}" disabled>
                     </div>
                     <div class="col-span-1 sm:col-span-2">
                         <label class="block text-gray-600">Jenis Kelamin</label>
                         <div class="flex gap-4 mt-1 flex-wrap">
                             <label class="flex items-center gap-2">
-                                <input type="radio" disabled
-                                    {{ $dataMahasiswa->detailMahasiswa->jenis_kelamin == 'Laki-laki' ? 'checked' : '' }}>
+                                <input type="radio" name="jenis_kelamin" value="Laki-Laki" readonly onclick="return false;"
+                                    {{ $dataMahasiswa->detailMahasiswa->jenis_kelamin == 'Laki-Laki' ? 'checked' : '' }}>
                                 Laki-laki
                             </label>
                             <label class="flex items-center gap-2">
-                                <input type="radio" disabled
+                                <input type="radio" name="jenis_kelamin" value="Perempuan" readonly onclick="return false;"
                                     {{ $dataMahasiswa->detailMahasiswa->jenis_kelamin == 'Perempuan' ? 'checked' : '' }}>
                                 Perempuan
                             </label>
@@ -158,11 +165,11 @@
                     <div>
                         <label class="block text-gray-600">No HP</label>
                         <input type="text" class="w-full border rounded-md px-3 py-2 bg-gray-100"
-                            value="{{ $dataMahasiswa->detailMahasiswa->no_hp ?? '' }}" disabled>
+                            value="{{ $dataMahasiswa->detailMahasiswa->no_hp ?? '-' }}" disabled>
                     </div>
                     <div>
                         <label class="block text-gray-600">Alamat</label>
-                        <textarea class="w-full border rounded-md px-3 py-2 bg-gray-100" disabled>{{ $dataMahasiswa->detailMahasiswa->alamat ?? '' }}</textarea>
+                        <textarea class="resize-none h-[120px] overflow-auto w-full border rounded-md px-3 py-2 bg-gray-100" disabled>{{ $dataMahasiswa->detailMahasiswa->alamat ?? '-' }}</textarea>
                     </div>
                 </div>
 

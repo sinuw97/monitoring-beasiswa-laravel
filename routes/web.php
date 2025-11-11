@@ -23,6 +23,7 @@ use App\Http\Controllers\mahasiswa\monev\CommitteeActivitiesMonevController;
 use App\Http\Controllers\mahasiswa\monev\IndependentActivitiesMonevController;
 use App\Http\Controllers\mahasiswa\monev\TargetAcademicActMonevController;
 use App\Http\Controllers\mahasiswa\monev\TargetAchievementsMonevController;
+use App\Http\Controllers\mahasiswa\profile\GantiPasswordController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -89,6 +90,8 @@ Route::prefix('mahasiswa')->group(function () {
         Route::get('/mahasiswa/profile/edit', [ProfilMahasiswaController::class, 'edit'])->name('mahasiswa.profile.edit');
         Route::post('/mahasiswa/profile/update', [ProfilMahasiswaController::class, 'update'])->name('mahasiswa.profile.update');
         Route::get('/riwayat-laporan', [RiwayatLaporanController::class, 'index'])->name('mahasiswa.riwayat-laporan');
+        // Ganti Password Verivikasi
+        Route::post('/ganti-password/submit', [GantiPasswordController::class, 'verifyPassword'])->name('mahasiswa.ganti-pw');
     });
 });
 

@@ -23,9 +23,9 @@ class ProfilMahasiswaController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'no_hp' => 'required|string|max:15',
-            'alamat' => 'required|string|max:255',
+            'email' => 'nullable|email',
+            'no_hp' => 'nullable|string|max:15',
+            'alamat' => 'nullable|string|max:255',
         ]);
 
         $mahasiswa = Auth::guard('mahasiswa')->user();

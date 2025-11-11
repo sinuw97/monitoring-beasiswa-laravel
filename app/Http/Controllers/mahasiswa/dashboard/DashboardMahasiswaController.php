@@ -32,10 +32,13 @@ class DashboardMahasiswaController extends Controller
         $pendingLaporan = $allLaporan->where('status', 'Pending');
         $lolosLaporan = $allLaporan->where('status', 'Lolos');
 
-        // Progress bar dengan total target 8 laporan
-        $totalTargetLaporan = 8; // jumlah laporan maksimal
-        $laporanValid = $allLaporan->whereIn('status', ['Lolos'])->count(); // dihitung sudah dikirim/valid
-        $persentaseLaporan = ($laporanValid / $totalTargetLaporan) * 100;
+        // jmlh laporan yg harus mhs kirim
+        $prodi = $dataMahasiswa->detailMahasiswa->prodi;
+        $totalLaporan = str_contains($prodi, 'S1') ? 8 : 6;
+
+        // jmlh laporan yg sudah dikirim mhs
+        $jumlahLaporanTerkirim = $allLaporan->where('status', '!=', 'Draft')->count();
+        $presentaseLaporan = ($jumlahLaporanTerkirim / $totalLaporan) * 100;
 
         // Kirim data ke view
         return view('mahasiswa.dashboard', compact(
@@ -43,9 +46,9 @@ class DashboardMahasiswaController extends Controller
             'draftedLaporan',
             'lolosLaporan',
             'pendingLaporan',
-            'laporanValid',
-            'totalTargetLaporan',
-            'persentaseLaporan'
+            'totalLaporan',
+            'jumlahLaporanTerkirim',
+            'presentaseLaporan'
         ));
     }
 }

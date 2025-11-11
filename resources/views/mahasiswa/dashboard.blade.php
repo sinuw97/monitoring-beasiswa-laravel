@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
     <title>Dashboard Mahasiswa</title>
 </head>
 
@@ -91,11 +96,11 @@
                 <div class="mt-6">
                     <p class="text-sm font-semibold mb-2">Laporan terajukan</p>
                     <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-500 h-2.5 rounded-full" style="width: {{ min($persentaseLaporan, 100) }}%">
+                        <div class="bg-blue-500 h-2.5 rounded-full" style="width: {{ min($presentaseLaporan, 100) }}%">
                         </div>
                     </div>
                     <p class="text-xs mt-1">
-                        {{ $laporanValid }}/{{ $totalTargetLaporan }}
+                        {{ $jumlahLaporanTerkirim }}/{{ $totalLaporan }}
                     </p>
                 </div>
             </div>
