@@ -86,12 +86,12 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 sm:px-6 text-center hidden md:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
+                            <a href="#editModal-academic-reports-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
                                 Edit
                             </a>
                         </td>
                         <td class="px-4 py-4 text-center md:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-academic-reports-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -100,27 +100,29 @@
                 </tbody>
             </table>
         </div>
-        @foreach ($academicReports as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'academic-reports',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'academic-reports',
-                'fields' => [
-                    'IPS' => $report['ips'],
-                    'IPK' => $report['ipk'],
-                    'Semester' => $report['semester'],
-                    'Komentar' => $report['comment'] ?? '-',
-                    'Status' => $report['status'],
-                    'Bukti' => $report['bukti_url'],
-                ]
-            ])
-        @endforeach
+        @if(count($academicReports) > 0)
+            @foreach ($academicReports as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'academic-reports',
+                    'modalId' => 'editModal-academic-reports-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-academic-reports-' . $report['id'],
+                    'type' => 'academic-reports',
+                    'fields' => [
+                        'IPS' => $report['ips'],
+                        'IPK' => $report['ipk'],
+                        'Semester' => $report['semester'],
+                        'Komentar' => $report['comment'] ?? '-',
+                        'Status' => $report['status'],
+                        'Bukti' => $report['bukti_url'],
+                    ]
+                ])
+            @endforeach
+        @endif
 
         {{-- Sub-bagian: Kegiatan Akademik Lain --}}
         @php
@@ -166,12 +168,12 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 text-center hidden sm:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
+                            <a href="#editModal-academic-activities-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
                                 Edit
                             </a>
                         </td>
                         <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-academic-activities-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -183,28 +185,30 @@
         @else
             <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada kegiatan akademik yang dilaporkan.</p>
         @endif
-        @foreach ($academicActivities as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'academic-activities',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'academic-activities',
-                'fields' => [
-                    'Kegiatan' => $report['activity_name'],
-                    'Tipe' => $report['activity_type'],
-                    'Keikutsertaan' => $report['participation'],
-                    'Tanggal' => \Carbon\Carbon::parse($report['start_date'])->format('d M Y'),
-                    'Points' => $report['points'] ?? '-',
-                    'Status' => $report['status'],
-                    'Bukti' => $report['bukti_url'],
-                ]
-            ])
-        @endforeach
+        @if(count($academicActivities) > 0)
+            @foreach ($academicActivities as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'academic-activities',
+                    'modalId' => 'editModal-academic-activities-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-academic-activities-' . $report['id'],
+                    'type' => 'academic-activities',
+                    'fields' => [
+                        'Kegiatan' => $report['activity_name'],
+                        'Tipe' => $report['activity_type'],
+                        'Keikutsertaan' => $report['participation'],
+                        'Tanggal' => \Carbon\Carbon::parse($report['start_date'])->format('d M Y'),
+                        'Points' => $report['points'] ?? '-',
+                        'Status' => $report['status'],
+                        'Bukti' => $report['bukti_url'],
+                    ]
+                ])
+            @endforeach
+        @endif
     </section>
 
     <hr class="my-8 border-gray-300">
@@ -255,12 +259,12 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 text-center hidden sm:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
+                            <a href="#editModal-organization-activities-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
                                 Edit
                             </a>
                         </td>
                         <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-organization-activities-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -272,29 +276,31 @@
         @else
             <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada kegiatan organisasi yang dilaporkan.</p>
         @endif
-        @foreach ($organizationActivities as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'organization-activities',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'organization-activities',
-                'fields' => [
-                    'UKM' => $report['ukm_name'],
-                    'Kegiatan' => $report['activity_name'],
-                    'Tingkat' => $report['level'],
-                    'Posisi' => $report['position'],
-                    'Tanggal Mulai' => \Carbon\Carbon::parse($report['start_date'])->format('d M Y'),
-                    'Points' => $report['points'] ?? '-',
-                    'Status' => $report['status'],
-                    'Bukti' => $report['bukti_url'],
-                ]
-            ])
-        @endforeach
+        @if(count($organizationActivities) > 0)
+            @foreach ($organizationActivities as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'organization-activities',
+                    'modalId' => 'editModal-organization-activities-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-organization-activities-' . $report['id'],
+                    'type' => 'organization-activities',
+                    'fields' => [
+                        'UKM' => $report['ukm_name'],
+                        'Kegiatan' => $report['activity_name'],
+                        'Tingkat' => $report['level'],
+                        'Posisi' => $report['position'],
+                        'Tanggal Mulai' => \Carbon\Carbon::parse($report['start_date'])->format('d M Y'),
+                        'Points' => $report['points'] ?? '-',
+                        'Status' => $report['status'],
+                        'Bukti' => $report['bukti_url'],
+                    ]
+                ])
+            @endforeach
+        @endif
 
         {{-- Sub-bagian: Kegiatan Kepanitiaan Atau Penugasan --}}
         @php
@@ -338,12 +344,12 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 text-center hidden sm:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
+                            <a href="#editModal-committee-activities-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
                                 Edit
                             </a>
                         </td>
                         <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-committee-activities-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -355,28 +361,30 @@
         @else
             <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada kegiatan kepanitiaan/penugasan yang dilaporkan.</p>
         @endif
-        @foreach ($committeeActivities as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'committee-activities',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'committee-activities',
-                'fields' => [
-                    'Kegiatan' => $report['activity_name'],
-                    'Tipe Kegiatan' => $report['activity_type'],
-                    'Tingkat' => $report['level'],
-                    'Keikutsertaan' => $report['participation'],
-                    'Points' => $report['points'] ?? '-',
-                    'Status' => $report['status'],
-                    'Bukti' => $report['bukti_url'],
-                ]
-            ])
-        @endforeach
+        @if(count($committeeActivities) > 0)
+            @foreach ($committeeActivities as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'committee-activities',
+                    'modalId' => 'editModal-committee-activities-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-committee-activities-' . $report['id'],
+                    'type' => 'committee-activities',
+                    'fields' => [
+                        'Kegiatan' => $report['activity_name'],
+                        'Tipe Kegiatan' => $report['activity_type'],
+                        'Tingkat' => $report['level'],
+                        'Keikutsertaan' => $report['participation'],
+                        'Points' => $report['points'] ?? '-',
+                        'Status' => $report['status'],
+                        'Bukti' => $report['bukti_url'],
+                    ]
+                ])
+            @endforeach
+        @endif
 
         {{-- Sub-bagian: Prestasi Mahasiswa --}}
         @php
@@ -420,12 +428,12 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 text-center hidden sm:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
+                            <a href="#editModal-student-achievements-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
                                 Edit
                             </a>
                         </td>
                         <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-student-achievements-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -437,29 +445,31 @@
         @else
             <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada prestasi mahasiswa yang dilaporkan.</p>
         @endif
-        @foreach ($studentAchievements as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'student-achievements',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'student-achievements',
-                'fields' => [
-                    'Prestasi' => $report['achievements_name'],
-                    'Tipe' => $report['achievements_type'],
-                    'Raihan' => $report['award'],
-                    'Tingkat' => $report['level'],
-                    'Tempat' => $report['place'],
-                    'Points' => $report['points'] ?? '-',
-                    'Status' => $report['status'],
-                    'Bukti' => $report['bukti_url'],
-                ]
-            ])
-        @endforeach
+        @if(count($studentAchievements) > 0)
+            @foreach ($studentAchievements as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'student-achievements',
+                    'modalId' => 'editModal-student-achievements-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-student-achievements-' . $report['id'],
+                    'type' => 'student-achievements',
+                    'fields' => [
+                        'Prestasi' => $report['achievements_name'],
+                        'Tipe' => $report['achievements_type'],
+                        'Raihan' => $report['award'],
+                        'Tingkat' => $report['level'],
+                        'Tempat' => $report['place'],
+                        'Points' => $report['points'] ?? '-',
+                        'Status' => $report['status'],
+                        'Bukti' => $report['bukti_url'],
+                    ]
+                ])
+            @endforeach
+        @endif
 
         {{-- Sub-bagian: Kegiatan Mandiri Mahasiswa Selama Satu Semester --}}
         @php
@@ -503,12 +513,12 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 text-center hidden sm:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
+                            <a href="#editModal-independent-activities-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
                                 Edit
                             </a>
                         </td>
                         <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-independent-activities-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -520,28 +530,30 @@
         @else
             <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada kegiatan mandiri yang dilaporkan.</p>
         @endif
-        @foreach ($independentActivities as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'independent-activities',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'independent-activities',
-                'fields' => [
-                    'Kegiatan' => $report['activity_name'],
-                    'Tipe' => $report['activity_type'],
-                    'Partisipasi' => $report['participation'],
-                    'Tanggal' => \Carbon\Carbon::parse($report['start_date'])->format('d M Y'),
-                    'Points' => $report['points'] ?? '-',
-                    'Status' => $report['status'],
-                    'Bukti' => $report['bukti_url'],
-                ]
-            ])
-        @endforeach
+        @if(count($independentActivities) > 0)
+            @foreach ($independentActivities as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'independent-activities',
+                    'modalId' => 'editModal-independent-activities-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-independent-activities-' . $report['id'],
+                    'type' => 'independent-activities',
+                    'fields' => [
+                        'Kegiatan' => $report['activity_name'],
+                        'Tipe' => $report['activity_type'],
+                        'Partisipasi' => $report['participation'],
+                        'Tanggal' => \Carbon\Carbon::parse($report['start_date'])->format('d M Y'),
+                        'Points' => $report['points'] ?? '-',
+                        'Status' => $report['status'],
+                        'Bukti' => $report['bukti_url'],
+                    ]
+                ])
+            @endforeach
+        @endif
     </section>
 
     <hr class="my-8 border-gray-300">
@@ -550,6 +562,7 @@
     <section class="mb-10">
         <h2 class="text-2xl font-extrabold text-gray-800 mb-6">C. EVALUASI (REALISASI)</h2>
         @php
+            $evaluations = $evaluations ?? [];
             $evaluations = $evaluations ?? [null];
             $report = $evaluations[0] ?? ['support_factors' => '-', 'barrier_factors' => '-', 'status' => 'Pending', 'id' => 'eval'];
         @endphp
@@ -572,19 +585,23 @@
             </div>
         </div>
 
-        <div class="flex items-center pt-4 gap-4">
-            <h4 class="text-base font-semibold text-gray-700">Status Evaluasi:</h4>
-            @include('components.status-badge', ['status' => $report['status']])
-            <a href="#editModal-{{ $report['id'] }}" class="font-medium bg-indigo-100 rounded-lg py-2 px-4 hover:bg-indigo-400 hover:text-white transition">
-                Edit Status
-            </a>
-        </div>
+        @if(count($evaluations) > 0)
+            <div class="flex items-center pt-4 gap-4">
+                <h4 class="text-base font-semibold text-gray-700">Status Evaluasi:</h4>
+                @include('components.status-badge', ['status' => $report['status']])
+                <a href="#editModal-evaluations-{{ $report['id'] }}" class="font-medium bg-indigo-100 rounded-lg py-2 px-4 hover:bg-indigo-400 hover:text-white transition">
+                    Edit Status
+                </a>
+            </div>
+        @endif
 
-        @include('components.modal-laporan-admin', [
-            'report' => $report,
-            'type' => 'evaluations',
-            'modalId' => 'editModal-' . $report['id']
-        ])
+        @if(count($evaluations) > 0)
+            @include('components.modal-laporan-admin', [
+                'report' => $report,
+                'type' => 'evaluations',
+                'modalId' => 'editModal-evaluations-' . $report['id']
+            ])
+        @endif
     </section>
 
     <hr class="my-8 border-gray-300">
@@ -620,12 +637,12 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 sm:px-6 text-center hidden md:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
+                            <a href="#editModal-target-reports-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
                                 Edit
                             </a>
                         </td>
                         <td class="px-4 py-4 text-center md:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-target-reports-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -634,25 +651,27 @@
                 </tbody>
             </table>
         </div>
-        @foreach ($targetNextSemester as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'target-reports',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'target-reports',
-                'fields' => [
-                    'Semester' => $report['semester'],
-                    'Target IPS' => $report['target_ips'],
-                    'Target IPK' => $report['target_ipk'],
-                    'Status' => $report['status'],
-                ]
-            ])
-        @endforeach
+        @if(count($targetNextSemester) > 0)
+            @foreach ($targetNextSemester as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'target-reports',
+                    'modalId' => 'editModal-target-reports-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-target-reports-' . $report['id'],
+                    'type' => 'target-reports',
+                    'fields' => [
+                        'Semester' => $report['semester'],
+                        'Target IPS' => $report['target_ips'],
+                        'Target IPK' => $report['target_ipk'],
+                        'Status' => $report['status'],
+                    ]
+                ])
+            @endforeach
+        @endif
 
         {{-- Rencana Kegiatan Akademik --}}
         @php $targetAcademicActivities = $targetAcademicActivities ?? []; @endphp
@@ -680,10 +699,10 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 text-center hidden sm:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">Edit</a>
+                            <a href="#editModal-target-activities-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">Edit</a>
                         </td>
                         <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-target-activities-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -695,24 +714,26 @@
         @else
             <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada rencana kegiatan akademik.</p>
         @endif
-        @foreach ($targetAcademicActivities as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'target-activities',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'target-activities',
-                'fields' => [
-                    'Kegiatan' => $report['activity_name'],
-                    'Rencana/Strategi' => $report['strategy'],
-                    'Status' => $report['status'],
-                ]
-            ])
-        @endforeach
+        @if(count($targetAcademicActivities) > 0)
+            @foreach ($targetAcademicActivities as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'target-activities',
+                    'modalId' => 'editModal-target-activities-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-target-activities-' . $report['id'],
+                    'type' => 'target-activities',
+                    'fields' => [
+                        'Kegiatan' => $report['activity_name'],
+                        'Rencana/Strategi' => $report['strategy'],
+                        'Status' => $report['status'],
+                    ]
+                ])
+            @endforeach
+        @endif
 
         {{-- Rencana Prestasi Mahasiswa --}}
         @php $targetAchievements = $targetAchievements ?? []; @endphp
@@ -740,10 +761,10 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 text-center hidden sm:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">Edit</a>
+                            <a href="#editModal-target-achievements-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">Edit</a>
                         </td>
                         <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-target-achievements-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -755,25 +776,27 @@
         @else
             <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada rencana prestasi.</p>
         @endif
-        @foreach ($targetAchievements as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'target-achievements',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'target-achievements',
-                'fields' => [
-                    'Prestasi' => $report['achievements_name'],
-                    'Tingkat' => $report['level'],
-                    'Raihan' => $report['award'],
-                    'Status' => $report['status'],
-                ]
-            ])
-        @endforeach
+        @if(count($targetAchievements) > 0)
+            @foreach ($targetAchievements as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'target-achievements',
+                    'modalId' => 'editModal-target-achievements-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-target-achievements-' . $report['id'],
+                    'type' => 'target-achievements',
+                    'fields' => [
+                        'Prestasi' => $report['achievements_name'],
+                        'Tingkat' => $report['level'],
+                        'Raihan' => $report['award'],
+                        'Status' => $report['status'],
+                    ]
+                ])
+            @endforeach
+        @endif
 
         {{-- Rencana Kegiatan Mandiri --}}
         @php $targetIdependentActivities = $targetIdependentActivities ?? []; @endphp
@@ -803,10 +826,10 @@
                             @include('components.status-badge', ['status' => $report['status']])
                         </td>
                         <td class="px-4 py-4 text-center hidden sm:table-cell">
-                            <a href="#editModal-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">Edit</a>
+                            <a href="#editModal-target-independent-{{ $report['id'] }}" class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">Edit</a>
                         </td>
                         <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                            <a href="#detailModal-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
+                            <a href="#detailModal-target-independent-{{ $report['id'] }}" class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
                                 Detail
                             </a>
                         </td>
@@ -818,25 +841,27 @@
         @else
             <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada rencana kegiatan mandiri.</p>
         @endif
-        @foreach ($targetIdependentActivities as $report)
-            @include('components.modal-laporan-admin', [
-                'report' => $report,
-                'type' => 'target-independent',
-                'modalId' => 'editModal-' . $report['id']
-            ])
-            {{-- Modal Detail Mobile --}}
-            @include('components.detail-mobile-modal', [
-                'report' => $report,
-                'modalId' => 'detailModal-' . $report['id'],
-                'type' => 'target-independent',
-                'fields' => [
-                    'Kegiatan' => $report['activity_name'],
-                    'Partisipasi' => $report['participation'],
-                    'Rencana/Strategi' => $report['strategy'],
-                    'Status' => $report['status'],
-                ]
-            ])
-        @endforeach
+        @if(count($targetIdependentActivities) > 0)
+            @foreach ($targetIdependentActivities as $report)
+                @include('components.modal-laporan-admin', [
+                    'report' => $report,
+                    'type' => 'target-independent',
+                    'modalId' => 'editModal-target-independent-' . $report['id']
+                ])
+                {{-- Modal Detail Mobile --}}
+                @include('components.detail-mobile-modal', [
+                    'report' => $report,
+                    'modalId' => 'detailModal-target-independent-' . $report['id'],
+                    'type' => 'target-independent',
+                    'fields' => [
+                        'Kegiatan' => $report['activity_name'],
+                        'Partisipasi' => $report['participation'],
+                        'Rencana/Strategi' => $report['strategy'],
+                        'Status' => $report['status'],
+                    ]
+                ])
+            @endforeach
+        @endif
     </section>
 
     <hr class="my-8 border-gray-300">
@@ -893,38 +918,7 @@
         pointer-events: auto;
     }
 
-    /* Pastikan modal detail mobile hanya muncul di mobile */
-    .modal-target {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 50;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex; /* Ganti dari 'hidden' menjadi 'flex' untuk penargetan awal */
-        align-items: center;
-        justify-content: center;
 
-        visibility: hidden;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-    }
-
-    /* 1A: Aturan dasar: saat target, modal terlihat */
-    :target {
-        visibility: visible;
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    /* 1B: Sembunyikan semua modal di desktop (>= sm) agar hanya terlihat di mobile saat di-target */
-    @media (min-width: 640px) { /* Ini adalah breakpoint 'sm' di Tailwind CSS */
-        .modal-target {
-            display: none !important;
-        }
-    }
 
     /* 1C: Pastikan modal tersembunyi secara default di mobile (sebelum di-target) */
     @media (max-width: 639px) {

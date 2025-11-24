@@ -107,6 +107,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/dashboard', [DashboardAdminController::class, 'addPeriode'])->name('admin.dashboard.addPeriode');
         Route::delete('/dashboard/{id}', [DashboardAdminController::class, 'deletePeriode'])->name('admin.dashboard.deletePeriode');
         Route::put('/dashboard/{id}', [DashboardAdminController::class, 'editPeriode'])->name('admin.dashboard.editPeriode');
+        Route::put('/dashboard/{id}/aktifkan', [DashboardAdminController::class, 'activatePeriode'])->name('admin.dashboard.activatePeriode');
+        Route::put('/dashboard/{id}/nonaktifkan', [DashboardAdminController::class, 'deactivatePeriode'])->name('admin.dashboard.deactivatePeriode');
         Route::get('/laporan', [LaporanMonevController::class, 'index'])->name('admin.laporan');
         Route::get('/laporan/{id}', [LaporanMonevController::class, 'show'])->name('admin.show');
         Route::put('/laporan/{id}', [LaporanMonevController::class, 'update'])->name('admin.update');

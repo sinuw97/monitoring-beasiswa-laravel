@@ -23,8 +23,9 @@ class DashboardAdminController extends Controller
         $jmlMahasiswwa = Mahasiswa::count();
         $jmlLaporan= LaporanMonevMahasiswa::join('periode', 'laporan_mahasiswa.semester_id', '=', 'periode.semester_id')->where('periode.status', '=', 'Aktif')->where('laporan_mahasiswa.status', '!=', 'Draft')->count();
         $dataPeriode = Periode::orderBy('semester_id', 'desc')->paginate(10);
+        $anyActivePeriod = Periode::where('status', 'Aktif')->exists();
 
-        return view('admin.dashboard', compact(['dataAdmin'], ['jmlMahasiswwa'], ['dataPeriode'], ['jmlLaporan']));
+        return view('admin.dashboard', compact(['dataAdmin'], ['jmlMahasiswwa'], ['dataPeriode'], ['jmlLaporan'], 'anyActivePeriod'));
     }
 
     public function showLaporan($laporanId){
@@ -188,8 +189,11 @@ class DashboardAdminController extends Controller
         ));
     }
 
-    public function addPeriode(){
-        $admin = Auth::guard('admin')->user();
+    public function addPeriode(Request $request){
+        $request->validate([
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date',
+        ]);
 
         $firstDataPeriode = Periode::orderBy('semester_id', 'desc')->first();
         $secondDataPeriode = Periode::orderBy('semester_id', 'desc')->skip(1)->take(1)->first();
@@ -199,8 +203,8 @@ class DashboardAdminController extends Controller
                 'semester_id' => substr($firstDataPeriode->semester_id, 0, -1).'2',
                 'tahun_akademik' => $firstDataPeriode->tahun_akademik,
                 'semester' => 'Genap',
-                'tanggal_mulai' => null,
-                'tanggal_selesai' => null,
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'tanggal_selesai' => $request->tanggal_selesai,
                 'status' => 'Non-Aktif',
             ]);
         }else{
@@ -209,8 +213,8 @@ class DashboardAdminController extends Controller
                 'semester_id' => 'SM'.$tahun.'01',
                 'tahun_akademik' => $tahun.'/'.$tahun+1,
                 'semester' => 'Ganjil',
-                'tanggal_mulai' => null,
-                'tanggal_selesai' => null,
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'tanggal_selesai' => $request->tanggal_selesai,
                 'status' => 'Non-Aktif',
             ]);
         }
@@ -224,18 +228,52 @@ class DashboardAdminController extends Controller
         return redirect('/admin/dashboard')->with('success', 'Periode berhasil dihapus.');
     }
 
-    public function editPeriode($id){
-        $data = Periode::where('semester_id', $id)->first();
-        $dataActive = Periode::where('status', '=', 'Aktif')->first();
+    public function editPeriode(Request $request, $id){
+        $request->validate([
+            'tanggal_mulai' => 'nullable|date',
+            'tanggal_selesai' => 'nullable|date',
+        ]);
 
-        $date = Carbon::now();
+        $periode = Periode::where('semester_id', $id)->first();
+        
+        if ($periode) {
+            $periode->update([
+                'tanggal_mulai' => $request->tanggal_mulai,
+                'tanggal_selesai' => $request->tanggal_selesai,
+            ]);
+            return redirect('/admin/dashboard')->with('success', 'Periode berhasil diubah.');
+        }
 
-        $dataActive->update(['tanggal_selesai' => $date]);
+        return redirect('/admin/dashboard')->with('error', 'Periode tidak ditemukan.');
+    }
 
-        Periode::query()->update(['status' => 'Non-Aktif']);
+    public function activatePeriode($id) {
+        $periode = Periode::where('semester_id', $id)->first();
+        $activePeriode = Periode::where('status', 'Aktif')->first();
 
-        $data->update(['status' => 'Aktif', 'tanggal_mulai' => $date]);
+        if ($activePeriode) {
+            $periode->update([
+                'status' => 'Aktif Sementara',
+                'tanggal_mulai' => Carbon::now()
+            ]);
+            return redirect('/admin/dashboard')->with('success', 'Periode berhasil diaktifkan sementara.');
+        } else {
+            $periode->update([
+                'status' => 'Aktif',
+                'tanggal_mulai' => Carbon::now()
+            ]);
+            return redirect('/admin/dashboard')->with('success', 'Periode berhasil diaktifkan.');
+        }
+    }
 
-        return redirect('/admin/dashboard')->with('success', 'Periode berhasil diubah.');
+    public function deactivatePeriode($id) {
+        $periode = Periode::where('semester_id', $id)->first();
+        
+        $periode->update([
+            'status' => 'Non-Aktif',
+            'tanggal_selesai' => Carbon::now()
+        ]);
+
+        return redirect('/admin/dashboard')->with('success', 'Periode berhasil dinonaktifkan.');
     }
 }

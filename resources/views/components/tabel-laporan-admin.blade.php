@@ -5,14 +5,20 @@
         <h2 class="text-lg sm:text-xl font-semibold text-[#09697E]">Data Laporan Mahasiswa</h2>
         <div class="text-sm text-gray-600 mt-2 sm:mt-0">
             <span class="font-medium">Periode Aktif:</span>
-            {{ $periode->tahun_akademik }} - {{ $periode->semester }}
+            @if ($periode !== [])
+                {{ $periode->tahun_akademik }} - {{ $periode->semester }}
+            @else
+                Tidak ada periode aktif
+            @endif
         </div>
     </div>
 
     {{-- Filter & Search --}}
-    <form method="GET" action="{{ url('/admin/laporan') }}" class="grid grid-cols-1 sm:grid-cols-5 gap-2 sm:gap-3 mb-4 text-sm">
+    <form method="GET" action="{{ url('/admin/laporan') }}"
+        class="grid grid-cols-1 sm:grid-cols-5 gap-2 sm:gap-3 mb-4 text-sm">
         {{-- Filter angkatan --}}
-        <select name="angkatan" class="w-full border-gray-300 px-2 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] cursor-pointer text-sm">
+        <select name="angkatan"
+            class="w-full border-gray-300 px-2 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] cursor-pointer text-sm">
             <option value="">Semua Angkatan</option>
             @foreach ($daftarAngkatan as $a)
                 <option value="{{ $a->angkatan }}" {{ request('angkatan') == $a->angkatan ? 'selected' : '' }}>
@@ -22,20 +28,29 @@
         </select>
 
         {{-- Filter status --}}
-        <select name="status" class="w-full border-gray-300 px-2 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] cursor-pointer text-sm">
+        <select name="status"
+            class="w-full border-gray-300 px-2 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] cursor-pointer text-sm">
             <option value="">Semua Status</option>
             <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
             <option value="Lolos" {{ request('status') == 'Lolos' ? 'selected' : '' }}>Lolos</option>
             <option value="Draft" {{ request('status') == 'Draft' ? 'selected' : '' }}>Draft</option>
-            <option value="Ditolak SP-1" {{ request('status') == 'Ditolak SP-1' ? 'selected' : '' }}>Ditolak SP-1</option>
-            <option value="Ditolak SP-2" {{ request('status') == 'Ditolak SP-2' ? 'selected' : '' }}>Ditolak SP-2</option>
-            <option value="Ditolak SP-3" {{ request('status') == 'Ditolak SP-3' ? 'selected' : '' }}>Ditolak SP-3</option>
-            <option value="Lolos dengan penugasan" {{ request('status') == 'Lolos dengan penugasan' ? 'selected' : '' }}>Lolos dengan penugasan</option>
+            <option value="Ditolak SP-1" {{ request('status') == 'Ditolak SP-1' ? 'selected' : '' }}>Ditolak SP-1
+            </option>
+            <option value="Ditolak SP-2" {{ request('status') == 'Ditolak SP-2' ? 'selected' : '' }}>Ditolak SP-2
+            </option>
+            <option value="Ditolak SP-3" {{ request('status') == 'Ditolak SP-3' ? 'selected' : '' }}>Ditolak SP-3
+            </option>
+            <option value="Lolos dengan penugasan"
+                {{ request('status') == 'Lolos dengan penugasan' ? 'selected' : '' }}>Lolos dengan penugasan</option>
         </select>
 
         {{-- Filter periode --}}
-        <select name="periode" class="w-full border-gray-300 px-2 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] cursor-pointer text-sm">
-            <option value="">Periode Aktif ({{ $periode->tahun_akademik }} - {{ $periode->semester }})</option>
+        <select name="periode"
+            class="w-full border-gray-300 px-2 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] cursor-pointer text-sm">
+            @if ($periode !== [])
+                <option value="">Periode Aktif ({{ $periode->tahun_akademik }} - {{ $periode->semester }})
+                </option>
+            @endif
             @foreach ($daftarPeriode as $p)
                 @php
                     $tahun = substr($p->tahun_akademik, 0, 4);
@@ -50,16 +65,15 @@
 
         {{-- Search --}}
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari NIM atau Nama..."
-               class="w-full border-gray-300 p-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
+            class="w-full border-gray-300 p-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
 
         {{-- Tombol --}}
         <div class="flex gap-2">
-            <button type="submit"
-                    class="bg-[#09697E] hover:bg-[#075263] text-white rounded-lg px-4 py-2 w-full">
+            <button type="submit" class="bg-[#09697E] hover:bg-[#075263] text-white rounded-lg px-4 py-2 w-full">
                 Filter
             </button>
             <a href="{{ url('/admin/laporan') }}"
-               class="bg-gray-400 hover:bg-gray-500 text-white rounded-lg px-4 py-2 w-full text-center">
+                class="bg-gray-400 hover:bg-gray-500 text-white rounded-lg px-4 py-2 w-full text-center">
                 Reset
             </a>
         </div>
@@ -75,7 +89,8 @@
                     <th class="px-3 sm:px-6 py-3 text-left font-semibold uppercase tracking-wider">Nama</th>
                     <th class="px-3 sm:px-6 py-3 text-left font-semibold uppercase tracking-wider">Semester</th>
                     <th class="px-3 sm:px-6 py-3 text-left font-semibold uppercase tracking-wider">Status</th>
-                    <th class="px-8 sm:px-16 py-3 text-center font-semibold uppercase tracking-wider whitespace-nowrap">Aksi</th>
+                    <th class="px-8 sm:px-16 py-3 text-center font-semibold uppercase tracking-wider whitespace-nowrap">
+                        Aksi</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-100">
@@ -112,16 +127,18 @@
                         <td class="px-3 sm:px-6 py-3 text-center">
                             <div class="grid justify-center grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
                                 <div class="w-full">
-                                    <a href="{{ url('/admin/laporan/'.$laporan->laporan_id) }}"
+                                    <a href="{{ url('/admin/laporan/' . $laporan->laporan_id) }}"
                                         class="flex w-full bg-[#09697E] hover:bg-[#075263] text-white py-2 rounded text-xs cursor-pointer">
-                                            <div class="w-full flex items-center justify-center">Edit</div>
+                                        <div class="w-full flex items-center justify-center">Edit</div>
                                     </a>
                                 </div>
-                                <form method="POST" action="{{ url('/admin/laporan/'.$laporan->laporan_id) }}"
-                                      onsubmit="return confirm('Hapus data Laporan {{$laporan->laporan_id}}?')" class="w-full">
+                                <form method="POST" action="{{ url('/admin/laporan/' . $laporan->laporan_id) }}"
+                                    onsubmit="return showConfirmationModal(event, 'Hapus data Laporan {{ $laporan->laporan_id }}?')"
+                                    class="w-full">
                                     @csrf
                                     @method('delete')
-                                    <button class="w-full bg-[#000000] hover:bg-gray-800 text-white px-3 py-2 rounded text-xs cursor-pointer">
+                                    <button
+                                        class="w-full bg-[#000000] hover:bg-gray-800 text-white px-3 py-2 rounded text-xs cursor-pointer">
                                         Hapus
                                     </button>
                                 </form>
@@ -139,7 +156,9 @@
         </table>
     </div>
 
-    <div class="pt-4">
-        {{ $dataLaporan->withQueryString()->links() }}
-    </div>
+    @if ($dataLaporan !== [])
+        <div class="pt-4">
+            {{ $dataLaporan->withQueryString()->links() }}
+        </div>
+    @endif
 </div>
