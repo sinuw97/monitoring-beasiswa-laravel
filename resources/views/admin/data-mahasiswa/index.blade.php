@@ -1,159 +1,239 @@
 @extends('admin.layout')
 
 @section('content')
-<div class="bg-white w-full max-w-5xl mx-auto shadow-lg rounded-xl p-2 sm:p-6 border-l-4 border-[#09697E] my-2 sm:my-8">
-    {{-- Header --}}
-    @if ($errors->any())
+    <div class="bg-white w-full max-w-5xl mx-auto shadow-lg rounded-xl p-2 sm:p-6 border-t-4 border-[#09697E] my-6 sm:my-8">
 
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4" role="alert">
-                        <strong class="font-bold">Gagal!</strong>
-                        <span class="block sm:inline">{{ $error }}</span>
-                        {{-- Tombol untuk menutup alert (opsional) --}}
-                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" onclick="this.parentElement.style.display='none';">
-                            <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.854l-2.651 2.995a1.2 1.2 0 1 1-1.697-1.697l2.651-2.995-2.651-2.995a1.2 1.2 0 1 1 1.697-1.697l2.651 2.995 2.651-2.995a1.2 1.2 0 1 1 1.697 1.697l-2.651 2.995 2.651 2.995a1.2 1.2 0 0 1 0 1.697z"/></svg>
-                        </span>
+        {{-- Success Message --}}
+        @if (session('success'))
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg shadow-md flex justify-between items-center"
+                role="alert">
+                <div class="flex items-center">
+                    <svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+                    </svg>
+                    <div>
+                        <p class="font-bold">Berhasil!</p>
+                        <p class="text-sm">{{ session('success') }}</p>
                     </div>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-green-700 hover:text-green-900">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        @endif
 
-    @if (session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4" role="alert">
-            <strong class="font-bold">Gagal!</strong>
-            <span class="block sm:inline">{{ session('error') }}</span>
-            {{-- Tombol untuk menutup alert (opsional) --}}
-            <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" onclick="this.parentElement.style.display='none';">
-                <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.854l-2.651 2.995a1.2 1.2 0 1 1-1.697-1.697l2.651-2.995-2.651-2.995a1.2 1.2 0 1 1 1.697-1.697l2.651 2.995 2.651-2.995a1.2 1.2 0 1 1 1.697 1.697l-2.651 2.995 2.651 2.995a1.2 1.2 0 0 1 0 1.697z"/></svg>
-            </span>
-        </div>
-    @endif
-    @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative my-4" role="alert">
-            <strong class="font-bold">Berhasil!</strong>
-            <span class="block sm:inline">{{ session('success') }}</span>
-            {{-- Tombol untuk menutup alert (opsional) --}}
-            <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" onclick="this.parentElement.style.display='none';">
-                <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.854l-2.651 2.995a1.2 1.2 0 1 1-1.697-1.697l2.651-2.995-2.651-2.995a1.2 1.2 0 1 1 1.697-1.697l2.651 2.995 2.651-2.995a1.2 1.2 0 1 1 1.697 1.697l-2.651 2.995 2.651 2.995a1.2 1.2 0 0 1 0 1.697z"/></svg>
-            </span>
-        </div>
-    @endif
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-        <h2 class="text-lg sm:text-xl font-semibold text-[#09697E]">Data Mahasiswa</h2>
-        <a href="#" onclick="openModal(true)" class="bg-[#E8BE00] hover:bg-[#d4ac00] text-[#000000] font-semibold px-3 sm:px-4 py-2 rounded-lg text-sm transition w-full sm:w-auto text-center">
-            + Tambah Mahasiswa
-        </a>
-    </div>
+        {{-- Error Messages --}}
+        @if (session('error'))
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-md flex justify-between items-center"
+                role="alert">
+                <div class="flex items-center">
+                    <svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+                    </svg>
+                    <div>
+                        <p class="font-bold">Gagal!</p>
+                        <p class="text-sm">{{ session('error') }}</p>
+                    </div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-red-700 hover:text-red-900">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        @endif
 
-    @include('components.modal-tambah-mahasiswa-admin')
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg shadow-md flex justify-between items-center"
+                    role="alert">
+                    <div class="flex items-center">
+                        <svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20">
+                            <path
+                                d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+                        </svg>
+                        <div>
+                            <p class="font-bold">Gagal!</p>
+                            <p class="text-sm">{{ $error }}</p>
+                        </div>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-red-700 hover:text-red-900">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            @endforeach
+        @endif
 
-    {{-- Filter & Sorting --}}
-    <form method="GET" action="{{ route('admin.data-mahasiswa') }}"
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
-
-        {{-- Search --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Cari Mahasiswa</label>
-            <input type="text" name="search" value="{{ request('search') }}"
-                placeholder="Cari nama atau NIM..."
-                class="w-full border-gray-300 p-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
-        </div>
-
-        {{-- Filter Angkatan --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Filter Angkatan</label>
-            <select name="angkatan" class="w-full border-gray-300 px-2 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] cursor-pointer text-sm">
-                <option value="">Semua</option>
-                @foreach($angkatanList as $angkatan)
-                    <option value="{{ $angkatan }}" {{ request('angkatan') == $angkatan ? 'selected' : '' }}>
-                        20{{ $angkatan }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Sorting Nama --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Urutkan Nama</label>
-            <select name="sort" class="w-full border-gray-300 px-2 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] cursor-pointer text-sm">
-                <option value="">Default</option>
-                <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>A - Z</option>
-                <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Z - A</option>
-            </select>
-        </div>
-
-        {{-- Button --}}
-        <div class="flex items-end gap-2">
-            <button type="submit"
-                class="w-full bg-[#09697E] hover:bg-[#075263] text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                Filter
+        {{-- Header --}}
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+            <div>
+                <h2 class="text-lg sm:text-xl font-bold text-[#09697E]">Data Mahasiswa</h2>
+                <p class="text-sm text-gray-500 mt-1">Kelola data mahasiswa penerima beasiswa</p>
+            </div>
+            <button onclick="openModal(true)"
+                class="mt-3 sm:mt-0 inline-flex items-center gap-2 bg-[#E8BE00] hover:bg-[#d4ac00] text-gray-900 font-semibold px-4 py-2.5 rounded-lg text-sm transition shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                    </path>
+                </svg>
+                Tambah Mahasiswa
             </button>
-            <a href="{{ url('/admin/data-mahasiswa') }}"
-                class="w-full bg-gray-400 hover:bg-gray-500 text-center text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                Reset
-            </a>
         </div>
-    </form>
 
-    {{-- Table Wrapper --}}
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 text-xs sm:text-sm">
-            <thead class="bg-[#09697E] text-white">
-                <tr>
-                    <th class="px-3 sm:px-6 py-3 text-left font-semibold uppercase tracking-wider">No</th>
-                    <th class="px-8 sm:px-6 py-3 text-left font-semibold uppercase tracking-wider">NIM</th>
-                    <th class="px-3 sm:px-6 py-3 text-left font-semibold uppercase tracking-wider">Nama</th>
-                    {{-- Hidden on mobile --}}
-                    <th class="px-3 sm:px-6 py-3 text-left font-semibold uppercase tracking-wider hidden sm:table-cell">Email</th>
-                    <th class="px-8 sm:px-16 py-3 text-center font-semibold uppercase tracking-wider">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-100">
-                @forelse ($dataMahasiswa as $index => $mhs)
-                    <tr class="hover:bg-[#f7f7f7] transition">
-                        <td class="px-3 sm:px-6 py-3 text-gray-800">
-                            {{ ($dataMahasiswa->currentPage() - 1) * $dataMahasiswa->perPage() + $loop->iteration }}
-                        </td>
-                        <td class="px-3 sm:px-6 py-3 text-gray-800 font-semibold break-all">{{ $mhs->nim }}</td>
-                        <td class="px-3 sm:px-6 py-3 text-gray-800"><div class="line-clamp-2 md:line-clamp-1">{{ $mhs->name }}</div></td>
-                        {{-- Hidden on mobile --}}
-                        <td class="px-3 sm:px-6 py-3 text-gray-700 break-all hidden sm:table-cell">{{ $mhs->email }}</td>
-                        <td class="px-3 sm:px-6 py-3 text-center">
-                            <div class="grid justify-center grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
-                                <div class="w-full">
-                                    <a href="{{ url('/admin/data-mahasiswa/edit/'.$mhs->nim) }}" type="submit"
-                                        class="flex w-full bg-[#09697E] hover:bg-[#075263] text-white py-2 rounded text-xs cursor-pointer">
-                                            <div class="w-full flex items-center justify-center">Edit</div>
-                                    </a>
-                                </div>
-                                <form method="POST" action="{{ route('admin.data-mahasiswa.destroy', $mhs->nim) }}"
-                                      onsubmit="return confirm('Hapus data mahasiswa {{$mhs->nim}}?')" class="w-full">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="w-full bg-[#000000] hover:bg-gray-800 text-white px-3 py-2 rounded text-xs cursor-pointer">
-                                        Hapus
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" class="text-center py-6 text-gray-500 italic">
-                            Tidak ada data mahasiswa
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+        @include('components.modal-tambah-mahasiswa-admin')
 
-    {{-- Pagination --}}
-    <div class="pt-4">
-        {{ $dataMahasiswa->withQueryString()->links() }}
+        {{-- Filter & Search Section --}}
+        <form method="GET" action="{{ route('admin.data-mahasiswa') }}"
+            class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-100">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                {{-- Search --}}
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Cari Mahasiswa</label>
+                    <div class="relative">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Nama atau NIM..."
+                            class="w-full pl-10 pr-3 py-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 text-sm transition">
+                        <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                {{-- Filter Angkatan --}}
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Angkatan</label>
+                    <select name="angkatan"
+                        class="w-full py-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
+                        <option value="">Semua Angkatan</option>
+                        @foreach ($angkatanList as $angkatan)
+                            <option value="{{ $angkatan }}" {{ request('angkatan') == $angkatan ? 'selected' : '' }}>
+                                20{{ $angkatan }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Sorting Nama --}}
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Urutkan Nama</label>
+                    <select name="sort"
+                        class="w-full py-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
+                        <option value="">Default</option>
+                        <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>A - Z</option>
+                        <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Z - A</option>
+                    </select>
+                </div>
+
+                {{-- Buttons --}}
+                <div class="flex items-end gap-2">
+                    <a href="{{ url('/admin/data-mahasiswa') }}"
+                        class="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition text-center">
+                        Reset
+                    </a>
+                    <button type="submit"
+                        class="flex-1 bg-[#09697E] hover:bg-[#075263] text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                        Terapkan
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        {{-- Table --}}
+        <div class="overflow-hidden rounded-lg border border-gray-200">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">No
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                NIM</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                Nama</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                                Email</th>
+                            <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-100">
+                        @forelse ($dataMahasiswa as $index => $mhs)
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">
+                                    {{ ($dataMahasiswa->currentPage() - 1) * $dataMahasiswa->perPage() + $loop->iteration }}
+                                </td>
+                                <td class="px-6 py-4 text-gray-900 font-semibold">{{ $mhs->nim }}</td>
+                                <td class="px-6 py-4 text-gray-900">
+                                    <div class="max-w-xs truncate">{{ $mhs->name }}</div>
+                                </td>
+                                <td class="px-6 py-4 text-gray-600 hidden sm:table-cell">
+                                    <div class="max-w-xs truncate">{{ $mhs->email }}</div>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex justify-center gap-2">
+                                        <a href="{{ url('/admin/data-mahasiswa/edit/' . $mhs->nim) }}"
+                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition"
+                                            title="Edit">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                                                </path>
+                                            </svg>
+                                        </a>
+
+                                        <button
+                                            onclick="showConfirmationModal('Hapus data mahasiswa {{ $mhs->nim }}?', '{{ route('admin.data-mahasiswa.destroy', $mhs->nim) }}', 'DELETE')"
+                                            class="text-gray-400 hover:text-red-600 bg-gray-50 hover:bg-red-50 p-2 rounded-lg transition"
+                                            title="Hapus">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-12 text-center">
+                                    <div class="flex flex-col items-center justify-center text-gray-500">
+                                        <svg class="w-12 h-12 mb-3 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                                            </path>
+                                        </svg>
+                                        <p class="font-medium">Tidak ada data mahasiswa</p>
+                                        <p class="text-sm mt-1">Silakan tambah mahasiswa baru</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {{-- Pagination --}}
+        <div class="mt-6">
+            {{ $dataMahasiswa->withQueryString()->links() }}
+        </div>
     </div>
-</div>
 @endsection

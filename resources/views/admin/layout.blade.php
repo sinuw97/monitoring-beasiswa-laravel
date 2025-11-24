@@ -9,7 +9,7 @@
     <title>Dashboard Admin</title>
 </head>
 
-<body>
+<body class="bg-gray-50 font-sans text-gray-900 antialiased">
     @include('components.navbar-admin')
     @yield('content')
 
