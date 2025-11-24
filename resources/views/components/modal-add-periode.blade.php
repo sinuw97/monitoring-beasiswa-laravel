@@ -22,13 +22,13 @@
                 <div class="text-sm">
                     <label for="tanggal_mulai_new" class="font-semibold text-gray-700 block mb-1">Tanggal Mulai</label>
                     <input type="date" name="tanggal_mulai" id="tanggal_mulai_new" required
-                        class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        class="w-full py-2 px-2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 </div>
                 <div class="text-sm">
                     <label for="tanggal_selesai_new" class="font-semibold text-gray-700 block mb-1">Tanggal
                         Selesai</label>
                     <input type="date" name="tanggal_selesai" id="tanggal_selesai_new" required
-                        class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        class="w-full py-2 px-2 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 </div>
             </div>
 

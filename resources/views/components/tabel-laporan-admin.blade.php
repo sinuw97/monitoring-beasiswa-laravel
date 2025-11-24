@@ -25,7 +25,7 @@
             <div>
                 <label class="block text-xs font-medium text-gray-700 mb-1">Angkatan</label>
                 <select name="angkatan"
-                    class="w-full py-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
+                    class="w-full py-2 px-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
                     <option value="">Semua Angkatan</option>
                     @foreach ($daftarAngkatan as $a)
                         <option value="{{ $a->angkatan }}" {{ request('angkatan') == $a->angkatan ? 'selected' : '' }}>
@@ -39,7 +39,7 @@
             <div>
                 <label class="block text-xs font-medium text-gray-700 mb-1">Status Laporan</label>
                 <select name="status"
-                    class="w-full py-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
+                    class="w-full py-2 px-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
                     <option value="">Semua Status</option>
                     <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
                     <option value="Lolos" {{ request('status') == 'Lolos' ? 'selected' : '' }}>Lolos</option>
@@ -60,7 +60,7 @@
             <div>
                 <label class="block text-xs font-medium text-gray-700 mb-1">Periode</label>
                 <select name="periode"
-                    class="w-full py-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
+                    class="w-full py-2 px-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
                     @if ($periode !== [])
                         <option value="">Periode Aktif ({{ $periode->tahun_akademik }} -
                             {{ $periode->semester }})</option>

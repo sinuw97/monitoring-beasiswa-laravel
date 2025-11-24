@@ -116,7 +116,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Angkatan</label>
                     <select name="angkatan"
-                        class="w-full py-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
+                        class="w-full py-2 px-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
                         <option value="">Semua Angkatan</option>
                         @foreach ($angkatanList as $angkatan)
                             <option value="{{ $angkatan }}" {{ request('angkatan') == $angkatan ? 'selected' : '' }}>
@@ -130,7 +130,7 @@
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Urutkan Nama</label>
                     <select name="sort"
-                        class="w-full py-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
+                        class="w-full py-2 px-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
                         <option value="">Default</option>
                         <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>A - Z</option>
                         <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Z - A</option>
