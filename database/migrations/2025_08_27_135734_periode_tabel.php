@@ -14,7 +14,7 @@ return new class extends Migration
             $table->enum('semester', ['Ganjil', 'Genap'])->nullable(false);
             $table->date('tanggal_mulai')->nullable(true); //Akan false saat prod
             $table->date('tanggal_selesai')->nullable(true); //Akan false saat prod
-            $table->enum('status', ['Aktif', 'Non-Aktif'])->default('Aktif');
+            $table->enum('status', ['Aktif', 'Non-Aktif', 'Aktif Sementara'])->default('Aktif');
             $table->timestamps();
         });
     }
