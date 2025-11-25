@@ -83,7 +83,7 @@
                 <p class="text-sm text-gray-500 mt-1">Kelola data mahasiswa penerima beasiswa</p>
             </div>
             <button onclick="openModal(true)"
-                class="mt-3 sm:mt-0 inline-flex items-center gap-2 bg-[#E8BE00] hover:bg-[#d4ac00] text-gray-900 font-semibold px-4 py-2.5 rounded-lg text-sm transition shadow-sm">
+                class="mt-3 sm:mt-0 inline-flex items-center gap-2 bg-[#E8BE00] hover:bg-[#d4ac00] text-gray-900 font-bold px-4 py-2.5 rounded-lg text-sm transition shadow-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
                     </path>

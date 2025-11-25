@@ -254,13 +254,11 @@ class DashboardAdminController extends Controller
         if ($activePeriode) {
             $periode->update([
                 'status' => 'Aktif Sementara',
-                'tanggal_mulai' => Carbon::now()
             ]);
             return redirect('/admin/dashboard')->with('success', 'Periode berhasil diaktifkan sementara.');
         } else {
             $periode->update([
                 'status' => 'Aktif',
-                'tanggal_mulai' => Carbon::now()
             ]);
             return redirect('/admin/dashboard')->with('success', 'Periode berhasil diaktifkan.');
         }
@@ -271,7 +269,6 @@ class DashboardAdminController extends Controller
         
         $periode->update([
             'status' => 'Non-Aktif',
-            'tanggal_selesai' => Carbon::now()
         ]);
 
         return redirect('/admin/dashboard')->with('success', 'Periode berhasil dinonaktifkan.');
