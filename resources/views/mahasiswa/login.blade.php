@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        #nprogress .bar {
+            background: #09697E;
+            height: 5px;
+        }
+
+        #nprogress .peg {
+            box-shadow: 0 0 15px #09697E, 0 0 9px #09697E;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/nprogress/nprogress.css">
     <title>Login Mahasiswa - Monitoring Beasiswa</title>
 </head>
 
@@ -74,6 +85,25 @@
             </div>
         </div>
     </div>
+
+    <script src="https://unpkg.com/nprogress/nprogress.js"></script>
+
+    <script>
+        // load / submit form
+        document.addEventListener('DOMContentLoaded', () => {
+            NProgress.start()
+        });
+
+        // selesai load
+        window.addEventListener('load', () => {
+            NProgress.done()
+        });
+
+        // submit form
+        document.addEventListener('submit', function() {
+            NProgress.start()
+        });
+    </script>
 </body>
 
 </html>

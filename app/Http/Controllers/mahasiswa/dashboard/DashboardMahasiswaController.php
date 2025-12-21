@@ -5,6 +5,7 @@ namespace App\Http\Controllers\mahasiswa\dashboard;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\monev\LaporanMonevMahasiswa;
+use App\Models\semester\Periode;
 use App\Models\users\Mahasiswa;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,13 +25,13 @@ class DashboardMahasiswaController extends Controller
 
         // Ambil semua laporan
         $allLaporan = LaporanMonevMahasiswa::where('nim', $mahasiswa->nim)
-            ->whereIn('status', ['Draft', 'Pending', 'Lolos', 'Rejected', 'Ditolak SP-1'])
             ->get();
 
         // Pisahkan laporan berdasarkan status
         $draftedLaporan = $allLaporan->where('status', 'Draft');
         $pendingLaporan = $allLaporan->where('status', 'Pending');
-        $lolosLaporan = $allLaporan->where('status', 'Lolos');
+        $laporanDikembalikan = $allLaporan->where('status', 'Dikembalikan');
+        $laporanLolos = $allLaporan->where('status', 'Lolos');
 
         // jmlh laporan yg harus mhs kirim
         $prodi = $dataMahasiswa->detailMahasiswa->prodi;
@@ -40,12 +41,23 @@ class DashboardMahasiswaController extends Controller
         $jumlahLaporanTerkirim = $allLaporan->where('status', '!=', 'Draft')->count();
         $presentaseLaporan = ($jumlahLaporanTerkirim / $totalLaporan) * 100;
 
+        // ambil periode yang Aktif utk fitampilkan ke running text
+        $periodeAktif = Periode::where('status', 'Aktif')
+            ->first();
+
+        if ($periodeAktif) {
+            $pengumuman = "Pengumuman: Periode {$periodeAktif->tahun_akademik} - {$periodeAktif->semester} telah dibuka! Segera lengkapi laporan monev Anda sebelum periode ditutup!";
+        } else {
+            $pengumuman = "Saat ini belum ada periode monev yang aktif. Silakan tunggu pengumuman selanjutnya. Terimakasih.";
+        }
         // Kirim data ke view
         return view('mahasiswa.dashboard', compact(
             'dataMahasiswa',
             'draftedLaporan',
-            'lolosLaporan',
+            'pengumuman',
+            'laporanLolos',
             'pendingLaporan',
+            'laporanDikembalikan',
             'totalLaporan',
             'jumlahLaporanTerkirim',
             'presentaseLaporan'

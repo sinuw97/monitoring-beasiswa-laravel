@@ -10,7 +10,7 @@
         </ul>
 
         {{-- Dropdown disini --}}
-        <div x-data="{ open: false }"
+        <div x-data="{ open: false }" x-cloak
             class="flex items-center justify-center gap-2 bg-[#f6f6f6] p-1 rounded-xl cursor-pointer">
             <button @click="open = !open" class="flex items-center gap-2 focus:outline-none cursor-pointer">
                 <img src="{{ $mhsAvatar }}" class="w-[25px] h-[25px] rounded-xl" alt="avatar">
@@ -66,7 +66,8 @@
                 <a href="{{ route('mahasiswa.riwayat-laporan') }}"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 md:hidden md:invisible">
                     <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="history" class="w-[20px] h-[20px]">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="history"
+                            class="w-[20px] h-[20px]">
                             <path fill="#09697E"
                                 d="M12,2A10,10,0,0,0,5.12,4.77V3a1,1,0,0,0-2,0V7.5a1,1,0,0,0,1,1H8.62a1,1,0,0,0,0-2H6.22A8,8,0,1,1,4,12a1,1,0,0,0-2,0A10,10,0,1,0,12,2Zm0,6a1,1,0,0,0-1,1v3a1,1,0,0,0,1,1h2a1,1,0,0,0,0-2H13V9A1,1,0,0,0,12,8Z">
                             </path>
@@ -90,29 +91,32 @@
                     </div>
                 </a>
 
-                {{-- Ganti PW --}}
-                <button @click="$dispatch('open-modal-pw')"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    <div class="flex items-center gap-2">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                            class="w-[20px] h-[20px]">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path
-                                    d="M10 14.0505C9.36474 13.4022 8.47934 13 7.5 13C5.567 13 4 14.567 4 16.5C4 18.433 5.567 20 7.5 20C9.433 20 11 18.433 11 16.5C11 15.5463 10.6186 14.6818 10 14.0505ZM10 14.0505L15.0316 9.01894M18.5 5.5L17.2689 6.75631M15.0316 9.01894L16.0379 8.01263L17.2689 6.75631M15.0316 9.01894L17.0126 11M17.2689 6.75631L20.0126 9.5"
-                                    stroke="#09697E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                </path>
-                            </g>
-                        </svg>
-                        Ganti Password
-                    </div>
-                </button>
+                <div>
+                    {{-- Ganti PW --}}
+                    <button @click="
+                    open = false;
+                    $dispatch('open-ganti-password')
+                    "
+                        class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left">
+                        <div class="flex items-center gap-2">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                class="w-[20px] h-[20px]">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path
+                                        d="M10 14.0505C9.36474 13.4022 8.47934 13 7.5 13C5.567 13 4 14.567 4 16.5C4 18.433 5.567 20 7.5 20C9.433 20 11 18.433 11 16.5C11 15.5463 10.6186 14.6818 10 14.0505ZM10 14.0505L15.0316 9.01894M18.5 5.5L17.2689 6.75631M15.0316 9.01894L16.0379 8.01263L17.2689 6.75631M15.0316 9.01894L17.0126 11M17.2689 6.75631L20.0126 9.5"
+                                        stroke="#09697E" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                    </path>
+                                </g>
+                            </svg>
+                            Ganti Password
+                        </div>
+                    </button>
 
-                {{-- Logout --}}
-                <form method="POST" action="{{ url('mahasiswa/logout') }}">
-                    @csrf
-                    <button type="submit"
+                    {{-- Logout --}}
+                    <button type="button"
                         class="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-[#FF0303] hover:bg-gray-100">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="signout"
                             class="w-[20px] h-[20px]">
@@ -122,7 +126,10 @@
                         </svg>
                         Logout
                     </button>
-                </form>
+                    {{-- <form method="POST" action="{{ url('mahasiswa/logout') }}">
+                        @csrf
+                    </form> --}}
+                </div>
             </div>
         </div>
     </nav>

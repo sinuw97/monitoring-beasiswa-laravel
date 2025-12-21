@@ -7,6 +7,21 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="//unpkg.com/alpinejs" defer></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        #nprogress .bar {
+            background: #09697E;
+            height: 5px;
+        }
+
+        #nprogress .peg {
+            box-shadow: 0 0 15px #09697E, 0 0 9px #09697E;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/nprogress/nprogress.css">
     <title>Riwayat Laporan Monev</title>
 </head>
 
@@ -21,7 +36,7 @@
                 Menampilkan semua laporan yang telah kamu kirim.
             </p>
 
-            {{-- Table container (scrollable on small screens) --}}
+            {{-- Table --}}
             <div class="overflow-x-auto rounded-md border border-gray-200">
                 <table class="min-w-full text-xs sm:text-sm bg-white border-separate border-spacing-0">
                     <thead>
@@ -46,10 +61,11 @@
                                 <td class="px-3 sm:px-4 py-2 text-center">
                                     @php
                                         $warnaStatus = match ($laporan->status) {
-                                            'Lolos', 'Lolos dengan penugasan' => 'bg-[#27d360] text-white',
-                                            'Pending' => 'bg-[#ffdd44] text-black',
-                                            'Ditolak SP-1', 'Ditolak SP-2', 'Ditolak SP-3' => 'bg-[#d13737] text-white',
-                                            default => 'bg-gray-300 text-black',
+                                            'Lolos', 'Lolos dengan penugasan' => 'bg-[#27d360] text-[#FEFEFE]',
+                                            'Pending' => 'bg-[#ffdd44] text-[#0F0F0F]',
+                                            'Dikembalikan' => 'bg-[#2563EB] text-[#FEFEFE]',
+                                            'Ditolak SP-1', 'Ditolak SP-2', 'Ditolak SP-3' => 'bg-[#d13737] text-[#FEFEFE]',
+                                            default => 'bg-gray-300 text-[#0F0F0F]',
                                         };
                                     @endphp
                                     <span
@@ -63,7 +79,7 @@
                                 </td>
                                 <td class="px-3 sm:px-4 py-2 text-center">
                                     <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
-                                        class="px-3 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
+                                        class="px-2 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
                                         Lihat</a>
                                 </td>
                             </tr>
@@ -79,6 +95,23 @@
             </div>
         </div>
     </section>
+
+    {{-- Progress Bar --}}
+    <script src="https://unpkg.com/nprogress/nprogress.js"></script>
+    <script>
+        // load / submit form
+        document.addEventListener('DOMContentLoaded', () => {
+            NProgress.start()
+        });
+        // selesai load
+        window.addEventListener('load', () => {
+            NProgress.done()
+        });
+        // submit form
+        document.addEventListener('submit', function() {
+            NProgress.start()
+        });
+    </script>
 </body>
 
 </html>

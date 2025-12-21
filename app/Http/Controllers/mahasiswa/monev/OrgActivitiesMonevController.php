@@ -4,10 +4,12 @@ namespace App\Http\Controllers\mahasiswa\monev;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\monev\LaporanMonevMahasiswa;
 use Illuminate\Support\Facades\Auth;
 use App\Models\monev\OrganizationActivities;
-
+use App\Models\semester\Periode;
 use App\Services\GoogleDriveService;
+use Carbon\Carbon;
 
 class OrgActivitiesMonevController extends Controller
 {
@@ -22,10 +24,39 @@ class OrgActivitiesMonevController extends Controller
       'tingkat' => 'required|string|min:1|max:100',
       'posisi' => 'required|string|min:1|max:100',
       'tempat' => 'required|string|min:1|max:255',
-      'tanggal-mulai' => 'required',
-      'tanggal-selesai' => 'required',
+      'tanggal-mulai' => 'required|date',
+      'tanggal-selesai' => 'required|date|after_or_equal:tanggal-mulai',
       'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
     ]);
+
+    // Pengecekan apakah tanggal mulai dan selesai masih dalam satu periode?
+    $laporan = LaporanMonevMahasiswa::findOrFail($laporanId);
+    $semesterId = $laporan->semester_id;
+
+    $periode = Periode::where('semester_id', $semesterId)->first();
+
+    if (!$periode) {
+      return back()->withErrors('Periode semester tidak ditemukan.');
+    }
+
+    $tanggalMulai = Carbon::parse($validated['tanggal-mulai']);
+    $tanggalSelesai = Carbon::parse($validated['tanggal-selesai']);
+
+    $errors = [];
+
+    if ($tanggalMulai->lt($periode->tanggal_mulai)) {
+      $errors['tanggal-mulai'] =
+        'Tanggal mulai berada sebelum periode semester.';
+    }
+
+    if ($tanggalSelesai->gt($periode->tanggal_selesai)) {
+      $errors['tanggal-selesai'] =
+        'Tanggal selesai melewati periode semester.';
+    }
+
+    if (!empty($errors)) {
+      return back()->withErrors($errors);
+    }
 
     if ($request->hasFile('bukti')) {
       // service GDrive
@@ -81,10 +112,35 @@ class OrgActivitiesMonevController extends Controller
       'tingkat' => 'required|string|min:1|max:100',
       'posisi' => 'required|string|min:1|max:100',
       'tempat' => 'required|string|min:1|max:255',
-      'tanggal-mulai' => 'required',
-      'tanggal-selesai' => 'required',
+      'tanggal-mulai' => 'required|date',
+      'tanggal-selesai' => 'required|date|after_or_equal:tanggal-mulai',
       'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
     ]);
+
+    // Pengecekan apakah tanggal mulai dan selesai masih dalam satu periode?
+    $laporan = LaporanMonevMahasiswa::findOrFail($report->laporan_id);
+    $semesterId = $laporan->semester_id;
+
+    $periode = Periode::where('semester_id', $semesterId)->first();
+
+    $tanggalMulai = Carbon::parse($validated['tanggal-mulai']);
+    $tanggalSelesai = Carbon::parse($validated['tanggal-selesai']);
+
+    $errors = [];
+
+    if ($tanggalMulai->lt($periode->tanggal_mulai)) {
+      $errors['tanggal-mulai'] =
+        'Tanggal mulai berada sebelum periode semester.';
+    }
+
+    if ($tanggalSelesai->gt($periode->tanggal_selesai)) {
+      $errors['tanggal-selesai'] =
+        'Tanggal selesai melewati periode semester.';
+    }
+
+    if (!empty($errors)) {
+      return back()->withErrors($errors);
+    }
 
     $report->ukm_name = $validated['nama-ukm'];
     $report->activity_name = $validated['nama-kegiatan'];

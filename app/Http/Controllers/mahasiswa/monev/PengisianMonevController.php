@@ -124,6 +124,7 @@ class PengisianMonevController extends Controller
 
         return redirect()->route('mahasiswa.lihat-laporan', parameters: ['laporanId' => $laporan->laporan_id]);
     }
+
     // Menampilkan halaman pengisian aktivitas mhs (monev)
     public function showHalamanIsiMonev(string $laporanId)
     {
@@ -312,6 +313,27 @@ class PengisianMonevController extends Controller
             return back()->with('error', 'Laporan tidak ditemukan.');
         }
 
+        // validasi isi data laporan (relasi laporan mahasiswa harus ada yg isi)
+        $relationsToCheck = [
+            'academicReports',
+            'academicActivities',
+            'committeeActivities',
+            'organizationActivities',
+            'studentAchievements',
+            'independentActivities',
+            'evaluations',
+            'targetNextSemester',
+            'targetAcademicActivities',
+            'targetAchievements',
+            'targetIndependentActivities',
+        ];
+
+        $isAllEmpty = collect($relationsToCheck)->every(fn($rel) => $laporan->$rel->isEmpty());
+
+        if ($isAllEmpty) {
+            return back()->with('error', 'Minimal satu data harus terisi!');
+        }
+
         // inisiasi service
         $penilaianKegAkademik = app(KegAkademikService::class);
         $penilaianKegOrganisasi = app(KegOrgService::class);
@@ -383,6 +405,6 @@ class PengisianMonevController extends Controller
             $laporan->$relation()->update(['status' => 'Pending']);
         }
 
-        return redirect()->route('mahasiswa.detail-laporan')->with('success', 'Laporan Berhasil Diajukan Dengan Status Pending');
+        return redirect()->route('mahasiswa.detail-laporan', $laporanId)->with('success', 'Laporan Berhasil Diajukan Dengan Status Pending');
     }
 }

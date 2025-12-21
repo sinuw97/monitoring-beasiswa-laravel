@@ -5,7 +5,7 @@
     <div class="bg-white w-full max-w-[400px] p-6 rounded-xl shadow-lg" @click.stop>
 
         @if ($title)
-            <h2 class="text-lg font-bold mb-4 text-gray-800">{{ $title }}</h2>
+            <h2 class="text-lg text-center font-bold mb-4 text-gray-800">{{ $title }}</h2>
         @endif
 
         {{-- form content --}}

@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\monev\IndependentActivities;
-
+use App\Models\monev\LaporanMonevMahasiswa;
+use App\Models\semester\Periode;
 use App\Services\GoogleDriveService;
+use Carbon\Carbon;
 
 class IndependentActivitiesMonevController extends Controller
 {
@@ -16,15 +18,44 @@ class IndependentActivitiesMonevController extends Controller
   {
     $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
-    $vaalidated = $request->validate([
+    $validated = $request->validate([
       'nama-kegiatan' => 'required|string|min:1|max:255',
       'tipe-kegiatan' => 'required|string|min:1|max:255',
       'keikutsertaan' => 'required|string|min:1|max:255',
       'tempat' => 'required|string|min:1|max:255',
-      'tanggal-mulai' => 'required',
-      'tanggal-selesai' => 'required',
+      'tanggal-mulai' => 'required|date',
+      'tanggal-selesai' => 'required|date|after_or_equal:tanggal-mulai',
       'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
     ]);
+
+    // Pengecekan apakah tanggal mulai dan selesai masih dalam satu periode?
+    $laporan = LaporanMonevMahasiswa::findOrFail($laporanId);
+    $semesterId = $laporan->semester_id;
+
+    $periode = Periode::where('semester_id', $semesterId)->first();
+
+    if (!$periode) {
+      return back()->withErrors('Periode semester tidak ditemukan.');
+    }
+
+    $tanggalMulai = Carbon::parse($validated['tanggal-mulai']);
+    $tanggalSelesai = Carbon::parse($validated['tanggal-selesai']);
+
+    $errors = [];
+
+    if ($tanggalMulai->lt($periode->tanggal_mulai)) {
+      $errors['tanggal-mulai'] =
+        'Tanggal mulai berada sebelum periode semester.';
+    }
+
+    if ($tanggalSelesai->gt($periode->tanggal_selesai)) {
+      $errors['tanggal-selesai'] =
+        'Tanggal selesai melewati periode semester.';
+    }
+
+    if (!empty($errors)) {
+      return back()->withErrors($errors);
+    }
 
     if ($request->hasFile('bukti')) {
       // service GDrive
@@ -55,12 +86,12 @@ class IndependentActivitiesMonevController extends Controller
     IndependentActivities::create([
       'laporan_id' => $laporanId,
       'nim' => $dataMahasiswa->nim,
-      'activity_name' => $vaalidated['nama-kegiatan'],
-      'activity_type' => $vaalidated['tipe-kegiatan'],
-      'participation' => $vaalidated['keikutsertaan'],
-      'place' => $vaalidated['tempat'],
-      'start_date' => $vaalidated['tanggal-mulai'],
-      'end_date' => $vaalidated['tanggal-selesai'],
+      'activity_name' => $validated['nama-kegiatan'],
+      'activity_type' => $validated['tipe-kegiatan'],
+      'participation' => $validated['keikutsertaan'],
+      'place' => $validated['tempat'],
+      'start_date' => $validated['tanggal-mulai'],
+      'end_date' => $validated['tanggal-selesai'],
       'bukti_url' => $fileLink ?? 'Tidak Ada',
       'status' => 'Draft',
     ]);
@@ -73,22 +104,47 @@ class IndependentActivitiesMonevController extends Controller
     $report = IndependentActivities::findOrFail($idData);
     $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
-    $vaalidated = $request->validate([
+    $validated = $request->validate([
       'nama-kegiatan' => 'required|string|min:1|max:255',
       'tipe-kegiatan' => 'required|string|min:1|max:255',
       'keikutsertaan' => 'required|string|min:1|max:255',
       'tempat' => 'required|string|min:1|max:255',
-      'tanggal-mulai' => 'required',
-      'tanggal-selesai' => 'required',
+      'tanggal-mulai' => 'required|date',
+      'tanggal-selesai' => 'required|date|after_or_equal:tanggal-mulai',
       'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
     ]);
 
-    $report->activity_name = $vaalidated['nama-kegiatan'];
-    $report->activity_type = $vaalidated['tipe-kegiatan'];
-    $report->participation = $vaalidated['keikutsertaan'];
-    $report->place = $vaalidated['tempat'];
-    $report->start_date = $vaalidated['tanggal-mulai'];
-    $report->end_date = $vaalidated['tanggal-selesai'];
+    // Pengecekan apakah tanggal mulai dan selesai masih dalam satu periode?
+    $laporan = LaporanMonevMahasiswa::findOrFail($report->laporan_id);
+    $semesterId = $laporan->semester_id;
+
+    $periode = Periode::where('semester_id', $semesterId)->first();
+
+    $tanggalMulai = Carbon::parse($validated['tanggal-mulai']);
+    $tanggalSelesai = Carbon::parse($validated['tanggal-selesai']);
+
+    $errors = [];
+
+    if ($tanggalMulai->lt($periode->tanggal_mulai)) {
+      $errors['tanggal-mulai'] =
+        'Tanggal mulai berada sebelum periode semester.';
+    }
+
+    if ($tanggalSelesai->gt($periode->tanggal_selesai)) {
+      $errors['tanggal-selesai'] =
+        'Tanggal selesai melewati periode semester.';
+    }
+
+    if (!empty($errors)) {
+      return back()->withErrors($errors);
+    }
+
+    $report->activity_name = $validated['nama-kegiatan'];
+    $report->activity_type = $validated['tipe-kegiatan'];
+    $report->participation = $validated['keikutsertaan'];
+    $report->place = $validated['tempat'];
+    $report->start_date = $validated['tanggal-mulai'];
+    $report->end_date = $validated['tanggal-selesai'];
 
     if ($request->hasFile('bukti')) {
       // service GDrive
