@@ -183,9 +183,9 @@
                     class="mt-3 bg-[#ffffff] relative overflow-hidden border-l-4 border-[#09697E] rounded-sm shadow-md py-2">
                     <div class="flex whitespace-nowrap animate-marquee">
                         <span class="flex gap-3 mx-8 font-semibold text-[#074b5b]">
-                            <svg class="w-6 h-6" version="1.1" id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                viewBox="0 0 280.027 280.027" xml:space="preserve" fill="#000000">
+                            <svg class="w-6 h-6" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 280.027 280.027"
+                                xml:space="preserve" fill="#000000">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -223,9 +223,9 @@
                             {{ $pengumuman }}
                         </span>
                         <span class="flex gap-3 mx-8 font-semibold text-[#074b5b]">
-                            <svg class="w-6 h-6" version="1.1" id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                viewBox="0 0 280.027 280.027" xml:space="preserve" fill="#000000">
+                            <svg class="w-6 h-6" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 280.027 280.027"
+                                xml:space="preserve" fill="#000000">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -259,7 +259,7 @@
                                         </path>
                                     </g>
                                 </g>
-                            </svg> 
+                            </svg>
                             {{ $pengumuman }}
                         </span>
                     </div>
@@ -297,7 +297,6 @@
                 </div>
             </div>
 
-
             {{-- Laporan yg disimpan --}}
             <div class="bg-white w-full shadow-md rounded-md p-4 mb-5">
                 <h2 class="font-semibold mb-3 text-lg">Laporan Monev Yang Tersimpan</h2>
@@ -306,10 +305,10 @@
                 {{-- Mobile Card : Laporan yg disimpan --}}
                 <div class="block lg:hidden space-y-4">
                     @forelse ($draftedLaporan as $drafted)
-                        <div class="bg-white rounded-lg shadow-sm border-l-4 border-yellow-400 p-4">
+                        <div class="bg-white rounded-lg shadow-sm border-l-4 border-gray-400 p-4">
                             {{-- Status --}}
                             <span
-                                class="inline-block mb-2 px-2 py-0.5 text-xs font-semibold rounded bg-yellow-100 text-yellow-700">
+                                class="inline-block mb-2 px-2 py-0.5 text-xs font-semibold rounded bg-gray-100 text-black-700">
                                 {{ $drafted->status }}
                             </span>
 
@@ -332,7 +331,7 @@
 
                             {{-- Aksi btn --}}
                             <div class="mt-3">
-                                <a href="{{ route('mahasiswa.detail-laporan', $drafted->laporan_id) }}"
+                                <a href="{{ route('mahasiswa.lihat-laporan', $drafted->laporan_id) }}"
                                     class="inline-block px-3 py-1 text-xs font-semibold rounded-md
                            bg-[#1D7D94] text-white hover:bg-[#09697E] transition">
                                     Lihat
@@ -495,10 +494,10 @@
                 {{-- Mobile Card : laporan yang dikembalikan --}}
                 <div class="block lg:hidden space-y-4">
                     @forelse ($laporanDikembalikan as $dikembalikan)
-                        <div class="bg-white rounded-lg shadow-sm border-l-4 border-yellow-400 p-4">
+                        <div class="bg-white rounded-lg shadow-sm border-l-4 border-blue-400 p-4">
                             {{-- Status --}}
                             <span
-                                class="inline-block mb-2 px-2 py-0.5 text-xs font-semibold rounded bg-yellow-100 text-yellow-700">
+                                class="inline-block mb-2 px-2 py-0.5 text-xs font-semibold rounded bg-blue-100 text-blue-700">
                                 {{ $dikembalikan->status }}
                             </span>
 

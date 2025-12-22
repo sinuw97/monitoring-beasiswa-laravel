@@ -60,10 +60,7 @@
             {{-- ================= Mobile View ================= --}}
             <div class="block sm:hidden space-y-4 mt-4 px-2">
                 @forelse ($timeline as $row)
-                    <div
-                        class="bg-white rounded-lg shadow-sm p-4 border-l-4
-            {{ $row['status'] === 'Dibuka' ? 'border-[#1D7D94]' : 'border-red-400' }}">
-
+                    <div class="bg-white rounded-lg shadow-sm p-4 border-l-4 {{ $row['status'] === 'Dibuka' ? 'border-[#1D7D94]' : 'border-red-400' }}">
                         {{-- Status --}}
                         <span
                             class="inline-block mb-2 text-[10px] font-semibold tracking-wide uppercase px-2 py-1 rounded

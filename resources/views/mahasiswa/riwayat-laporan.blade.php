@@ -36,8 +36,70 @@
                 Menampilkan semua laporan yang telah kamu kirim.
             </p>
 
-            {{-- Table --}}
-            <div class="overflow-x-auto rounded-md border border-gray-200">
+            {{-- Mobile View --}}
+            <div class="block sm:hidden space-y-4 mt-4 px-2">
+                @forelse ($riwayatLaporan as $laporan)
+                    @php
+                        $warnaStatus = match ($laporan->status) {
+                            'Lolos', 'Lolos dengan penugasan' => 'bg-[#27d360] text-[#FEFEFE]',
+                            'Pending' => 'bg-[#ffdd44] text-[#0F0F0F]',
+                            'Dikembalikan' => 'bg-[#2563EB] text-[#FEFEFE]',
+                            'Ditolak SP-1', 'Ditolak SP-2', 'Ditolak SP-3' => 'bg-[#d13737] text-[#FEFEFE]',
+                            default => 'bg-gray-300 text-[#0F0F0F]',
+                        };
+                    @endphp
+
+                    <div class="bg-white rounded-lg shadow-sm p-4 border-l-4 border-[#E8BE00]">
+
+                        {{-- Header: Status & Tanggal --}}
+                        <div class="flex items-center justify-between mb-3">
+                            <span
+                                class="inline-block text-[10px] font-semibold tracking-wide uppercase px-2 py-1 rounded {{ $warnaStatus }}">
+                                {{ $laporan->status }}
+                            </span>
+
+                            <span class="text-[11px] italic text-gray-700">
+                                {{ $laporan->created_at ? $laporan->created_at->translatedFormat('d F Y') : '-' }}
+                            </span>
+                        </div>
+
+                        {{-- Semester --}}
+                        <h3 class="text-md font-bold mb-1">
+                            Semester {{ $laporan->semester }}
+                        </h3>
+
+                        {{-- Periode --}}
+                        <p class="text-xs text-gray-600 mb-3">
+                            Periode:
+                            {{ $laporan->periodeSemester?->tahun_akademik ?? '-' }}
+                            -
+                            {{ $laporan->periodeSemester?->semester }}
+                        </p>
+
+                        {{-- Aksi --}}
+                        <div class="flex justify-end">
+                            @if ($laporan->status === 'Lolos' || $laporan->status === 'Pending' || str_contains($laporan->status, 'Ditolak'))
+                                <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
+                                    class="px-3 py-1.5 text-xs bg-[#1D7D94] text-white font-semibold rounded-md hover:bg-[#09697E] transition">
+                                    Lihat
+                                </a>
+                            @elseif ($laporan->status === 'Dikembalikan')
+                                <a href="{{ route('mahasiswa.revisi-laporan', $laporan->laporan_id) }}"
+                                    class="px-3 py-1.5 text-xs bg-[#1D7D94] text-white font-semibold rounded-md hover:bg-[#09697E] transition">
+                                    Revisi
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center text-sm text-gray-500 py-6">
+                        Tidak ada data
+                    </div>
+                @endforelse
+            </div>
+
+            {{-- Desktop View --}}
+            <div class="hidden sm:block overflow-x-auto rounded-md">
                 <table class="min-w-full text-xs sm:text-sm bg-white border-separate border-spacing-0">
                     <thead>
                         <tr class="bg-[#E8BE00] text-gray-900">
@@ -64,7 +126,10 @@
                                             'Lolos', 'Lolos dengan penugasan' => 'bg-[#27d360] text-[#FEFEFE]',
                                             'Pending' => 'bg-[#ffdd44] text-[#0F0F0F]',
                                             'Dikembalikan' => 'bg-[#2563EB] text-[#FEFEFE]',
-                                            'Ditolak SP-1', 'Ditolak SP-2', 'Ditolak SP-3' => 'bg-[#d13737] text-[#FEFEFE]',
+                                            'Ditolak SP-1',
+                                            'Ditolak SP-2',
+                                            'Ditolak SP-3'
+                                                => 'bg-[#d13737] text-[#FEFEFE]',
                                             default => 'bg-gray-300 text-[#0F0F0F]',
                                         };
                                     @endphp
@@ -81,12 +146,12 @@
                                     {{-- Conditional Rendering --}}
                                     @if ($laporan->status === 'Lolos' || $laporan->status === 'Pending' || $laporan->status === 'Ditolak')
                                         <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
-                                        class="px-2 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
-                                        Lihat</a>
+                                            class="px-2 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
+                                            Lihat</a>
                                     @elseif($laporan->status === 'Dikembalikan')
                                         <a href="{{ route('mahasiswa.revisi-laporan', $laporan->laporan_id) }}"
-                                        class="px-2 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
-                                        Lihat</a>
+                                            class="px-2 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
+                                            Lihat</a>
                                     @endif
                                 </td>
                             </tr>
@@ -100,7 +165,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
     </section>
 
     {{-- Progress Bar --}}
