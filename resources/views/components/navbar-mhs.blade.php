@@ -93,10 +93,12 @@
 
                 <div>
                     {{-- Ganti PW --}}
-                    <button @click="
+                    <button
+                        @click="
                     open = false;
                     $dispatch('open-ganti-password')
                     "
+                    type="button"
                         class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left">
                         <div class="flex items-center gap-2">
                             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +118,11 @@
                     </button>
 
                     {{-- Logout --}}
-                    <button type="button"
+                    <button @click="
+                        open = false;
+                        $dispatch('open-logout-confirm')
+                    "
+                        type="button"
                         class="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-[#FF0303] hover:bg-gray-100">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="signout"
                             class="w-[20px] h-[20px]">
@@ -126,9 +132,6 @@
                         </svg>
                         Logout
                     </button>
-                    {{-- <form method="POST" action="{{ url('mahasiswa/logout') }}">
-                        @csrf
-                    </form> --}}
                 </div>
             </div>
         </div>
@@ -140,3 +143,4 @@
 </header>
 
 <x-modal-ganti-pw />
+<x-modal-logout />

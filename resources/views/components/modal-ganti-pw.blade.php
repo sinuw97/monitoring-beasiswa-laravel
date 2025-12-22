@@ -7,7 +7,6 @@
                 Ganti Password
             </h2>
 
-            {{-- KOSONG DULU --}}
             <div class="text-sm text-gray-500">
                 <form method="POST" action="{{ route('mahasiswa.ganti-pw') }}">
                     @csrf

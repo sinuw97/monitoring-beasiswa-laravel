@@ -16,6 +16,7 @@ use App\Http\Controllers\admin\dashboard\DashboardAdminController;
 use App\Http\Controllers\admin\dashboard\DataMahasiswaController;
 use App\Http\Controllers\admin\dashboard\LaporanMonevController;
 use App\Http\Controllers\mahasiswa\laporan\DetailLaporanMonevController;
+use App\Http\Controllers\mahasiswa\laporan\RevisiLaporanController;
 use App\Http\Controllers\mahasiswa\profile\ProfilMahasiswaController;
 use App\Http\Controllers\mahasiswa\laporan\RiwayatLaporanController;
 use App\Http\Controllers\mahasiswa\monev\AcademicActMonevController;
@@ -42,6 +43,9 @@ Route::prefix('mahasiswa')->group(function () {
 
         // Riwayat Laporan
         Route::get('/riwayat-laporan/{laporanId}',[DetailLaporanMonevController::class, 'showHalamanDetailLaporan'])->name('mahasiswa.detail-laporan');
+
+        // Revisi Laporan
+        Route::get('/riwayat-laporan/{laporanId}/revisi', [RevisiLaporanController::class, 'showHalamanRevisi'])->name('mahasiswa.revisi-laporan');
 
         // Tambah data
         Route::post('/isi-monev/{laporanId}/academic-reports', [NilaiIPSnIPKMonevController::class, 'submitNilaiIPKnIPS'])->name('laporan.academic-reports.store');

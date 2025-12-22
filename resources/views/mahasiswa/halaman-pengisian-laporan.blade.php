@@ -33,23 +33,26 @@
     <section class="flex justify-center w-full">
         <div class="bg-[#fdfdfd] w-full max-w-[1000px] p-4 sm:p-6">
 
-            <h2 class="text-lg sm:text-xl font-bold ml-2 sm:ml-3.5 mb-2">
+            <h2 class="text-xl lg:text-2xl text-[#09697E] font-bold ml-2 sm:ml-3.5 mb-2">
                 Pengisian Laporan Monev
             </h2>
 
             {{-- Banner Card --}}
             @if ($periodeAktifBanner)
-                <div
-                    class="bg-[#09697e41] border-[#09697E] rounded-sm shadow-md border-l-4 p-3 sm:p-4 mx-2 sm:mx-4 mb-4">
+                <div class="bg-[#EAF6F8] border-[#1D7D94] rounded-sm shadow-md border-l-4 p-3 sm:p-4 mx-2 sm:mx-4 mb-4">
                     <p class="font-semibold text-sm sm:text-base">
                         Periode {{ $periodeAktifBanner->tahun_akademik }} {{ $periodeAktifBanner->semester }} sedang
                         Dibuka
                     </p>
-                    <p class="font-bold text-base sm:text-lg">
+                    <p class="font-bold text-base text-md lg:text-lg">
                         Waktu periode:
-                        {{ \Carbon\Carbon::parse($periodeAktifBanner->tanggal_mulai)->locale('id')->translatedFormat('d F Y') }}
-                        -
-                        {{ \Carbon\Carbon::parse($periodeAktifBanner->tanggal_selesai)->locale('id')->translatedFormat('d F Y') }}
+                        @if ($periodeAktifBanner->tanggal_mulai && $periodeAktifBanner->tanggal_selesai)
+                            {{ \Carbon\Carbon::parse($periodeAktifBanner->tanggal_mulai)->locale('id')->translatedFormat('d F Y') }}
+                            -
+                            {{ \Carbon\Carbon::parse($periodeAktifBanner->tanggal_selesai)->locale('id')->translatedFormat('d F Y') }}
+                        @else
+                            <span class="italic text-gray-500">Belum ditentukan</span>
+                        @endif
                     </p>
                 </div>
             @endif
@@ -112,7 +115,6 @@
                     </div>
                 @endforelse
             </div>
-
 
             {{-- ================= Desktop View ================= --}}
             <div class="hidden sm:block overflow-x-auto mt-4">

@@ -28,9 +28,11 @@
 
     <section class="flex justify-center w-full h-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-[#fdfdfd] w-full max-w-[1100px] lg:max-w-[1100px] xl:max-w-[1200px] h-auto p-4 sm:p-6 shadow-lg">
-            <h2 class="text-xl text-[#013F4E] font-bold mb-2">Laporan Monev Yang Tersimpan</h2>
+            <h1 class="text-xl lg:text-2xl text-[#013F4E] font-bold mb-3">Laporan Monev Yang Tersimpan</h1>
+            
+            {{-- Card --}}
             <div
-                class="h-auto bg-[#fefefe] border-l-4 border-[#09697E] text-[#09697E] font-semibold px-3 py-3 rounded mb-3 shadow-md">
+                class="text-sm flex flex-col gap-1.5 h-auto bg-[#fefefe] border-l-4 border-[#09697E] text-[#09697E] font-semibold px-3 py-3 rounded mb-3 shadow-md">
                 <div class="flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-[20px] h-[20px]" viewBox="0 0 24 24"
                         id="user">
@@ -146,6 +148,16 @@
                 </div>
             </div>
 
+            {{-- Informasi Penting --}}
+            <div class="bg-[#EAF6F8] border-l-4 border-[#1D7D94] rounded-md px-4 py-3 mb-4">
+                <div class="flex items-start gap-3">
+                    <p class="text-sm text-[#0F3F4A] leading-relaxed">
+                        Perhatikan bahwa <b>tanggal mulai</b> dan <b>tanggal selesai</b> kegiatan harus berada dalam
+                        <b>rentang waktu periode monev</b> yang telah ditentukan.
+                    </p>
+                </div>
+            </div>
+
             @if (session('success'))
                 <div class="bg-green-100 border-l-4 border-green-600 text-[#013F4E] w-full px-3 py-3 rounded mb-3">
                     {{ session('success') }}
@@ -170,10 +182,11 @@
                 {{-- Reports --}}
                 <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="mb-3 mt-5 cursor-default"
                     x-on:edit-reports.window="editDataReports = $event.detail; openEditReports = true">
-                    <h2 class="text-xl font-bold text-[#013F4E]">A. KEGIATAN AKADEMIK</h2>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Nilai IPS dan IPK Semester Ini
+                    <h2 class="text-xl lg:text-2xl font-bold text-[#013F4E]">A. KEGIATAN AKADEMIK</h2>
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Nilai IPS dan IPK Semester Ini
                     </p>
 
+                    {{-- Tabel --}}
                     <div class="overflow-x-auto w-full">
                         {{-- Panggil komponen tabel --}}
                         <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Status']" :columns="['semester', 'ips', 'ipk', 'bukti', 'status']" :rows="$parsingAcademicReports" idKey="id"
@@ -181,6 +194,7 @@
                             style="draft" />
                     </div>
 
+                    {{-- Modal --}}
                     @if ($laporan->status === 'Draft')
                         @if (!$parsingAcademicReports || count($parsingAcademicReports) === 0)
                             {{-- Btn tambah data --}}
@@ -295,8 +309,9 @@
                 {{-- Academic Activities --}}
                 <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="mb-2 cursor-default"
                     x-on:edit-academic.window="editDataAcademy = $event.detail; openEditAcademic = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Akademik</p>
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kegiatan Akademik</p>
 
+                    {{-- Tabel --}}
                     <div class="overflow-x-auto w-full">
                         <x-tabel :headers="[
                             'No',
@@ -322,6 +337,7 @@
                             :status="$laporan->status" style="draft" />
                     </div>
 
+                    {{-- Modal --}}
                     @if ($laporan->status === 'Draft')
                         <button @click="openAcademic = true"
                             class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
@@ -497,8 +513,8 @@
                 {{-- Organization Activities --}}
                 <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="mb-2 cursor-default"
                     x-on:edit-org.window="editDataOrg = $event.detail; openEditOrg = true">
-                    <h2 class="text-xl font-bold text-[#013F4E] mt-4">B. KEGIATAN NON-AKADEMIK</h2>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Organisasi Mahasiswa</p>
+                    <h2 class="text-xl lg:text-2xl font-bold text-[#013F4E] mt-4">B. KEGIATAN NON-AKADEMIK</h2>
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kegiatan Organisasi Mahasiswa</p>
 
                     <div class="overflow-x-auto w-full">
                         <x-tabel :headers="[
@@ -716,7 +732,7 @@
                 {{-- Committee Activities --}}
                 <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="mb-2 cursor-default"
                     x-on:edit-committee.window="editDataCommittee = $event.detail; openEditCommittee = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Kepanitiaan Atau Penugasan
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kegiatan Kepanitiaan Atau Penugasan
                     </p>
 
                     <div class="overflow-x-auto w-full">
@@ -962,7 +978,7 @@
                 {{-- Achievements --}}
                 <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="mb-2 cursor-default"
                     x-on:edit-achievement.window="editDataAchievement = $event.detail; openEditAchievement = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Prestasi Mahasiswa</p>
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Prestasi Mahasiswa</p>
 
                     <div class="overflow-x-auto w-full">
                         <x-tabel :headers="[
@@ -1362,7 +1378,7 @@
                 {{-- Independent Activities --}}
                 <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="mb-2 cursor-default"
                     x-on:edit-independent="editDataIndependent = $event.detail; openEditIndependent = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Kegiatan Mandiri Mahasiswa Selama
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kegiatan Mandiri Mahasiswa Selama
                         Satu
                         Semester</p>
 
@@ -1550,7 +1566,7 @@
 
                 {{-- Evaluations --}}
                 <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="mb-2 mt-4 cursor-default">
-                    <h2 class="text-xl font-bold text-[#013F4E]">C. EVALUASI</h2>
+                    <h2 class="text-xl lg:text-2xl font-bold text-[#013F4E]">C. EVALUASI</h2>
                     {{-- Data yg ditampilkan --}}
                     <div>
                         <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Pendukung
@@ -1651,8 +1667,8 @@
                 {{-- Target Next SMT --}}
                 <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }" class="mb-2 mt-2 cursor-default"
                     x-on:edit-target-rep.window="editDataTargetRep = $event.detail; openEditTargetRep = true">
-                    <h2 class="text-xl font-bold text-[#013F4E] mt-4">D. TARGET SEMESTER DEPAN</h2>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Nilai IPS dan IPK
+                    <h2 class="text-xl lg:text-2xl font-bold text-[#013F4E] mt-4">D. TARGET SEMESTER DEPAN</h2>
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Rencana Nilai IPS dan IPK
                         Semester
                         Depan
                     </p>
@@ -1756,7 +1772,8 @@
                                         class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">
                                         Batal
                                     </button>
-                                    <button type="submit" class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">
+                                    <button type="submit"
+                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">
                                         Simpan
                                     </button>
                                 </div>
@@ -1768,7 +1785,7 @@
                 {{-- Target Keg Akademik --}}
                 <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }" class="mb-2 cursor-default"
                     x-on:edit-target-academic.window="editDataTargetAcademic = $event.detail; openEditTargetAcademic = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Kegiatan Akademik
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Rencana Kegiatan Akademik
                         Semester
                         Depan
                     </p>
@@ -1847,7 +1864,7 @@
                 {{-- Target Achievements --}}
                 <div x-cloak x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }" class="mb-2 cursor-default"
                     x-on:edit-target-achievement="editDatatargetAchievement = $event.detail; openEditTargetAchievement = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Prestasi</p>
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Rencana Prestasi</p>
 
                     <div class="overflow-x-auto w-full">
                         <x-tabel :headers="['No', 'Nama Prestasi', 'Tingkat', 'Raihan', 'Status']" :columns="['achievements-name', 'level', 'award', 'status']" :rows="$parsingNextAchievements" idKey="id"
@@ -1941,7 +1958,7 @@
                 {{-- Target Independent --}}
                 <div x-cloak x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }" class="mb-2 cursor-default"
                     x-on:edit-target-independent="editDataTargetIndependent = $event.detail; openEditTargetIndependent = true">
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Rencana Kegiatan Mandiri</p>
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Rencana Kegiatan Mandiri</p>
 
                     <div class="overflow-x-auto w-full">
                         <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Keikutsertaan', 'Status']" :columns="['activity-name', 'strategy', 'participation', 'status']" :rows="$parsingNextIndependentActivities" idKey="id"
@@ -2033,6 +2050,7 @@
                 </div>
             </div>
 
+            {{-- Button Aksi --}}
             <div x-cloak x-data="{ openModalKonfirmasi: false }" class="mt-4 flex gap-2">
                 <button type="button"
                     class="button bg-[#09697E] hover:bg-[#27788a] text-white px-2 py-1 rounded-md cursor-pointer">
@@ -2044,7 +2062,7 @@
                 </button>
                 {{-- Modal Konfirmasi --}}
                 <x-modal title="Konfirmasi Pengajuan Laporan" show="openModalKonfirmasi">
-                    <h1 class="text-center font-semibold">Apakah anda yakin ingin mengirim laporan?</h1>
+                    <h1 class="text-center font-semibold">Apakah Anda yakin ingin mengirim laporan?</h1>
                     {{-- icon --}}
                     <div class="flex items-center justify-center">
                         <svg viewBox="0 0 24 24" fill="none" class="w-[100px] h-[100px]"

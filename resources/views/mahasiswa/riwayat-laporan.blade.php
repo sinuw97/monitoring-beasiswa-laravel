@@ -31,7 +31,7 @@
 
     <section class="flex justify-center w-full px-4 sm:px-6 lg:px-8 py-6">
         <div class="bg-[#fdfdfd] w-full max-w-[1000px] h-auto p-4 sm:p-6 mt-4 rounded-lg shadow">
-            <h2 class="text-lg sm:text-xl font-bold mb-2 text-[#09697E]">Riwayat Laporan Monev</h2>
+            <h2 class="text-xl lg:text-2xl font-bold mb-2 text-[#09697E]">Riwayat Laporan Monev</h2>
             <p class="text-sm sm:text-md text-gray-600 mb-4">
                 Menampilkan semua laporan yang telah kamu kirim.
             </p>
@@ -78,9 +78,16 @@
                                     {{ $laporan->created_at ? $laporan->created_at->translatedFormat('d F Y') : '-' }}
                                 </td>
                                 <td class="px-3 sm:px-4 py-2 text-center">
-                                    <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
+                                    {{-- Conditional Rendering --}}
+                                    @if ($laporan->status === 'Lolos' || $laporan->status === 'Pending' || $laporan->status === 'Ditolak')
+                                        <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
                                         class="px-2 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
                                         Lihat</a>
+                                    @elseif($laporan->status === 'Dikembalikan')
+                                        <a href="{{ route('mahasiswa.revisi-laporan', $laporan->laporan_id) }}"
+                                        class="px-2 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
+                                        Lihat</a>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

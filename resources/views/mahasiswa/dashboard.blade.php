@@ -521,7 +521,7 @@
 
                             {{-- Aksi btn --}}
                             <div class="mt-3">
-                                <a href="{{ route('mahasiswa.detail-laporan', $dikembalikan->laporan_id) }}"
+                                <a href="{{ route('mahasiswa.revisi-laporan', $dikembalikan->laporan_id) }}"
                                     class="inline-block px-3 py-1 text-xs font-semibold rounded-md
                            bg-[#1D7D94] text-white hover:bg-[#09697E] transition">
                                     Lihat
@@ -565,7 +565,7 @@
                                         {{ $dikembalikan->created_at ? $dikembalikan->created_at->translatedFormat('d F Y') : '-' }}
                                     </td>
                                     <td class="px-4 py-2 text-center">
-                                        <a href="{{ route('mahasiswa.detail-laporan', $dikembalikan->laporan_id) }}"
+                                        <a href="{{ route('mahasiswa.revisi-laporan', $dikembalikan->laporan_id) }}"
                                             class="px-2 py-1 bg-[#1D7D94] text-[#fdfcfc] font-bold rounded-md hover:bg-[#09697E] transition-all">
                                             Lihat
                                         </a>
