@@ -438,76 +438,88 @@
             @php
                 $committeeActivities = $committeeActivities ?? [];
             @endphp
-            <h3 class="text-lg font-semibold text-gray-600 my-6 border-l-4 border-cyan-500 pl-3">Kegiatan Kepanitiaan Atau
-                Penugasan</h3>
-            @if (count($committeeActivities) > 0)
-                <div class="overflow-x-auto shadow-xl rounded-lg border">
-                    <table class="min-w-full text-sm text-left text-gray-700 bg-white">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th scope="col" class="px-4 py-3">#</th>
-                                <th scope="col" class="px-4 py-3">Kegiatan</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Tipe/Tingkat</th>
-                                <th scope="col" class="px-4 py-3 hidden md:table-cell">Keikutsertaan</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Bukti</th>
-                                <th scope="col" class="px-4 py-3 hidden md:table-cell">Points</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Status</th>
-                                <th scope="col" class="px-4 py-3 text-center hidden sm:table-cell">Aksi</th>
-                                <th scope="col" class="px-4 py-3 text-center sm:hidden">Detail</th>
-                                {{-- Kolom Detail Mobile --}}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($committeeActivities as $report)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-4 text-xs sm:text-sm max-w-[150px] truncate">
-                                        {{ $report['activity_name'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">{{ $report['activity_type'] }} /
-                                        {{ $report['level'] }}</td>
-                                    <td class="px-4 py-4 hidden md:table-cell">{{ $report['participation'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">
-                                        @if ($report['bukti_url'] != 'Tidak Ada' && $report['bukti_url'])
-                                            <a href="{{ $report['bukti_url'] }}" target="_blank"
-                                                class="text-blue-600 hover:text-blue-800 hover:underline">Lihat</a>
-                                        @else
-                                            <span>Tidak Ada</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-4 hidden md:table-cell">
-                                        {{ $report['points' ?? '-'] }}
-                                    </td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">
-                                        @include('components.status-badge', [
-                                            'status' => $report['status'],
-                                        ])
-                                    </td>
-                                    <td class="px-4 py-4 text-center hidden sm:table-cell">
-                                        <a href="#editModal-committee-activities-{{ $report['id'] }}"
-                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </a>
-                                    </td>
-                                    <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                                        <a href="#detailModal-committee-activities-{{ $report['id'] }}"
-                                            class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
-                                            Detail
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-[#09697E]">Kegiatan Kepanitiaan Atau Penugasan</h3>
                 </div>
-            @else
-                <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada kegiatan kepanitiaan/penugasan
-                    yang dilaporkan.</p>
-            @endif
+                @if (count($committeeActivities) > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 font-semibold">#</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Kegiatan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Tipe/Tingkat</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden md:table-cell">Keikutsertaan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Bukti</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden md:table-cell">Points</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Status</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center hidden sm:table-cell">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center sm:hidden">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($committeeActivities as $report)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 text-xs sm:text-sm max-w-[150px] truncate font-medium text-gray-900">
+                                            {{ $report['activity_name'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">{{ $report['activity_type'] }} /
+                                            {{ $report['level'] }}</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">{{ $report['participation'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @if ($report['bukti_url'] != 'Tidak Ada' && $report['bukti_url'])
+                                                <a href="{{ $report['bukti_url'] }}" target="_blank"
+                                                    class="text-[#09697E] hover:text-[#075263] hover:underline flex items-center gap-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                                                        </path>
+                                                    </svg>
+                                                    Lihat
+                                                </a>
+                                            @else
+                                                <span class="text-gray-400">Tidak Ada</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 hidden md:table-cell font-semibold text-[#E8BE00]">
+                                            {{ $report['points' ?? '-'] }}
+                                        </td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @include('components.status-badge', [
+                                                'status' => $report['status'],
+                                            ])
+                                        </td>
+                                        <td class="px-6 py-4 text-center hidden sm:table-cell">
+                                            <a href="#editModal-committee-activities-{{ $report['id'] }}"
+                                                class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 text-center sm:hidden">
+                                            <a href="#detailModal-committee-activities-{{ $report['id'] }}"
+                                                class="text-[#09697E] bg-cyan-50 hover:bg-cyan-100 px-3 py-1 rounded-md text-xs font-medium transition">
+                                                Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-8 text-center">
+                        <p class="text-gray-500 italic">Tidak ada kegiatan kepanitiaan/penugasan yang dilaporkan.</p>
+                    </div>
+                @endif
+            </div>
             @if (count($committeeActivities) > 0)
                 @foreach ($committeeActivities as $report)
                     @include('components.modal-laporan-admin', [
@@ -537,76 +549,89 @@
             @php
                 $studentAchievements = $studentAchievements ?? [];
             @endphp
-            <h3 class="text-lg font-semibold text-gray-600 my-6 border-l-4 border-cyan-500 pl-3">Prestasi Mahasiswa</h3>
-            @if (count($studentAchievements) > 0)
-                <div class="overflow-x-auto shadow-xl rounded-lg border">
-                    <table class="min-w-full text-sm text-left text-gray-700 bg-white">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th scope="col" class="px-4 py-3">#</th>
-                                <th scope="col" class="px-4 py-3">Prestasi</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Tipe/Raihan</th>
-                                <th scope="col" class="px-4 py-3 hidden md:table-cell">Tingkat/Tempat</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Bukti</th>
-                                <th scope="col" class="px-4 py-3 hidden md:table-cell">Points</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Status</th>
-                                <th scope="col" class="px-4 py-3 text-center hidden sm:table-cell">Aksi</th>
-                                <th scope="col" class="px-4 py-3 text-center sm:hidden">Detail</th>
-                                {{-- Kolom Detail Mobile --}}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($studentAchievements as $report)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-4 text-xs sm:text-sm max-w-[150px] truncate">
-                                        {{ $report['achievements_name'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">{{ $report['achievements_type'] }} /
-                                        {{ $report['award'] }}</td>
-                                    <td class="px-4 py-4 hidden md:table-cell">{{ $report['level'] }} /
-                                        {{ $report['place'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">
-                                        @if ($report['bukti_url'] != 'Tidak Ada' && $report['bukti_url'])
-                                            <a href="{{ $report['bukti_url'] }}" target="_blank"
-                                                class="text-blue-600 hover:text-blue-800 hover:underline">Lihat</a>
-                                        @else
-                                            <span>Tidak Ada</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-4 hidden md:table-cell">
-                                        {{ $report['points' ?? '-'] }}
-                                    </td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">
-                                        @include('components.status-badge', [
-                                            'status' => $report['status'],
-                                        ])
-                                    </td>
-                                    <td class="px-4 py-4 text-center hidden sm:table-cell">
-                                        <a href="#editModal-student-achievements-{{ $report['id'] }}"
-                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </a>
-                                    </td>
-                                    <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                                        <a href="#detailModal-student-achievements-{{ $report['id'] }}"
-                                            class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
-                                            Detail
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-[#09697E]">Prestasi Mahasiswa</h3>
                 </div>
-            @else
-                <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada prestasi mahasiswa yang
-                    dilaporkan.</p>
-            @endif
+                @if (count($studentAchievements) > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 font-semibold">#</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Prestasi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Tipe/Raihan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden md:table-cell">Tingkat/Tempat</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Bukti</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden md:table-cell">Points</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Status</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center hidden sm:table-cell">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center sm:hidden">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($studentAchievements as $report)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 text-xs sm:text-sm max-w-[150px] truncate font-medium text-gray-900">
+                                            {{ $report['achievements_name'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">{{ $report['achievements_type'] }} /
+                                            {{ $report['award'] }}</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">{{ $report['level'] }} /
+                                            {{ $report['place'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @if ($report['bukti_url'] != 'Tidak Ada' && $report['bukti_url'])
+                                                <a href="{{ $report['bukti_url'] }}" target="_blank"
+                                                    class="text-[#09697E] hover:text-[#075263] hover:underline flex items-center gap-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                                                        </path>
+                                                    </svg>
+                                                    Lihat
+                                                </a>
+                                            @else
+                                                <span class="text-gray-400">Tidak Ada</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 hidden md:table-cell font-semibold text-[#E8BE00]">
+                                            {{ $report['points' ?? '-'] }}
+                                        </td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @include('components.status-badge', [
+                                                'status' => $report['status'],
+                                            ])
+                                        </td>
+                                        <td class="px-6 py-4 text-center hidden sm:table-cell">
+                                            <a href="#editModal-student-achievements-{{ $report['id'] }}"
+                                                class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 text-center sm:hidden">
+                                            <a href="#detailModal-student-achievements-{{ $report['id'] }}"
+                                                class="text-[#09697E] bg-cyan-50 hover:bg-cyan-100 px-3 py-1 rounded-md text-xs font-medium transition">
+                                                Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-8 text-center">
+                        <p class="text-gray-500 italic">Tidak ada prestasi mahasiswa yang dilaporkan.</p>
+                    </div>
+                @endif
+            </div>
             @if (count($studentAchievements) > 0)
                 @foreach ($studentAchievements as $report)
                     @include('components.modal-laporan-admin', [
@@ -637,77 +662,90 @@
             @php
                 $independentActivities = $independentActivities ?? [];
             @endphp
-            <h3 class="text-lg font-semibold text-gray-600 my-6 border-l-4 border-cyan-500 pl-3">Kegiatan Mandiri Mahasiswa
-            </h3>
-            @if (count($independentActivities) > 0)
-                <div class="overflow-x-auto shadow-xl rounded-lg border">
-                    <table class="min-w-full text-sm text-left text-gray-700 bg-white">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th scope="col" class="px-4 py-3">#</th>
-                                <th scope="col" class="px-4 py-3">Kegiatan</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Tipe/Partisipasi</th>
-                                <th scope="col" class="px-4 py-3 hidden md:table-cell">Tanggal</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Bukti</th>
-                                <th scope="col" class="px-4 py-3 hidden md:table-cell">Points</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Status</th>
-                                <th scope="col" class="px-4 py-3 text-center hidden sm:table-cell">Aksi</th>
-                                <th scope="col" class="px-4 py-3 text-center sm:hidden">Detail</th>
-                                {{-- Kolom Detail Mobile --}}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($independentActivities as $report)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-4 text-xs sm:text-sm max-w-[150px] truncate">
-                                        {{ $report['activity_name'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">{{ $report['activity_type'] }} /
-                                        {{ $report['participation'] }}</td>
-                                    <td class="px-4 py-4 hidden md:table-cell">
-                                        {{ \Carbon\Carbon::parse($report['start_date'])->format('d M Y') }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">
-                                        @if ($report['bukti_url'] != 'Tidak Ada' && $report['bukti_url'])
-                                            <a href="{{ $report['bukti_url'] }}" target="_blank"
-                                                class="text-blue-600 hover:text-blue-800 hover:underline">Lihat</a>
-                                        @else
-                                            <span>Tidak Ada</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-4 hidden md:table-cell">
-                                        {{ $report['points' ?? '-'] }}
-                                    </td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">
-                                        @include('components.status-badge', [
-                                            'status' => $report['status'],
-                                        ])
-                                    </td>
-                                    <td class="px-4 py-4 text-center hidden sm:table-cell">
-                                        <a href="#editModal-independent-activities-{{ $report['id'] }}"
-                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </a>
-                                    </td>
-                                    <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                                        <a href="#detailModal-independent-activities-{{ $report['id'] }}"
-                                            class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
-                                            Detail
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-[#09697E]">Kegiatan Mandiri Mahasiswa</h3>
                 </div>
-            @else
-                <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada kegiatan mandiri yang dilaporkan.
-                </p>
-            @endif
+                @if (count($independentActivities) > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 font-semibold">#</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Kegiatan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Tipe/Partisipasi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden md:table-cell">Tanggal</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Bukti</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden md:table-cell">Points</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Status</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center hidden sm:table-cell">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center sm:hidden">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($independentActivities as $report)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 text-xs sm:text-sm max-w-[150px] truncate font-medium text-gray-900">
+                                            {{ $report['activity_name'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">{{ $report['activity_type'] }} /
+                                            {{ $report['participation'] }}</td>
+                                        <td class="px-6 py-4 hidden md:table-cell">
+                                            {{ \Carbon\Carbon::parse($report['start_date'])->format('d M Y') }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @if ($report['bukti_url'] != 'Tidak Ada' && $report['bukti_url'])
+                                                <a href="{{ $report['bukti_url'] }}" target="_blank"
+                                                    class="text-[#09697E] hover:text-[#075263] hover:underline flex items-center gap-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                                                        </path>
+                                                    </svg>
+                                                    Lihat
+                                                </a>
+                                            @else
+                                                <span class="text-gray-400">Tidak Ada</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 hidden md:table-cell font-semibold text-[#E8BE00]">
+                                            {{ $report['points' ?? '-'] }}
+                                        </td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @include('components.status-badge', [
+                                                'status' => $report['status'],
+                                            ])
+                                        </td>
+                                        <td class="px-6 py-4 text-center hidden sm:table-cell">
+                                            <a href="#editModal-independent-activities-{{ $report['id'] }}"
+                                                class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 text-center sm:hidden">
+                                            <a href="#detailModal-independent-activities-{{ $report['id'] }}"
+                                                class="text-[#09697E] bg-cyan-50 hover:bg-cyan-100 px-3 py-1 rounded-md text-xs font-medium transition">
+                                                Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-8 text-center">
+                        <p class="text-gray-500 italic">Tidak ada kegiatan mandiri yang dilaporkan.
+                        </p>
+                    </div>
+                @endif
+            </div>
             @if (count($independentActivities) > 0)
                 @foreach ($independentActivities as $report)
                     @include('components.modal-laporan-admin', [
@@ -800,45 +838,53 @@
             @php
                 $targetNextSemester = $targetNextSemester ?? [];
             @endphp
-            <h3 class="text-lg font-semibold text-gray-600 mb-4 border-l-4 border-cyan-500 pl-3">Rencana Nilai IPS dan IPK
-            </h3>
-            <div class="overflow-x-auto shadow-xl rounded-lg border">
-                <table class="min-w-full text-sm text-left text-gray-700 bg-white">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                        <tr>
-                            <th scope="col" class="px-4 py-3 sm:px-6">Semester</th>
-                            <th scope="col" class="px-4 py-3 sm:px-6 hidden md:table-cell">Target IPS</th>
-                            <th scope="col" class="px-4 py-3 sm:px-6 hidden md:table-cell">Target IPK</th>
-                            <th scope="col" class="px-4 py-3 sm:px-6 hidden md:table-cell">Status</th>
-                            <th scope="col" class="px-4 py-3 sm:px-6 text-center hidden md:table-cell">Aksi</th>
-                            <th scope="col" class="px-4 py-3 text-center md:hidden">Detail</th> {{-- Kolom Detail Mobile --}}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($targetNextSemester as $report)
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="px-4 py-4 sm:px-6 font-medium text-gray-900">{{ $report['semester'] }}</td>
-                                <td class="px-4 py-4 sm:px-6 hidden md:table-cell">{{ $report['target_ips'] }}</td>
-                                <td class="px-4 py-4 sm:px-6 hidden md:table-cell">{{ $report['target_ipk'] }}</td>
-                                <td class="px-4 py-4 sm:px-6 hidden md:table-cell">
-                                    @include('components.status-badge', ['status' => $report['status']])
-                                </td>
-                                <td class="px-4 py-4 sm:px-6 text-center hidden md:table-cell">
-                                    <a href="#editModal-target-reports-{{ $report['id'] }}"
-                                        class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
-                                        Edit
-                                    </a>
-                                </td>
-                                <td class="px-4 py-4 text-center md:hidden"> {{-- Tombol Detail Mobile --}}
-                                    <a href="#detailModal-target-reports-{{ $report['id'] }}"
-                                        class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
-                                        Detail
-                                    </a>
-                                </td>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-[#09697E]">Rencana Nilai IPS dan IPK</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm text-left">
+                        <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 font-semibold sm:px-6">Semester</th>
+                                <th scope="col" class="px-6 py-3 font-semibold sm:px-6 hidden md:table-cell">Target IPS</th>
+                                <th scope="col" class="px-6 py-3 font-semibold sm:px-6 hidden md:table-cell">Target IPK</th>
+                                <th scope="col" class="px-6 py-3 font-semibold sm:px-6 hidden md:table-cell">Status</th>
+                                <th scope="col" class="px-6 py-3 font-semibold sm:px-6 text-center hidden md:table-cell">Aksi</th>
+                                <th scope="col" class="px-6 py-3 font-semibold text-center md:hidden">Detail</th> {{-- Kolom Detail Mobile --}}
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach ($targetNextSemester as $report)
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 font-medium text-gray-900 sm:px-6">{{ $report['semester'] }}</td>
+                                    <td class="px-6 py-4 hidden md:table-cell sm:px-6">{{ $report['target_ips'] }}</td>
+                                    <td class="px-6 py-4 hidden md:table-cell sm:px-6">{{ $report['target_ipk'] }}</td>
+                                    <td class="px-6 py-4 hidden md:table-cell sm:px-6">
+                                        @include('components.status-badge', ['status' => $report['status']])
+                                    </td>
+                                    <td class="px-6 py-4 text-center hidden md:table-cell sm:px-6">
+                                        <a href="#editModal-target-reports-{{ $report['id'] }}"
+                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
+                                        </a>
+                                    </td>
+                                    <td class="px-6 py-4 text-center md:hidden"> {{-- Tombol Detail Mobile --}}
+                                        <a href="#detailModal-target-reports-{{ $report['id'] }}"
+                                            class="text-[#09697E] bg-cyan-50 hover:bg-cyan-100 px-3 py-1 rounded-md text-xs font-medium transition">
+                                            Detail
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
             @if (count($targetNextSemester) > 0)
                 @foreach ($targetNextSemester as $report)
@@ -864,53 +910,65 @@
 
             {{-- Rencana Kegiatan Akademik --}}
             @php $targetAcademicActivities = $targetAcademicActivities ?? []; @endphp
-            <h3 class="text-lg font-semibold text-gray-600 my-6 border-l-4 border-cyan-500 pl-3">Rencana Kegiatan Akademik
-            </h3>
-            @if (count($targetAcademicActivities) > 0)
-                <div class="overflow-x-auto shadow-xl rounded-lg border">
-                    <table class="min-w-full text-sm text-left text-gray-700 bg-white">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th scope="col" class="px-4 py-3">#</th>
-                                <th scope="col" class="px-4 py-3">Kegiatan</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Rencana/Strategi</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Status</th>
-                                <th scope="col" class="px-4 py-3 text-center hidden sm:table-cell">Aksi</th>
-                                <th scope="col" class="px-4 py-3 text-center sm:hidden">Detail</th>
-                                {{-- Kolom Detail Mobile --}}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($targetAcademicActivities as $report)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-4 text-xs sm:text-sm max-w-[150px] truncate">
-                                        {{ $report['activity_name'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell max-w-[200px] truncate">
-                                        {{ $report['strategy'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">
-                                        @include('components.status-badge', [
-                                            'status' => $report['status'],
-                                        ])
-                                    </td>
-                                    <td class="px-4 py-4 text-center hidden sm:table-cell">
-                                        <a href="#editModal-target-activities-{{ $report['id'] }}"
-                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">Edit</a>
-                                    </td>
-                                    <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                                        <a href="#detailModal-target-activities-{{ $report['id'] }}"
-                                            class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
-                                            Detail
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-[#09697E]">Rencana Kegiatan Akademik</h3>
                 </div>
-            @else
-                <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada rencana kegiatan akademik.</p>
-            @endif
+                @if (count($targetAcademicActivities) > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 font-semibold">#</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Kegiatan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Rencana/Strategi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Status</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center hidden sm:table-cell">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center sm:hidden">Detail</th>
+                                    {{-- Kolom Detail Mobile --}}
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($targetAcademicActivities as $report)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 text-xs sm:text-sm max-w-[150px] truncate font-medium text-gray-900">
+                                            {{ $report['activity_name'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell max-w-[200px] truncate">
+                                            {{ $report['strategy'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @include('components.status-badge', [
+                                                'status' => $report['status'],
+                                            ])
+                                        </td>
+                                        <td class="px-6 py-4 text-center hidden sm:table-cell">
+                                            <a href="#editModal-target-activities-{{ $report['id'] }}"
+                                                class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
+                                            <a href="#detailModal-target-activities-{{ $report['id'] }}"
+                                                class="text-[#09697E] bg-cyan-50 hover:bg-cyan-100 px-3 py-1 rounded-md text-xs font-medium transition">
+                                                Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-8 text-center">
+                        <p class="text-gray-500 italic">Tidak ada rencana kegiatan akademik.</p>
+                    </div>
+                @endif
+            </div>
             @if (count($targetAcademicActivities) > 0)
                 @foreach ($targetAcademicActivities as $report)
                     @include('components.modal-laporan-admin', [
@@ -934,53 +992,65 @@
 
             {{-- Rencana Prestasi Mahasiswa --}}
             @php $targetAchievements = $targetAchievements ?? []; @endphp
-            <h3 class="text-lg font-semibold text-gray-600 my-6 border-l-4 border-cyan-500 pl-3">Rencana Prestasi Mahasiswa
-            </h3>
-            @if (count($targetAchievements) > 0)
-                <div class="overflow-x-auto shadow-xl rounded-lg border">
-                    <table class="min-w-full text-sm text-left text-gray-700 bg-white">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th scope="col" class="px-4 py-3">#</th>
-                                <th scope="col" class="px-4 py-3">Prestasi</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Tingkat/Raihan</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Status</th>
-                                <th scope="col" class="px-4 py-3 text-center hidden sm:table-cell">Aksi</th>
-                                <th scope="col" class="px-4 py-3 text-center sm:hidden">Detail</th>
-                                {{-- Kolom Detail Mobile --}}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($targetAchievements as $report)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-4 text-xs sm:text-sm max-w-[150px] truncate">
-                                        {{ $report['achievements_name'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">{{ $report['level'] }} /
-                                        {{ $report['award'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">
-                                        @include('components.status-badge', [
-                                            'status' => $report['status'],
-                                        ])
-                                    </td>
-                                    <td class="px-4 py-4 text-center hidden sm:table-cell">
-                                        <a href="#editModal-target-achievements-{{ $report['id'] }}"
-                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">Edit</a>
-                                    </td>
-                                    <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                                        <a href="#detailModal-target-achievements-{{ $report['id'] }}"
-                                            class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
-                                            Detail
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-[#09697E]">Rencana Prestasi Mahasiswa</h3>
                 </div>
-            @else
-                <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada rencana prestasi.</p>
-            @endif
+                @if (count($targetAchievements) > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 font-semibold">#</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Prestasi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Tingkat/Raihan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Status</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center hidden sm:table-cell">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center sm:hidden">Detail</th>
+                                    {{-- Kolom Detail Mobile --}}
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($targetAchievements as $report)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 text-xs sm:text-sm max-w-[150px] truncate font-medium text-gray-900">
+                                            {{ $report['achievements_name'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">{{ $report['level'] }} /
+                                            {{ $report['award'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @include('components.status-badge', [
+                                                'status' => $report['status'],
+                                            ])
+                                        </td>
+                                        <td class="px-6 py-4 text-center hidden sm:table-cell">
+                                            <a href="#editModal-target-achievements-{{ $report['id'] }}"
+                                                class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
+                                            <a href="#detailModal-target-achievements-{{ $report['id'] }}"
+                                                class="text-[#09697E] bg-cyan-50 hover:bg-cyan-100 px-3 py-1 rounded-md text-xs font-medium transition">
+                                                Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-8 text-center">
+                        <p class="text-gray-500 italic">Tidak ada rencana prestasi.</p>
+                    </div>
+                @endif
+            </div>
             @if (count($targetAchievements) > 0)
                 @foreach ($targetAchievements as $report)
                     @include('components.modal-laporan-admin', [
@@ -1005,55 +1075,67 @@
 
             {{-- Rencana Kegiatan Mandiri --}}
             @php $targetIdependentActivities = $targetIdependentActivities ?? []; @endphp
-            <h3 class="text-lg font-semibold text-gray-600 my-6 border-l-4 border-cyan-500 pl-3">Rencana Kegiatan Mandiri
-            </h3>
-            @if (count($targetIdependentActivities) > 0)
-                <div class="overflow-x-auto shadow-xl rounded-lg border">
-                    <table class="min-w-full text-sm text-left text-gray-700 bg-white">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th scope="col" class="px-4 py-3">#</th>
-                                <th scope="col" class="px-4 py-3">Kegiatan</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Partisipasi</th>
-                                <th scope="col" class="px-4 py-3 hidden md:table-cell">Rencana/Strategi</th>
-                                <th scope="col" class="px-4 py-3 hidden sm:table-cell">Status</th>
-                                <th scope="col" class="px-4 py-3 text-center hidden sm:table-cell">Aksi</th>
-                                <th scope="col" class="px-4 py-3 text-center sm:hidden">Detail</th>
-                                {{-- Kolom Detail Mobile --}}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($targetIdependentActivities as $report)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-4 text-xs sm:text-sm max-w-[150px] truncate">
-                                        {{ $report['activity_name'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">{{ $report['participation'] }}</td>
-                                    <td class="px-4 py-4 hidden md:table-cell max-w-[200px] truncate">
-                                        {{ $report['strategy'] }}</td>
-                                    <td class="px-4 py-4 hidden sm:table-cell">
-                                        @include('components.status-badge', [
-                                            'status' => $report['status'],
-                                        ])
-                                    </td>
-                                    <td class="px-4 py-4 text-center hidden sm:table-cell">
-                                        <a href="#editModal-target-independent-{{ $report['id'] }}"
-                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">Edit</a>
-                                    </td>
-                                    <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
-                                        <a href="#detailModal-target-independent-{{ $report['id'] }}"
-                                            class="text-blue-600 hover:text-blue-800 font-medium bg-blue-100 rounded-md py-1 px-3 hover:bg-blue-200 transition text-xs">
-                                            Detail
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-[#09697E]">Rencana Kegiatan Mandiri</h3>
                 </div>
-            @else
-                <p class="text-gray-500 italic p-4 bg-white rounded-lg border">Tidak ada rencana kegiatan mandiri.</p>
-            @endif
+                @if (count($targetIdependentActivities) > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 font-semibold">#</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Kegiatan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Partisipasi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden md:table-cell">Rencana/Strategi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Status</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center hidden sm:table-cell">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center sm:hidden">Detail</th>
+                                    {{-- Kolom Detail Mobile --}}
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($targetIdependentActivities as $report)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 text-xs sm:text-sm max-w-[150px] truncate font-medium text-gray-900">
+                                            {{ $report['activity_name'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">{{ $report['participation'] }}</td>
+                                        <td class="px-6 py-4 hidden md:table-cell max-w-[200px] truncate">
+                                            {{ $report['strategy'] }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @include('components.status-badge', [
+                                                'status' => $report['status'],
+                                            ])
+                                        </td>
+                                        <td class="px-6 py-4 text-center hidden sm:table-cell">
+                                            <a href="#editModal-target-independent-{{ $report['id'] }}"
+                                                class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
+                                            <a href="#detailModal-target-independent-{{ $report['id'] }}"
+                                                class="text-[#09697E] bg-cyan-50 hover:bg-cyan-100 px-3 py-1 rounded-md text-xs font-medium transition">
+                                                Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-8 text-center">
+                        <p class="text-gray-500 italic">Tidak ada rencana kegiatan mandiri.</p>
+                    </div>
+                @endif
+            </div>
             @if (count($targetIdependentActivities) > 0)
                 @foreach ($targetIdependentActivities as $report)
                     @include('components.modal-laporan-admin', [
