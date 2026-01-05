@@ -48,6 +48,7 @@
                     @if ($laporan->status == 'Lolos' || $laporan->status == 'Lolos dengan penugasan') bg-green-100 text-green-800 border border-green-200
                     @elseif (Str::contains($laporan->status, 'Ditolak')) bg-red-100 text-red-800 border border-red-200
                     @elseif ($laporan->status == 'Pending') bg-yellow-100 text-yellow-800 border border-yellow-200
+                    @elseif ($laporan->status == 'Dikembalikan') bg-blue-100 text-blue-800 border border-blue-200
                     @else bg-gray-100 text-gray-800 border border-gray-200 @endif">
                         {{ $laporan->status }}
                     </span>
@@ -483,8 +484,13 @@
                                     </td>
                                     <td class="px-4 py-4 text-center hidden sm:table-cell">
                                         <a href="#editModal-committee-activities-{{ $report['id'] }}"
-                                            class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
-                                            Edit
+                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
                                         </a>
                                     </td>
                                     <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
@@ -577,8 +583,13 @@
                                     </td>
                                     <td class="px-4 py-4 text-center hidden sm:table-cell">
                                         <a href="#editModal-student-achievements-{{ $report['id'] }}"
-                                            class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
-                                            Edit
+                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
                                         </a>
                                     </td>
                                     <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
@@ -673,8 +684,13 @@
                                     </td>
                                     <td class="px-4 py-4 text-center hidden sm:table-cell">
                                         <a href="#editModal-independent-activities-{{ $report['id'] }}"
-                                            class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
-                                            Edit
+                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
                                         </a>
                                     </td>
                                     <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
@@ -809,7 +825,7 @@
                                 </td>
                                 <td class="px-4 py-4 sm:px-6 text-center hidden md:table-cell">
                                     <a href="#editModal-target-reports-{{ $report['id'] }}"
-                                        class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">
+                                        class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
                                         Edit
                                     </a>
                                 </td>
@@ -879,7 +895,7 @@
                                     </td>
                                     <td class="px-4 py-4 text-center hidden sm:table-cell">
                                         <a href="#editModal-target-activities-{{ $report['id'] }}"
-                                            class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">Edit</a>
+                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">Edit</a>
                                     </td>
                                     <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
                                         <a href="#detailModal-target-activities-{{ $report['id'] }}"
@@ -949,7 +965,7 @@
                                     </td>
                                     <td class="px-4 py-4 text-center hidden sm:table-cell">
                                         <a href="#editModal-target-achievements-{{ $report['id'] }}"
-                                            class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">Edit</a>
+                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">Edit</a>
                                     </td>
                                     <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
                                         <a href="#detailModal-target-achievements-{{ $report['id'] }}"
@@ -1022,7 +1038,7 @@
                                     </td>
                                     <td class="px-4 py-4 text-center hidden sm:table-cell">
                                         <a href="#editModal-target-independent-{{ $report['id'] }}"
-                                            class="text-indigo-600 hover:text-indigo-900 font-medium bg-indigo-100 rounded-md py-1 px-3 hover:bg-indigo-200 transition">Edit</a>
+                                            class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">Edit</a>
                                     </td>
                                     <td class="px-4 py-4 text-center sm:hidden"> {{-- Tombol Detail Mobile --}}
                                         <a href="#detailModal-target-independent-{{ $report['id'] }}"
@@ -1083,6 +1099,8 @@
                         class="text-center bg-white text-red-600">Ditolak SP-2</option>
                     <option value="Ditolak SP-3" {{ $laporan->status == 'Ditolak SP-3' ? 'selected' : '' }}
                         class="text-center bg-white text-red-600">Ditolak SP-3</option>
+                    <option value="Dikembalikan" {{ $laporan->status == 'Dikembalikan' ? 'selected' : '' }}
+                        class="text-center bg-white text-blue-600">Dikembalikan</option>
                     <option value="Lolos dengan penugasan"
                         {{ $laporan->status == 'Lolos dengan penugasan' ? 'selected' : '' }}
                         class="text-center bg-white text-orange-600">Lolos dengan penugasan</option>
