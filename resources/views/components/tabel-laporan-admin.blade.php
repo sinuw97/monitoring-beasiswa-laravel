@@ -100,11 +100,11 @@
         <div class="flex justify-end gap-3 pt-2 border-t border-gray-200">
             <a href="{{ url('/admin/laporan') }}"
                 class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#09697E] transition">
-                Reset Filter
+                Reset
             </a>
             <button type="submit"
                 class="px-4 py-2 bg-[#09697E] border border-transparent rounded-lg text-sm font-medium text-white hover:bg-[#075263] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#09697E] shadow-sm hover:shadow transition">
-                Terapkan Filter
+                Terapkan
             </button>
         </div>
     </form>
