@@ -26,17 +26,6 @@
                 <a href="{{ route('admin.data-mahasiswa') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 md:hidden md:invisible">Data Mahasiswa</a>
                 <a href="{{ route('admin.laporan') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 md:hidden md:invisible">Laporan Monev</a>
                 <div class="h-[1px] w-full bg-gray-300 hidden invisible"></div>
-                <a href="{{ route('mahasiswa.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="user"
-                            class="w-[20px] h-[20px]">
-                            <path fill="#09697E"
-                                d="M15.71,12.71a6,6,0,1,0-7.42,0,10,10,0,0,0-6.22,8.18,1,1,0,0,0,2,.22,8,8,0,0,1,15.9,0,1,1,0,0,0,1,.89h.11a1,1,0,0,0,.88-1.1A10,10,0,0,0,15.71,12.71ZM12,12a4,4,0,1,1,4-4A4,4,0,0,1,12,12Z">
-                            </path>
-                        </svg>
-                        Profil Saya
-                    </div>
-                </a>
                 <form method="POST" action="{{ url('admin/logout') }}">
                     @csrf
                     <button type="submit"

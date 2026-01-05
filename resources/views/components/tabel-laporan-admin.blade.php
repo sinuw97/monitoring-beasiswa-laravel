@@ -50,6 +50,7 @@
                         SP-2</option>
                     <option value="Ditolak SP-3" {{ request('status') == 'Ditolak SP-3' ? 'selected' : '' }}>Ditolak
                         SP-3</option>
+                    <option value="Dikembalikan" {{ request('status') == 'Dikembalikan' ? 'selected' : '' }}>Dikembalikan</option>
                     <option value="Lolos dengan penugasan"
                         {{ request('status') == 'Lolos dengan penugasan' ? 'selected' : '' }}>Lolos dengan penugasan
                     </option>
@@ -142,6 +143,8 @@
                             $colorClass = 'bg-gray-100 text-gray-600 border border-gray-200';
                         } elseif (Str::contains($status, 'Ditolak')) {
                             $colorClass = 'bg-red-100 text-red-800 border border-red-200';
+                        } elseif (Str::contains($status, 'Dikembalikan')) {
+                            $colorClass = 'bg-blue-100 text-blue-800 border border-blue-200';
                         } else {
                             $colorClass = 'bg-gray-100 text-gray-700 border border-gray-200';
                         }

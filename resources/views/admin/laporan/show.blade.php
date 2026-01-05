@@ -48,6 +48,7 @@
                     @if ($laporan->status == 'Lolos' || $laporan->status == 'Lolos dengan penugasan') bg-green-100 text-green-800 border border-green-200
                     @elseif (Str::contains($laporan->status, 'Ditolak')) bg-red-100 text-red-800 border border-red-200
                     @elseif ($laporan->status == 'Pending') bg-yellow-100 text-yellow-800 border border-yellow-200
+                    @elseif ($laporan->status == 'Dikembalikan') bg-blue-100 text-blue-800 border border-blue-200
                     @else bg-gray-100 text-gray-800 border border-gray-200 @endif">
                         {{ $laporan->status }}
                     </span>
@@ -1083,6 +1084,8 @@
                         class="text-center bg-white text-red-600">Ditolak SP-2</option>
                     <option value="Ditolak SP-3" {{ $laporan->status == 'Ditolak SP-3' ? 'selected' : '' }}
                         class="text-center bg-white text-red-600">Ditolak SP-3</option>
+                    <option value="Dikembalikan" {{ $laporan->status == 'Dikembalikan' ? 'selected' : '' }}
+                        class="text-center bg-white text-blue-600">Dikembalikan</option>
                     <option value="Lolos dengan penugasan"
                         {{ $laporan->status == 'Lolos dengan penugasan' ? 'selected' : '' }}
                         class="text-center bg-white text-orange-600">Lolos dengan penugasan</option>
