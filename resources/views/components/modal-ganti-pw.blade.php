@@ -1,4 +1,4 @@
-<div x-data="{ show: false }" x-cloak @open-ganti-password.window="show = true" @close-ganti-password.window="show = false">
+<div x-data="{ show: {{ session()->has('error') || session()->has('success') || $errors->any() ? 'true' : 'false' }} }" x-cloak @open-ganti-password.window="show = true" @close-ganti-password.window="show = false">
     <div x-show="show" x-transition @click.away="show = false"
         class="fixed inset-0 bg-[#2525252d] backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div class="bg-white w-full max-w-[400px] p-6 rounded-xl shadow-lg" @click.stop>
@@ -8,6 +8,28 @@
             </h2>
 
             <div class="text-sm text-gray-500">
+                @if ($errors->any())
+                    <div class="mb-3 text-xs text-red-600 bg-red-50 p-2 rounded">
+                        <ul class="list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="mb-3 text-xs text-red-600 bg-red-50 p-2 rounded">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="mb-3 text-xs text-green-600 bg-green-50 p-2 rounded">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('mahasiswa.ganti-pw') }}">
                     @csrf
                     <!-- Password Saat Ini -->
@@ -43,7 +65,8 @@
 
                     <!-- Password Baru -->
                     <div class="mb-4" x-data="{ show: false }">
-                        <label class="block text-xs sm:text-sm text-gray-600 mb-1">Password Baru</label>
+                        <label class="block text-xs sm:text-sm text-gray-600">Password Baru</label>
+                        <span class="italic text-sm mb-1 text-red-500">Minimal 8 karakter dengan 1 angka dan 1 simbol</span>
                         <div class="relative">
                             <input :type="show ? 'text' : 'password'" name="new_password" required
                                 placeholder="Masukan password baru Anda..."
@@ -74,7 +97,8 @@
 
                     <!-- Action -->
                     <div class="flex justify-end gap-2">
-                        <button @click="show = false" class="px-3 py-1.5 text-xs sm:text-sm bg-[#09697E] hover:bg-[#167b92] text-[#fefefe] rounded-md">
+                        <button @click="show = false"
+                            class="px-3 py-1.5 text-xs sm:text-sm bg-[#09697E] hover:bg-[#167b92] text-[#fefefe] rounded-md">
                             Tutup
                         </button>
                         <button type="submit"
@@ -87,3 +111,10 @@
         </div>
     </div>
 </div>
+@if ($errors->any() || session('error'))
+    <script>
+        document.addEventListener('alpine:init', () => {
+            window.dispatchEvent(new CustomEvent('open-ganti-password'))
+        })
+    </script>
+@endif
