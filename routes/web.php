@@ -25,9 +25,11 @@ use App\Http\Controllers\mahasiswa\monev\IndependentActivitiesMonevController;
 use App\Http\Controllers\mahasiswa\monev\TargetAcademicActMonevController;
 use App\Http\Controllers\mahasiswa\monev\TargetAchievementsMonevController;
 use App\Http\Controllers\mahasiswa\profile\GantiPasswordController;
+use App\Http\Controllers\admin\PengumumanController;
 
 Route::get('/', function () {
-    return view('welcome');
+    $pengumuman = \App\Models\Pengumuman::where('is_active', true)->latest()->get();
+    return view('welcome', compact('pengumuman'));
 });
 
 Route::prefix('mahasiswa')->group(function () {
@@ -128,8 +130,13 @@ Route::prefix('admin')->group(function () {
         Route::get('/data-mahasiswa/edit/{id}', [DataMahasiswaController::class, 'edit'])->name('admin.data-mahasiswa.edit');
         Route::put('/data-mahasiswa/edit/{id}', [DataMahasiswaController::class, 'update'])->name('admin.data-mahasiswa.update');
         Route::delete('/data-mahasiswa/{id}', [DataMahasiswaController::class, 'destroy'])->name('admin.data-mahasiswa.destroy');
+        
+        // Pengumuman Routes
+        Route::resource('pengumuman', PengumumanController::class, ['names' => 'admin.pengumuman']);
     });
 });
 
 Route::get('/google/auth', [GoogleAuthController::class, 'redirectToGoogle']);
+
 Route::get('/google/callback', [GoogleAuthController::class, 'handlegoogleCallback']);
+

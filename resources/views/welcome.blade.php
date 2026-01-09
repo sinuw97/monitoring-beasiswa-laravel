@@ -50,6 +50,17 @@
 
     <x-navbar-landingPage />
 
+    @if(isset($pengumuman) && $pengumuman->count() > 0)
+        {{-- Pengumuman Data for JS --}}
+        <script>
+            const pengumumanData = @json($pengumuman);
+        </script>
+        
+        @foreach($pengumuman as $item)
+            @include('components.modal-detail-pengumuman', ['modalId' => 'detailModal-' . $item->id, 'pengumuman' => $item])
+        @endforeach
+    @endif
+
     <section id="beranda" class="relative overflow-hidden">
         <div class="relative h-[450px] sm:h-[600px] lg:h-[700px]">
             <img src="{{ asset('img/bckg1.png') }}" alt="Gedung TSU"
@@ -58,6 +69,66 @@
         </div>
 
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4">
+            {{-- Announcements Block (Vertical) --}}
+            @if(isset($pengumuman) && $pengumuman->count() > 0)
+            <div class="mb-8 w-full max-w-lg flex flex-col gap-3 items-center z-50">
+                @foreach($pengumuman as $item)
+                <div class="relative group cursor-pointer w-full max-w-md"
+                     onclick="openModal('detailModal-{{ $item->id }}')">
+                    <div class="absolute inset-0 bg-cyan-600/20 rounded-full blur-md group-hover:bg-cyan-500/30 transition-all duration-300"></div>
+                    <div class="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-full py-2 px-4 flex items-center gap-3 overflow-hidden shadow-lg hover:bg-white/20 transition-all duration-300">
+                        {{-- Icon --}}
+                        <div class="flex-shrink-0 bg-yellow-400 rounded-full p-1 shadow-inner">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-cyan-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                            </svg>
+                        </div>
+                        
+                        {{-- Content --}}
+                        <div class="flex-grow overflow-hidden relative h-6">
+                            @if(strlen($item->judul . ': ' . $item->isi) > 50)
+                                {{-- Marquee for long text --}}
+                                <div class="whitespace-nowrap absolute animate-marquee-pill">
+                                    <span class="font-bold text-yellow-300">{{ $item->judul }}:</span>
+                                    <span class="text-white text-sm">{{ $item->isi }}</span>
+                                    <span class="mx-4"></span>
+                                    <span class="font-bold text-yellow-300">{{ $item->judul }}:</span>
+                                    <span class="text-white text-sm">{{ $item->isi }}</span>
+                                </div>
+                            @else
+                                {{-- Static for short text --}}
+                                <div class="whitespace-nowrap text-left truncate">
+                                    <span class="font-bold text-yellow-300">{{ $item->judul }}:</span>
+                                    <span class="text-white text-sm">{{ $item->isi }}</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Arrow hint --}}
+                        <svg class="w-4 h-4 text-white/50 group-hover:text-white transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            
+            <style>
+                @keyframes marquee-pill {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                .animate-marquee-pill {
+                    animation: marquee-pill 45s linear infinite;
+                    display: inline-block;
+                    will-change: transform;
+                }
+                .group:hover .animate-marquee-pill {
+                    animation-play-state: paused;
+                }
+            </style>
+            @endif
+
             <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight drop-shadow-lg">
                 <span class="block">Web Monitoring</span>
                 <span class="block text-cyan-300 mt-2">Beasiswa Tiga Serangkai University</span>

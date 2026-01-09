@@ -8,6 +8,7 @@
             <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
             <li><a href="{{ route('admin.data-mahasiswa') }}">Data Mahasiswa</a></li>
             <li><a href="{{ route('admin.laporan') }}">Laporan Monev</a></li>
+            <li><a href="{{ route('admin.pengumuman.index') }}">Pengumuman</a></li>
         </ul>
         {{-- Dropdown disini --}}
         <div x-data="{ open: false }"
