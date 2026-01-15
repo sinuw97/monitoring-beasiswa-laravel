@@ -1,7 +1,7 @@
 {{-- Navbar Landing Page --}}
 <script src="//unpkg.com/alpinejs" defer></script>
 
-<header class="sticky top-0 z-50">
+<header class="sticky top-0 z-99">
     <nav 
         x-data="{ open: false }" 
         class="bg-[#FEFEFE] text-[11pt] px-5 sm:px-7 py-2 flex justify-between items-center shadow-sm"
