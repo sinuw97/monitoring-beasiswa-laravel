@@ -128,6 +128,59 @@ class LaporanMonevController extends Controller
     }
 
     /**
+     * Export data to Excel.
+     */
+    public function export(Request $request)
+    {
+        // Ambil periode aktif
+        $periodeCheck1 = Periode::where('status', '=', 'Aktif')->get();
+        $periodeCheck2 = Periode::where('status', '=', 'Aktif Sementara')->get();
+        
+        $dataLaporan = [];
+
+        if ($periodeCheck1->count() > 0 || $periodeCheck2->count() > 0) {
+            $periode = Periode::where('status', '=', 'Aktif')->orWhere('status', '=', 'Aktif Sementara')->first();
+            
+            $tahun = substr($periode->tahun_akademik, 0, 4);
+            $semesterKode = $periode->semester == 'Ganjil' ? '01' : '02';
+            $semesterId = 'SM' . $tahun . $semesterKode;
+
+            // Ambil filter dan search dari request
+            $angkatan = $request->angkatan;
+            $status = $request->status;
+            $periodeFilter = $request->periode;
+            $search = $request->search;
+
+            // Query dasar
+            $query = LaporanMonevMahasiswa::join('mahasiswa', 'laporan_mahasiswa.nim', '=', 'mahasiswa.nim')
+                ->where('semester_id', '=', $periodeFilter ?? $semesterId);
+
+            // Filter angkatan
+            if (!empty($angkatan)) {
+                $query->whereRaw('LEFT(mahasiswa.nim, 2) = ?', [$angkatan]);
+            }
+
+            // Filter status
+            if (!empty($status)) {
+                $query->where('laporan_mahasiswa.status', '=', $status);
+            }
+
+            // Search by NIM or Nama
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('mahasiswa.nim', 'like', "%{$search}%")
+                    ->orWhere('mahasiswa.name', 'like', "%{$search}%");
+                });
+            }
+
+            // Ambil data (GET) bukan paginate
+            $dataLaporan = $query->select('laporan_mahasiswa.*', 'mahasiswa.*')->get();
+        }
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\LaporanDataExport($dataLaporan), 'laporan_monev_' . date('Y-m-d_H-i-s') . '.xlsx');
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(string $id)

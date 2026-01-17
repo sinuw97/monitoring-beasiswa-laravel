@@ -97,7 +97,7 @@
         {{-- Filter & Search Section --}}
         <form method="GET" action="{{ route('admin.data-mahasiswa') }}"
             class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-100">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                 {{-- Search --}}
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Cari Mahasiswa</label>
@@ -136,18 +136,27 @@
                         <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Z - A</option>
                     </select>
                 </div>
+            </div>
 
-                {{-- Buttons --}}
-                <div class="flex items-end gap-2">
-                    <a href="{{ url('/admin/data-mahasiswa') }}"
-                        class="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition text-center">
-                        Reset
-                    </a>
-                    <button type="submit"
-                        class="flex-1 bg-[#09697E] hover:bg-[#075263] text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                        Terapkan
-                    </button>
-                </div>
+            {{-- Buttons --}}
+            <div class="flex justify-end gap-3 pt-2 border-t border-gray-200">
+                <a href="{{ url('/admin/data-mahasiswa') }}"
+                    class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#09697E] transition">
+                    Reset
+                </a>
+                <button type="submit"
+                    class="px-4 py-2 bg-[#09697E] border border-transparent rounded-lg text-sm font-medium text-white hover:bg-[#075263] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#09697E] shadow-sm hover:shadow transition">
+                    Terapkan
+                </button>
+                <a href="{{ route('admin.data-mahasiswa.export', request()->query()) }}"
+                    class="px-4 py-2 bg-green-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-sm hover:shadow transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    Export Excel
+                </a>
             </div>
         </form>
 

@@ -72,6 +72,44 @@ class DataMahasiswaController extends Controller
 
 
     /**
+     * Export data to Excel.
+     */
+    public function export(Request $request)
+    {
+        // --- QUERY DASAR UNTUK DATA MAHASISWA ---
+        $query = Mahasiswa::query();
+
+        // --- FILTER ANGKATAN JIKA ADA REQUEST ---
+        if ($request->filled('angkatan')) {
+            $angkatan = $request->angkatan;
+            $query->whereRaw('LEFT(nim, 2) = ?', [$angkatan]);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('nim', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // --- SORTING NAMA JIKA ADA REQUEST ---
+        if ($request->sort === 'asc') {
+            $query->orderBy('name', 'asc');
+        } elseif ($request->sort === 'desc') {
+            $query->orderBy('name', 'desc');
+        } else {
+            // Default: urut berdasarkan NIM
+            $query->orderBy('nim', 'asc');
+        }
+
+        // --- AMBIL DATA (GET) BUKAN PAGINATE ---
+        $dataMahasiswa = $query->get();
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\DataMahasiswaExport($dataMahasiswa), 'data_mahasiswa_' . date('Y-m-d_H-i-s') . '.xlsx');
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -111,6 +149,31 @@ class DataMahasiswaController extends Controller
             return redirect('/admin/data-mahasiswa')->with('error', 'Gagal menambahkan data mahasiswa.');
         }
 
+    }
+
+    /**
+     * Import data from Excel.
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\DataMahasiswaImport, $request->file('file'));
+            return redirect('/admin/data-mahasiswa')->with('success', 'Data mahasiswa berhasil diimport via Excel.');
+        } catch (Exception $e) {
+            return redirect('/admin/data-mahasiswa')->with('error', 'Gagal import data: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download template Excel for import.
+     */
+    public function downloadTemplate()
+    {
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\TemplateMahasiswaExport, 'template_mahasiswa.xlsx');
     }
 
     /**

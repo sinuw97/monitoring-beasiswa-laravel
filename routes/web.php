@@ -115,6 +115,7 @@ Route::prefix('admin')->group(function () {
         Route::put('/dashboard/{id}', [DashboardAdminController::class, 'editPeriode'])->name('admin.dashboard.editPeriode');
         Route::put('/dashboard/{id}/aktifkan', [DashboardAdminController::class, 'activatePeriode'])->name('admin.dashboard.activatePeriode');
         Route::put('/dashboard/{id}/nonaktifkan', [DashboardAdminController::class, 'deactivatePeriode'])->name('admin.dashboard.deactivatePeriode');
+        Route::get('/laporan/export', [LaporanMonevController::class, 'export'])->name('admin.laporan.export');
         Route::get('/laporan', [LaporanMonevController::class, 'index'])->name('admin.laporan');
         Route::get('/laporan/{id}', [LaporanMonevController::class, 'show'])->name('admin.show');
         Route::put('/laporan/{id}', [LaporanMonevController::class, 'update'])->name('admin.update');
@@ -125,6 +126,9 @@ Route::prefix('admin')->group(function () {
         Route::put('/laporan/{id}/student-achievements/{idStudentAchievements}', [LaporanMonevController::class, 'studentAchievements'])->name('admin.student-achievements');
         Route::put('/laporan/{id}/independent-activities/{idIndependentActivities}', [LaporanMonevController::class, 'independentActivities'])->name('admin.independent-activities');
         Route::put('/laporan/{id}/evaluations/{idEvaluations}', [LaporanMonevController::class, 'evaluations'])->name('admin.evaluations');
+        Route::get('/data-mahasiswa/template', [DataMahasiswaController::class, 'downloadTemplate'])->name('admin.data-mahasiswa.template');
+        Route::post('/data-mahasiswa/import', [DataMahasiswaController::class, 'import'])->name('admin.data-mahasiswa.import');
+        Route::get('/data-mahasiswa/export', [DataMahasiswaController::class, 'export'])->name('admin.data-mahasiswa.export');
         Route::get('/data-mahasiswa', [DataMahasiswaController::class, 'index'])->name('admin.data-mahasiswa');
         Route::post('/data-mahasiswa', [DataMahasiswaController::class, 'store'])->name('admin.data-mahasiswa.store');
         Route::get('/data-mahasiswa/edit/{id}', [DataMahasiswaController::class, 'edit'])->name('admin.data-mahasiswa.edit');
