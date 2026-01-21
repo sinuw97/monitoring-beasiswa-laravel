@@ -34,7 +34,7 @@ class GantiPasswordController extends Controller
         }
 
         if ($request->current_password === $request->new_password) {
-            return back()->withInput()->with('error', 'Password baru tidak boleh sama dengan lama');
+            return back()->withInput()->with('ganti_pw_error', 'Password lama salah');
         }
 
         $mahasiswa->password = Hash::make($request->new_password);
@@ -43,6 +43,6 @@ class GantiPasswordController extends Controller
         // refresh auth session
         Auth::guard('mahasiswa')->login($mahasiswa);
 
-        return back()->with('success', 'Password berhasil diperbarui!');
+        return back()->with('ganti_pw_success', 'Password berhasil diubah');
     }
 }

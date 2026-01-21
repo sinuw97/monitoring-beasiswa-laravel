@@ -10,12 +10,10 @@ return new class extends Migration
     {
         Schema::create('student_achievements', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('nim', 8)->nullable(false);
-            $table->char('laporan_id', 20)->nullable(false);
-            $table->integer('semester')->nullable(true);
+            $table->char('nim', 20)->nullable(false);
+            $table->char('laporan_id', 36)->nullable(false);
             $table->string('achievements_name', 255)->nullable(true);
-            $table->string('scope', 100)->nullable(true);
-            $table->boolean('is_group')->default(true)->nullable(true);
+            $table->string('achievements_type', 255)->nullable(true);
             $table->string('level', 100)->nullable(true);
             $table->string('award', 100)->nullable(true);
             $table->string('place', 255)->nullable(true);
@@ -24,7 +22,7 @@ return new class extends Migration
             $table->text('bukti_url')->nullable(true);
             $table->integer('points')->nullable(true);
             $table->text('comment')->nullable(true);
-            $table->enum('status', ['Draft', 'Pending', 'Valid', 'Rejected'])->default('Draft');
+            $table->enum('status', ['Draft','Pending','Valid','Rejected','Revisi'])->default('Draft');
             $table->timestamps();
         });
     }

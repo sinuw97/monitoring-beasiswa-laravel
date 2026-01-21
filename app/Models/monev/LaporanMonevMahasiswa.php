@@ -5,6 +5,7 @@ namespace App\Models\monev;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\semester\Periode;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class LaporanMonevMahasiswa extends Model
 {
@@ -21,6 +22,16 @@ class LaporanMonevMahasiswa extends Model
     'status',
   ];
   public $timestamps = true;
+
+
+  protected static function booted()
+  {
+    static::creating(function ($model) {
+      if (empty($model->laporan_id)) {
+        $model->laporan_id = (string) Str::orderedUuid();
+      }
+    });
+  }
 
   // Relasi ke periode
   public function periodeSemester()

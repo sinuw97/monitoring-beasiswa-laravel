@@ -10,12 +10,12 @@ return new class extends Migration
     {
         Schema::create('target_next_semester', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('nim', 8)->nullable(false);
-            $table->char('laporan_id', 20)->nullable(false);
+            $table->char('nim', 20)->nullable(false);
+            $table->char('laporan_id', 36)->nullable(false);
             $table->integer('semester')->nullable(true);
             $table->decimal('target_ips', 3, 2)->nullable(true);
             $table->decimal('target_ipk', 3, 2)->nullable(true);
-            $table->enum('status', ['Draft', 'Pending', 'Valid', 'Rejected'])->default('Draft');
+            $table->enum('status', ['Draft','Pending','Valid','Rejected','Revisi'])->default('Draft');
             $table->timestamps();
         });
     }

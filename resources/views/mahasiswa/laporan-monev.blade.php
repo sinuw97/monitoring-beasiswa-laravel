@@ -29,7 +29,7 @@
     <section class="flex justify-center w-full h-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-[#fdfdfd] w-full max-w-[1100px] lg:max-w-[1100px] xl:max-w-[1200px] h-auto p-4 sm:p-6 shadow-lg">
             <h1 class="text-xl lg:text-2xl text-[#013F4E] font-bold mb-3">Laporan Monev Yang Tersimpan</h1>
-            
+
             {{-- Card --}}
             <div
                 class="text-sm flex flex-col gap-1.5 h-auto bg-[#fefefe] border-l-4 border-[#09697E] text-[#09697E] font-semibold px-3 py-3 rounded mb-3 shadow-md">
@@ -157,6 +157,13 @@
                     </p>
                 </div>
             </div>
+
+            {{-- Status Periode Laporan --}}
+            @if ($laporan->periodeSemester && $laporan->periodeSemester->status === 'Non-Aktif')
+                <div class="bg-red-200 border-l-4 border-red-600 text-red-700 w-full px-3 py-3 rounded mb-3">
+                    Periode pengisian laporan sudah ditutup.
+                </div>
+            @endif
 
             @if (session('success'))
                 <div class="bg-green-100 border-l-4 border-green-600 text-[#013F4E] w-full px-3 py-3 rounded mb-3">
@@ -732,7 +739,8 @@
                 {{-- Committee Activities --}}
                 <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="mb-2 cursor-default"
                     x-on:edit-committee.window="editDataCommittee = $event.detail; openEditCommittee = true">
-                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kegiatan Kepanitiaan Atau Penugasan
+                    <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kegiatan Kepanitiaan Atau
+                        Penugasan
                     </p>
 
                     <div class="overflow-x-auto w-full">

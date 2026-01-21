@@ -10,9 +10,8 @@ return new class extends Migration
     {
         Schema::create('committee_activities', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->char('nim', 8)->nullable(false);
-            $table->char('laporan_id', 20)->nullable(false);
-            $table->integer('semester')->nullable(true);
+            $table->char('nim', 20)->nullable(false);
+            $table->char('laporan_id', 36)->nullable(false);
             $table->string('activity_name', 255)->nullable(true);
             $table->string('activity_type', 255)->nullable(true);
             $table->string('participation', 100)->nullable(true);
@@ -23,7 +22,7 @@ return new class extends Migration
             $table->text('bukti_url')->nullable(true);
             $table->integer('points')->nullable(true);
             $table->text('comment')->nullable(true);
-            $table->enum('status', ['Draft', 'Pending', 'Valid', 'Rejected'])->default('Draft');
+            $table->enum('status', ['Draft','Pending','Valid','Rejected','Revisi'])->default('Draft');
             $table->timestamps();
         });
     }

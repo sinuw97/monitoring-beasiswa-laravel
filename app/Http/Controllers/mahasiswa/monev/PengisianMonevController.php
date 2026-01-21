@@ -109,13 +109,8 @@ class PengisianMonevController extends Controller
             return back()->with('error', 'Laporan sudah dibuat!');
         }
 
-        // generate laporan_id
-        $tanggal = now()->format('dmyHi');
-        $laporanId = "LP" . $dataMahasiswa->nim . $tanggal;
-
         // simpan ke laporan_mahasiswa
         $laporan = LaporanMonevMahasiswa::create([
-            'laporan_id' => $laporanId,
             'nim' => $dataMahasiswa->nim,
             'semester_id' => $semesterId,
             'semester' => $semesterAngka,
@@ -311,6 +306,15 @@ class PengisianMonevController extends Controller
 
         if (!$laporan) {
             return back()->with('error', 'Laporan tidak ditemukan.');
+        }
+
+        // cek apakah periode pengisian monev dibuka atau tutup, tolak kalau tutup
+        $isPeriodeOpen = Periode::where('semester_id', $laporan->semester_id)
+            ->whereIn('status', ['Aktif', 'Aktif-Khusus'])
+            ->exists();
+
+        if (!$isPeriodeOpen) {
+            return back()->with('error', 'Maaf periode ini sudah ditutup, mohon untuk menghubungi admin bila ingin periode dibuka');
         }
 
         // validasi isi data laporan (relasi laporan mahasiswa harus ada yg isi)

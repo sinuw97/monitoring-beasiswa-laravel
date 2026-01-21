@@ -1,4 +1,4 @@
-<div x-data="{ show: {{ session()->has('error') || session()->has('success') || $errors->any() ? 'true' : 'false' }} }" x-cloak @open-ganti-password.window="show = true" @close-ganti-password.window="show = false">
+<div x-data="{ show: {{ session()->has('ganti_pw_error') || session()->has('ganti_pw_success') ? 'true' : 'false' }} }" x-cloak @open-ganti-password.window="show = true" @close-ganti-password.window="show = false">
     <div x-show="show" x-transition @click.away="show = false"
         class="fixed inset-0 bg-[#2525252d] backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div class="bg-white w-full max-w-[400px] p-6 rounded-xl shadow-lg" @click.stop>

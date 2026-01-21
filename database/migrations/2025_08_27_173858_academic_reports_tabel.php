@@ -10,14 +10,14 @@ return new class extends Migration
     {
         Schema::create('academic_reports', function (Blueprint $table){
             $table->uuid('id')->primary();
-            $table->char('nim', 8)->nullable(false);
-            $table->char('laporan_id', 20)->nullable(false);
+            $table->char('nim', 20)->nullable(false);
+            $table->char('laporan_id', 36)->nullable(false);
             $table->integer('semester')->nullable(true);
             $table->decimal('ips', 3, 2)->nullable(true);
             $table->decimal('ipk', 3, 2)->nullable(true);
             $table->text('comment')->nullable(true);
             $table->text('bukti_url')->nullable(true);
-            $table->enum('status', ['Draft', 'Pending', 'Valid', 'Rejected'])->default('Draft');
+            $table->enum('status', ['Draft','Pending','Valid','Rejected','Revisi'])->default('Draft');
             $table->timestamps();
         });
     }

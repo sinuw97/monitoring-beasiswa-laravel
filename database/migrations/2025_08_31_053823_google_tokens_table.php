@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('google_tokens', function (Blueprint $table) {
             $table->char('id', 36)->primary();
-            $table->char('user_id', 8);
+            $table->char('user_id', 36);
             $table->string('access_token')->nullable(false);
             $table->string('refresh_token')->nullable(false);
             $table->string('scope')->nullable(false);
