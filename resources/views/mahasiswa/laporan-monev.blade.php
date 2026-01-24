@@ -185,6 +185,7 @@
                 </div>
             @endif
 
+            {{-- Section Monev --}}
             <div>
                 {{-- Reports --}}
                 <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="mb-3 mt-5 cursor-default"
@@ -215,7 +216,8 @@
                         <x-modal title="Tambah data IPS dan IPK" show="openReports">
                             <form method="POST"
                                 action="{{ route('laporan.academic-reports.store', $laporan->laporan_id) }}"
-                                enctype="multipart/form-data">
+                                enctype="multipart/form-data" x-data="{ submitting: false }"
+                                x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Semester <span
@@ -229,7 +231,7 @@
                                     <label class="block text-sm font-medium">IPS <span
                                             class="text-red-500">*</span></label>
                                     <span class="text-[2pt] text-red-500 italic">Maks 4.00</span>
-                                    <input type="number" name="ips"
+                                    <input type="number" name="ips" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         step="0.01" min="0" max="4">
                                 </div>
@@ -237,7 +239,7 @@
                                     <label class="block text-sm font-medium">IPK <span
                                             class="text-red-500">*</span></label>
                                     <span class="text-[2pt] text-red-500 italic">Maks 4.00</span>
-                                    <input type="number" name="ipk"
+                                    <input type="number" name="ipk" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         step="0.01" min="0" max="4">
                                 </div>
@@ -245,15 +247,22 @@
                                     <label class="block text-sm font-medium">Bukti <span class="italic">(pdf, jpg,
                                             jpeg, atau png)</span>
                                         maks 4MB<span class="text-red-500">*</span></label>
+                                    {{-- Prod: required --}}
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openReports = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded">
+                                    </button>
                                 </div>
                             </form>
                         </x-modal>
@@ -263,7 +272,8 @@
                                 x-bind:action="'{{ route('laporan.academic-reports.update', ':id') }}'.replace(':id',
                                     editDataReports
                                     .id)"
-                                method="POST" enctype="multipart/form-data">
+                                method="POST" enctype="multipart/form-data" x-data="{ submitting: false }"
+                                x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -298,18 +308,20 @@
                                 {{-- btn --}}
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditReports = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">
                                         Batal
                                     </button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] text-white rounded cursor-pointer">
-                                        Simpan
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded">
                                     </button>
                                 </div>
                             </form>
                         </x-modal>
-                        {{-- Delete Modal --}}
-                        <x-modal-delete deleteRoute="laporan.academic-reports.delete" />
                     @endif
                 </div>
 
@@ -355,18 +367,19 @@
                         <x-modal title="Tambah Data Kegiatan Akademik" show="openAcademic">
                             <form method="POST"
                                 action="{{ route('laporan.academic-activities.store', $laporan->laporan_id) }}"
-                                enctype="multipart/form-data">
+                                enctype="multipart/form-data" x-data="{ submitting: false }"
+                                x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Nama Kegiatan <span
                                             class="text-red-500">*</span></label>
-                                    <input type="text" name="nama-kegiatan"
+                                    <input type="text" name="nama-kegiatan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tipe Kegiatan <span
                                             class="text-red-500">*</span></label>
-                                    <select name="tipe-kegiatan"
+                                    <select name="tipe-kegiatan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Tipe</option>
                                         <option value="Salam Kampus">Salam Kampus</option>
@@ -384,7 +397,7 @@
                                     <label class="block text-sm font-medium">Keikutsertaan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <select name="keikutsertaan"
+                                    <select name="keikutsertaan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Keikutsertaan</option>
                                         <option value="Peserta">Peserta</option>
@@ -394,21 +407,21 @@
                                     <label class="block text-sm font-medium">Tempat
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="tempat"
+                                    <input type="text" name="tempat" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Mulai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-mulai"
+                                    <input type="date" name="tanggal-mulai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Selesai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-selesai"
+                                    <input type="date" name="tanggal-selesai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
@@ -416,15 +429,21 @@
                                             jpeg, atau png)</span>
                                         maks 4MB<span class="text-red-500">*</span></label>
                                     </label>
+                                    {{-- Prod: required --}}
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openAcademic = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -435,7 +454,8 @@
                                 x-bind:action="'{{ route('laporan.academic-activities.update', ':id') }}'.replace(':id',
                                     editDataAcademy
                                     .id)"
-                                enctype="multipart/form-data">
+                                enctype="multipart/form-data" x-data="{ submitting: false }"
+                                x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -508,9 +528,14 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditAcademic = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -560,33 +585,40 @@
                         {{-- Modal Tambah --}}
                         <x-modal title="Tambah data kegiatan organisasi" show="openOrganization">
                             <form method="POST" enctype="multipart/form-data"
-                                action="{{ route('laporan.org-activities.store', $laporan->laporan_id) }}">
+                                action="{{ route('laporan.org-activities.store', $laporan->laporan_id) }}"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Nama UKM <span
                                             class="text-red-500">*</span></label>
-                                    <select name="nama-ukm"
+                                    <select name="nama-ukm" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih UKM</option>
                                         <option value="BEM">BEM</option>
                                         <option value="ALVIC">ALVIC</option>
                                         <option value="LDK">LDK</option>
                                         <option value="PMKK">PMKK</option>
+                                        <option value="PASTERA">PASTERA</option>
+                                        <option value="FORVOL">FORVOL</option>
+                                        <option value="KEWIRAUSAHAAN">KEWIRAUSAHAAN</option>
                                         <option value="PSM">PSM</option>
                                         <option value="CIT">CIT</option>
-                                        <option value="FORVOL">FORVOL</option>
+                                        <option value="TSU SPORT">TSU SPORT</option>
+                                        <option value="ENGLISH CLUB">ENGLISH CLUB</option>
+                                        <option value="KSR">KSR</option>
+                                        <option value="HIMPUNAN MAHASISWA">HIMPUNAN MAHASISWA</option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Nama Kegiatan <span
                                             class="text-red-500">*</span></label>
-                                    <input type="text" name="nama-kegiatan"
+                                    <input type="text" name="nama-kegiatan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tingkat
                                         <span class="text-red-500">*</span></label>
-                                    <select name="tingkat"
+                                    <select name="tingkat" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Tingkat</option>
                                         <option value="Perguruan Tinggi">Perguruan Tinggi</option>
@@ -595,7 +627,7 @@
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Posisi <span
                                             class="text-red-500">*</span></label>
-                                    <select name="posisi"
+                                    <select name="posisi" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Posisi</option>
                                         <option value="Ketua">Ketua</option>
@@ -609,36 +641,42 @@
                                     <label class="block text-sm font-medium">Tempat
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="tempat"
+                                    <input type="text" name="tempat" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Mulai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-mulai"
+                                    <input type="date" name="tanggal-mulai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Selesai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-selesai"
+                                    <input type="date" name="tanggal-selesai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Bukti <span class="italic">(pdf, jpg,
                                             jpeg, atau png)</span>
                                         maks 4MB<span class="text-red-500">*</span></label>
-                                    <input type="file" name="bukti"
+                                    {{-- Prod: required --}}
+                                    <input type="file" name="bukti" 
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openOrganization = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -647,7 +685,8 @@
                         <x-modal title="Edit data kegiatan organisasi" show="openEditOrg">
                             <form method="POST"
                                 x-bind:action="'{{ route('laporan.org-activities.update', ':id') }}'.replace(':id', editDataOrg.id)"
-                                enctype="multipart/form-data">
+                                enctype="multipart/form-data" x-data="{ submitting: false }"
+                                x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -727,9 +766,14 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditOrg = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded">Simpan</button>
                                 </div>
                             </form>
                         </x-modal>
@@ -779,20 +823,21 @@
                         {{-- Modal Tambah --}}
                         <x-modal title="Tambah Data Kegiatan Penugasan dan Kepanitian" show="openCommittee">
                             <form method="POST" enctype="multipart/form-data"
-                                action="{{ route('laporan.committee-activities.store', $laporan->laporan_id) }}">
+                                action="{{ route('laporan.committee-activities.store', $laporan->laporan_id) }}"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Nama Kegiatan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="nama-kegiatan"
+                                    <input type="text" name="nama-kegiatan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tipe Kegiatan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <select name="tipe-kegiatan" id="tipe-kegiatan"
+                                    <select name="tipe-kegiatan" id="tipe-kegiatan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="">Pilih Satu</option>
                                         <option value="Pelatihan Kepemimpinan">Pelatihan Kepemimpinan</option>
@@ -804,7 +849,7 @@
                                     <label class="block text-sm font-medium">Tingkat
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <select name="tingkat" id="tingkat"
+                                    <select name="tingkat" id="tingkat" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Tingkatan</option>
                                         {{-- utk Kepemimpinan --}}
@@ -823,7 +868,7 @@
                                     <label class="block text-sm font-medium">Keikutsertaan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <select name="keikutsertaan"
+                                    <select name="keikutsertaan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Posisi</option>
                                         <option value="Ketua">Ketua</option>
@@ -837,21 +882,21 @@
                                     <label class="block text-sm font-medium">Tempat
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="tempat"
+                                    <input type="text" name="tempat" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Mulai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-mulai"
+                                    <input type="date" name="tanggal-mulai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Selesai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-selesai"
+                                    <input type="date" name="tanggal-selesai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
@@ -859,15 +904,21 @@
                                             jpeg, atau png)</span>
                                         maks 4MB<span class="text-red-500">*</span></label>
                                     </label>
+                                    {{-- Prod: required --}}
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openCommittee = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -876,7 +927,8 @@
                         <x-modal title="Tambah Data Kegiatan Penugasan dan Kepanitian" show="openEditCommittee">
                             <form method="POST" enctype="multipart/form-data"
                                 x-bind:action="'{{ route('laporan.committee-activities.update', ':id') }}'.replace(':id',
-                                    editDataCommittee.id)">
+                                    editDataCommittee.id)"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -945,12 +997,20 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditCommittee = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
+
+                        {{-- Delete Modal --}}
+                        <x-modal-delete />
 
                         {{-- JS (dipertahankan) --}}
                         <script>
@@ -1024,20 +1084,21 @@
                         {{-- Modal Tambah --}}
                         <x-modal title="Tambah Data Prestasi" show="openAchievement">
                             <form method="POST" enctype="multipart/form-data"
-                                action="{{ route('laporan.achievements.store', $laporan->laporan_id) }}">
+                                action="{{ route('laporan.achievements.store', $laporan->laporan_id) }}"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Nama Prestasi
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="nama-prestasi"
+                                    <input type="text" name="nama-prestasi" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tipe Prestasi
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <select name="tipe-prestasi" id="tipe-prestasi"
+                                    <select name="tipe-prestasi" id="tipe-prestasi" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Tipe</option>
                                         <option value="Kompetisi Pemerintahan Individu">Kompetisi Pemerintahan Individu
@@ -1075,7 +1136,7 @@
                                     <label class="block text-sm font-medium">Tingkat
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <select name="tingkat" id="tingkat-prestasi"
+                                    <select name="tingkat" id="tingkat-prestasi" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         {{-- Kompetisi --}}
                                         <option value="Tidak Ada" class="italic">Pilih Tingkatan</option>
@@ -1093,7 +1154,7 @@
                                     <label class="block text-sm font-medium">Raihan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <select name="raihan" id="raihan-prestasi"
+                                    <select name="raihan" id="raihan-prestasi" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="Tidak Ada" class="italic">Pilih Juara</option>
                                         <option value="Juara 1">Juara 1</option>
@@ -1113,21 +1174,21 @@
                                     <label class="block text-sm font-medium">Tempat
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="tempat"
+                                    <input type="text" name="tempat" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Mulai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-mulai"
+                                    <input type="date" name="tanggal-mulai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Selesai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-selesai"
+                                    <input type="date" name="tanggal-selesai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
@@ -1135,15 +1196,21 @@
                                             jpeg, atau png)</span>
                                         maks 4MB<span class="text-red-500">*</span></label>
                                     </label>
+                                    {{-- Prod: required --}}
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openAchievement = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1152,7 +1219,8 @@
                         <x-modal title="Edit Data Prestasi" show="openEditAchievement">
                             <form method="POST" enctype="multipart/form-data"
                                 x-bind:action="'{{ route('laporan.achievements.update', ':id') }}'.replace(':id', editDataAchievement
-                                    .id)">
+                                    .id)"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -1276,9 +1344,14 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditAchievement = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1423,20 +1496,21 @@
                         {{-- Modal Tambah --}}
                         <x-modal title="Tambah Data Kegiatan Mandiri" show="openIndependent">
                             <form method="POST" enctype="multipart/form-data"
-                                action="{{ route('laporan.independent-activities.store', $laporan->laporan_id) }}">
+                                action="{{ route('laporan.independent-activities.store', $laporan->laporan_id) }}"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Nama Kegiatan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="nama-kegiatan"
+                                    <input type="text" name="nama-kegiatan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tipe Kegiatan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <select type="text" name="tipe-kegiatan"
+                                    <select type="text" name="tipe-kegiatan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Tipe</option>
                                         <option value="Magang Bersertifikat">Magang Bersertifikat</option>
@@ -1454,7 +1528,7 @@
                                     <label class="block text-sm font-medium">Keikutsertaan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <select type="text" name="keikutsertaan"
+                                    <select type="text" name="keikutsertaan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="" class="italic">Pilih Keikutsertaan</option>
                                         <option value="Peserta">Peserta</option>
@@ -1464,21 +1538,21 @@
                                     <label class="block text-sm font-medium">Tempat
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="tempat"
+                                    <input type="text" name="tempat" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Mulai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-mulai"
+                                    <input type="date" name="tanggal-mulai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tanggal Selesai
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="date" name="tanggal-selesai"
+                                    <input type="date" name="tanggal-selesai" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
@@ -1486,15 +1560,21 @@
                                             jpeg, atau png)</span>
                                         maks 4MB<span class="text-red-500">*</span></label>
                                     </label>
+                                    {{-- Prod: required --}}
                                     <input type="file" name="bukti"
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openIndependent = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1502,7 +1582,8 @@
                         <x-modal title="Edit Data Kegiatan Mandiri" show="openEditIndependent">
                             <form method="POST" enctype="multipart/form-data"
                                 x-bind:action="'{{ route('laporan.independent-activities.update', ':id') }}'.replace(':id',
-                                    editDataIndependent.id)">
+                                    editDataIndependent.id)"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -1563,9 +1644,14 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditIndependent = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1580,7 +1666,7 @@
                         <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Pendukung
                             <span class="text-red-500">*</span>
                         </p>
-                        <textarea name="faktor-pendukung" id="faktor-pendukung"
+                        <textarea name="faktor-pendukung" id="faktor-pendukung" required
                             class="resize-none px-2 py-0.5 w-full sm:w-full md:w-[450px] h-[200px] cursor-default shadow-md border border-[#c0c0c0] focus:outline-none focus:ring-0"
                             readonly>{{ $parsingEvaluations->support_factors ?? '-' }}</textarea>
                     </div>
@@ -1588,7 +1674,7 @@
                         <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Penghambat
                             <span class="text-red-500">*</span>
                         </p>
-                        <textarea name="faktor-pendukung" id=""
+                        <textarea name="faktor-penghambat" id="faktor-penghambat" required
                             class="resize-none px-2 py-0.5 w-full sm:w-full md:w-[450px] h-[200px] cursor-default shadow-md border border-[#c0c0c0] focus:outline-none focus:ring-0"
                             readonly>{{ $parsingEvaluations->barrier_factors ?? '-' }}</textarea>
                     </div>
@@ -1619,7 +1705,8 @@
                     {{-- Modal Tambah --}}
                     <x-modal title="Tambah Data Evaluasi" show="openEvaluation">
                         <form method="POST"
-                            action="{{ route('laporan.evaluations.store', $laporan->laporan_id) }}">
+                            action="{{ route('laporan.evaluations.store', $laporan->laporan_id) }}"
+                            x-data="{ submitting: false }" x-on:submit="submitting = true">
                             @csrf
                             <div class="mb-3">
                                 <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Pendukung</p>
@@ -1637,8 +1724,13 @@
                             <div class="flex justify-end gap-2 mt-4">
                                 <button type="button" @click="openEvaluation = false"
                                     class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
-                                <button type="submit"
-                                    class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
+                                <button type="submit" x-bind:disabled="submitting"
+                                    x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                    :class="submitting
+                                        ?
+                                        'cursor-not-allowed bg-gray-400' :
+                                        'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                    class="px-3 py-1 transition text-white rounded"></button>
                             </div>
                         </form>
                     </x-modal>
@@ -1646,7 +1738,8 @@
                     {{-- Modal Edit --}}
                     <x-modal title="Edit Data Evaluasi" show="openEditEvaluation">
                         <form method="POST"
-                            x-bind:action="'{{ route('laporan.evaluations.update', ':id') }}'.replace(':id', editDataEvaluation.id)">
+                            x-bind:action="'{{ route('laporan.evaluations.update', ':id') }}'.replace(':id', editDataEvaluation.id)"
+                            x-data="{ submitting: false }" x-on:submit="submitting = true">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
@@ -1665,8 +1758,13 @@
                             <div class="flex justify-end gap-2 mt-4">
                                 <button type="button" @click="openEditEvaluation = false"
                                     class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
-                                <button type="submit"
-                                    class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
+                                <button type="submit" x-bind:disabled="submitting"
+                                    x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                    :class="submitting
+                                        ?
+                                        'cursor-not-allowed bg-gray-400' :
+                                        'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                    class="px-3 py-1 transition text-white rounded"></button>
                             </div>
                         </form>
                     </x-modal>
@@ -1696,12 +1794,13 @@
                         <x-modal title="Tambah Data Target IPS dan IPK" show="openTargetRep">
                             <form method="POST"
                                 action="{{ route('laporan.next-semester-reports.store', $laporan->laporan_id) }}"
-                                enctype="multipart/form-data">
+                                enctype="multipart/form-data" x-data="{ submitting: false }"
+                                x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Semester <span
                                             class="text-red-500">*</span></label>
-                                    <select name="semester"
+                                    <select name="semester" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -1717,7 +1816,7 @@
                                     <label class="block text-sm font-medium">Target IPS <span
                                             class="text-red-500">*</span></label>
                                     <span class="text-[2pt] text-red-500 italic">Maks 4.00</span>
-                                    <input type="number" name="target-ips"
+                                    <input type="number" name="target-ips" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         step="0.01" min="0" max="4">
                                 </div>
@@ -1725,16 +1824,21 @@
                                     <label class="block text-sm font-medium">Target IPK <span
                                             class="text-red-500">*</span></label>
                                     <span class="text-[2pt] text-red-500 italic">Maks 4.00</span>
-                                    <input type="number" name="target-ipk"
+                                    <input type="number" name="target-ipk" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                         step="0.01" min="0" max="4">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openTargetRep = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1743,7 +1847,7 @@
                             <form
                                 x-bind:action="'{{ route('laporan.next-semester-reports.update', ':id') }}'.replace(':id',
                                     editDataTargetRep.id)"
-                                method="POST">
+                                method="POST" x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -1777,12 +1881,16 @@
                                 {{-- btn --}}
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditTargetRep = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">
                                         Batal
                                     </button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">
-                                        Simpan
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded">
                                     </button>
                                 </div>
                             </form>
@@ -1812,29 +1920,35 @@
                         {{-- Modal tambah --}}
                         <x-modal title="Tambah Data Rencana Kegiatan Akademik" show="openTargetAcademic">
                             <form method="POST"
-                                action="{{ route('laporan.next-smt-activities.store', $laporan->laporan_id) }}">
+                                action="{{ route('laporan.next-smt-activities.store', $laporan->laporan_id) }}"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Nama Kegiatan</label>
-                                    <input type="text" name="nama-kegiatan"
+                                    <input type="text" name="nama-kegiatan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Rencana/Strategi</label>
-                                    <input type="text" name="rencana-strategi"
+                                    <input type="text" name="rencana-strategi" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Keikutsertaan</label>
-                                    <input type="text" name="keikutsertaan"
+                                    <input type="text" name="keikutsertaan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openTargetAcademic = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1842,7 +1956,8 @@
                         <x-modal title="Edit Data Rencana Kegiatan Akademik" show="openEditTargetAcademic">
                             <form method="POST"
                                 x-bind:action="'{{ route('laporan.next-smt-activities.update', ':id') }}'.replace(':id',
-                                    editDataTargetAcademic.id)">
+                                    editDataTargetAcademic.id)"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -1860,9 +1975,14 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditTargetAcademic = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1888,35 +2008,41 @@
                         {{-- Modal Tambah --}}
                         <x-modal title="Tambah Data Rencana Prestasi" show="openTargetAchievement">
                             <form method="POST"
-                                action="{{ route('laporan.next-smt-achievements.store', $laporan->laporan_id) }}">
+                                action="{{ route('laporan.next-smt-achievements.store', $laporan->laporan_id) }}"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Nama Prestasi
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="nama-prestasi"
+                                    <input type="text" name="nama-prestasi" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Tingkat
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="tingkat"
+                                    <input type="text" name="tingkat" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Raihan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="raihan"
+                                    <input type="text" name="raihan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openTargetAchievement = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1924,7 +2050,8 @@
                         <x-modal title="Edit Data Rencana Prestasi" show="openEditTargetAchievement">
                             <form method="POST"
                                 x-bind:action="'{{ route('laporan.next-smt-achievements.update', ':id') }}'.replace(':id',
-                                    editDatatargetAchievement.id)">
+                                    editDatatargetAchievement.id)"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -1954,9 +2081,14 @@
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditTargetAchievement = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -1982,35 +2114,41 @@
                         {{-- Modal tambah --}}
                         <x-modal title="Tambah Data Rencana Kegiatan Mandiri" show="openTargetIndependent">
                             <form method="POST"
-                                action="{{ route('laporan.next-smt-independent.store', $laporan->laporan_id) }}">
+                                action="{{ route('laporan.next-smt-independent.store', $laporan->laporan_id) }}"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Nama Kegiatan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="nama-kegiatan"
+                                    <input type="text" name="nama-kegiatan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Rencana/Strategi
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="rencana-strategi"
+                                    <input type="text" name="rencana-strategi" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
                                 <div class="mb-3">
                                     <label class="block text-sm font-medium">Keikutsertaan
                                         <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" name="keikutsertaan"
+                                    <input type="text" name="keikutsertaan" required
                                         class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 </div>
 
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openTargetIndependent = false"
-                                        class="px-3 py-1 bg-[#52AEFF] hover:bg-[#8AC8FF] rounded transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#21C40F] hover:bg-[#0DD603] transition text-white rounded cursor-pointer">Simpan</button>
+                                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] hover:bg-[#d72626] rounded transition cursor-pointer">Batal</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
@@ -2018,7 +2156,8 @@
                         <x-modal title="Tambah Data Rencana Kegiatan Mandiri" show="openEditTargetIndependent">
                             <form method="POST"
                                 x-bind:action="'{{ route('laporan.next-smt-independent.update', ':id') }}'.replace(':id',
-                                    editDataTargetIndependent.id)">
+                                    editDataTargetIndependent.id)"
+                                x-data="{ submitting: false }" x-on:submit="submitting = true">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">
@@ -2049,14 +2188,22 @@
                                 <div class="flex justify-end gap-2 mt-4">
                                     <button type="button" @click="openEditTargetIndependent = false"
                                         class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
-                                    <button type="submit"
-                                        class="px-3 py-1 bg-[#09697E] hover:bg-[#10849f] text-white rounded cursor-pointer">Simpan</button>
+                                    <button type="submit" x-bind:disabled="submitting"
+                                        x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                        :class="submitting
+                                            ?
+                                            'cursor-not-allowed bg-gray-400' :
+                                            'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                        class="px-3 py-1 transition text-white rounded"></button>
                                 </div>
                             </form>
                         </x-modal>
                     @endif
                 </div>
             </div>
+
+            {{-- Delete Modal --}}
+            <x-modal-delete />
 
             {{-- Button Aksi --}}
             <div x-cloak x-data="{ openModalKonfirmasi: false }" class="mt-4 flex gap-2">
@@ -2096,11 +2243,17 @@
                         </button>
                         {{-- Konfirmasi --}}
                         <form action="{{ route('laporan.ajukan', $laporan->laporan_id) }}" method="POST"
-                            enctype="multipart/form-data">
+                            enctype="multipart/form-data" x-data="{ submitting: false }"
+                            x-on:submit="submitting = true">
                             @csrf
                             @method('PUT')
-                            <button type="submit"
-                                class="px-3 py-1 bg-[#3FAA54] hover:bg-[#48cc62] text-[#fefefe] rounded transition cursor-pointer">
+                            <button type="submit" x-bind:disabled="submitting"
+                                x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                :class="submitting
+                                    ?
+                                    'cursor-not-allowed bg-gray-400' :
+                                    'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                class="px-3 py-1 text-[#fefefe] rounded transition">
                                 Konfirmasi
                             </button>
                         </form>

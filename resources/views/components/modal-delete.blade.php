@@ -30,11 +30,17 @@
                     Batal
                 </button>
 
-                <form method="POST" :action="deleteRoute">
+                <form method="POST" :action="deleteRoute" x-data="{ deleting: false }" x-on:submit="deleting = true" :class="deleting ? 'cursor-not-allowed' : ''">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="px-4 py-1 rounded bg-red-500 hover:bg-red-700 text-white transition">
-                        Hapus
+                    <button type="submit" :disabled="deleting"
+                        :class="deleting
+                            ?
+                            'cursor-not-allowed bg-gray-400' :
+                            'cursor-pointer bg-red-500 hover:bg-red-700'"
+                        class="px-4 py-1 transition text-white rounded">
+                        <span x-show="!deleting">Hapus</span>
+                        <span x-show="deleting">Menghapus...</span>
                     </button>
                 </form>
             </div>
