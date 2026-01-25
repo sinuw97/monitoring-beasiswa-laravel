@@ -26,7 +26,10 @@
                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 md:hidden md:invisible">Dashboard</a>
                 <a href="{{ route('admin.data-mahasiswa') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 md:hidden md:invisible">Data Mahasiswa</a>
                 <a href="{{ route('admin.laporan') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 md:hidden md:invisible">Laporan Monev</a>
-                <div class="h-[1px] w-full bg-gray-300 hidden invisible"></div>
+
+                <div class="h-[1px] w-full bg-gray-300"></div>
+                <a href="{{ route('admin.profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil Admin</a>
+                <div class="h-[1px] w-full bg-gray-300"></div>
                 <form method="POST" action="{{ url('admin/logout') }}">
                     @csrf
                     <button type="submit"

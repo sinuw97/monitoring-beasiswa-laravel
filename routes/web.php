@@ -137,6 +137,11 @@ Route::prefix('admin')->group(function () {
         
         // Pengumuman Routes
         Route::resource('pengumuman', PengumumanController::class, ['names' => 'admin.pengumuman']);
+
+        // Profile Routes
+        Route::get('/profile', [\App\Http\Controllers\admin\profile\AdminProfileController::class, 'edit'])->name('admin.profile.edit');
+        Route::put('/profile', [\App\Http\Controllers\admin\profile\AdminProfileController::class, 'update'])->name('admin.profile.update');
+        Route::post('/profile/password', [\App\Http\Controllers\admin\profile\AdminProfileController::class, 'verifyPassword'])->name('admin.profile.password');
     });
 });
 
