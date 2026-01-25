@@ -1,5 +1,7 @@
 @extends('admin.layout')
 
+@section('title', 'Data Mahasiswa')
+
 @section('content')
     <div class="bg-white w-full max-w-5xl mx-auto shadow-lg rounded-xl p-2 sm:p-6 border-t-4 border-[#09697E] my-6 sm:my-8">
 

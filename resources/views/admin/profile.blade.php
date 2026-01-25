@@ -1,5 +1,7 @@
 @extends('admin.layout')
 
+@section('title', 'Profil Admin')
+
 @section('content')
     <main class="min-h-screen flex-1 p-2 sm:p-6 bg-gray-50">
         <div class="max-w-4xl mx-auto">

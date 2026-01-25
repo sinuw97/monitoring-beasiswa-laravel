@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <title>Dashboard Admin</title>
+    <title>@yield('title') - Monitoring Beasiswa</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 </head>
 
 <body class="bg-gray-50 font-sans text-gray-900 antialiased">

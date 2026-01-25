@@ -1,5 +1,7 @@
 @extends('admin.layout')
 
+@section('title', 'Dashboard Admin')
+
 @section('content')
     {{-- Konten Utama --}}
     <main class="min-h-screen flex-1 p-2 sm:p-6 bg-gray-50">

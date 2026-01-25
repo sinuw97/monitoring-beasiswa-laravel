@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <title>Login Admin - Monitoring Beasiswa</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 </head>
 
 <body class="min-h-screen flex antialiased bg-gray-100 font-sans">

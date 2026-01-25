@@ -23,14 +23,14 @@
                         class="font-semibold text-gray-700 block mb-1">Tanggal Mulai</label>
                     <input type="date" name="tanggal_mulai" id="tanggal_mulai_{{ $periode->semester_id }}"
                         value="{{ $periode->tanggal_mulai ? \Carbon\Carbon::parse($periode->tanggal_mulai)->format('Y-m-d') : '' }}"
-                        class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        class="w-full border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 </div>
                 <div class="text-sm">
                     <label for="tanggal_selesai_{{ $periode->semester_id }}"
                         class="font-semibold text-gray-700 block mb-1">Tanggal Selesai</label>
                     <input type="date" name="tanggal_selesai" id="tanggal_selesai_{{ $periode->semester_id }}"
                         value="{{ $periode->tanggal_selesai ? \Carbon\Carbon::parse($periode->tanggal_selesai)->format('Y-m-d') : '' }}"
-                        class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        class="w-full border-gray-300 rounded-md p-2 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                 </div>
             </div>
 

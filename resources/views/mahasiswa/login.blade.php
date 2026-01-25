@@ -18,6 +18,7 @@
     </style>
     <link rel="stylesheet" href="https://unpkg.com/nprogress/nprogress.css">
     <title>Login Mahasiswa - Monitoring Beasiswa</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 </head>
 
 <body class="min-h-screen flex antialiased bg-gray-100 font-sans">

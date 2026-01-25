@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <title>Login Admin</title>
+    <title>Register Admin - Monitoring Beasiswa</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row">
     <!-- Bagian kiri (gradient background) -->

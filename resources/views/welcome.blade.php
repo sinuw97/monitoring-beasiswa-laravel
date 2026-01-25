@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring Beasiswa - TSU</title>
+    <title>Monitoring Beasiswa - Tiga Serangkai University</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -314,8 +315,9 @@
             <div>
                 <h3 class="font-bold text-white mb-4 uppercase text-sm tracking-wider">Hubungi Kami</h3>
                 <p class="text-sm">
-                    **Tiga Serangkai University**<br>
-                    Telepon: <a href="tel:0271765500" class="hover:text-cyan-400 transition duration-300">(0271) 765500</a>
+                    Tiga Serangkai University<br>
+                    Telepon: <a href="tel:0271765500" class="hover:text-cyan-400 transition duration-300">+62271716500</a><br>
+                    Whatsapp: <a href="https://wa.me/62895705354767" class="hover:text-cyan-400 transition duration-300">+62895705354767</a>
                 </p>
             </div>
         </div>

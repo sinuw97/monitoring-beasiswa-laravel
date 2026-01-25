@@ -253,7 +253,7 @@ class DashboardAdminController extends Controller
 
         if ($activePeriode) {
             $periode->update([
-                'status' => 'Aktif Sementara',
+                'status' => 'Aktif-Khusus',
             ]);
             return redirect('/admin/dashboard')->with('success', 'Periode berhasil diaktifkan sementara.');
         } else {

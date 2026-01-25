@@ -20,7 +20,8 @@
         }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/nprogress/nprogress.css">
-    <title>Isi Laporan Monev</title>
+    <title>Isi Laporan Monev - Monitoring Beasiswa</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 </head>
 
 <body class="bg-[#F8F6F6]">

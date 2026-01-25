@@ -19,7 +19,7 @@
         <!-- Tombol Masuk (Desktop) -->
         <a 
             href="{{ url('mahasiswa/login') }}" 
-            class="hidden md:inline bg-yellow-400 px-4 py-2 rounded font-semibold hover:bg-yellow-500"
+            class="hidden md:inline bg-yellow-400 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500"
         >
             Masuk
         </a>
@@ -54,7 +54,7 @@
                 <li>
                     <a 
                         href="{{ url('mahasiswa/login') }}" 
-                        class="bg-yellow-400 px-4 py-2 rounded font-semibold hover:bg-yellow-500"
+                        class="bg-yellow-400 px-4 py-2 rounded-full font-semibold hover:bg-yellow-500"
                         @click="open=false"
                     >
                         Masuk

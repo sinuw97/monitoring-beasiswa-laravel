@@ -1,5 +1,7 @@
 @extends('admin.layout')
 
+@section('title', 'Pengumuman')
+
 @section('content')
 <main class="min-h-screen p-2 sm:p-6 bg-gray-50 font-sans">
     <div class="bg-white w-full max-w-5xl mx-auto shadow-lg rounded-xl p-2 sm:p-6 border-t-4 border-[#09697E] my-6 sm:my-8 text-sm">

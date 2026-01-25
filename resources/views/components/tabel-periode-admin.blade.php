@@ -75,11 +75,11 @@
                                     <span class="w-2 h-2 bg-green-400 rounded-full mr-1.5"></span>
                                     Aktif
                                 </span>
-                            @elseif ($periode->status === 'Aktif Sementara')
+                            @elseif ($periode->status === 'Aktif-Khusus')
                                 <span
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     <span class="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></span>
-                                    Aktif Sementara
+                                    Aktif-Khusus
                                 </span>
                             @else
                                 <span

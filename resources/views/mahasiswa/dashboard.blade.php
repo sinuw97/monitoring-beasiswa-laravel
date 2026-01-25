@@ -24,7 +24,8 @@
         }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/nprogress/nprogress.css">
-    <title>Dashboard Mahasiswa</title>
+    <title>Dashboard Mahasiswa - Monitoring Beasiswa</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 </head>
 
 <body class="bg-[#F8F6F6]">

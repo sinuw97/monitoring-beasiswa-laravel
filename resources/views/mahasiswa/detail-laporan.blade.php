@@ -22,7 +22,8 @@
     </style>
     <script src="//unpkg.com/alpinejs" defer></script>
     <link rel="stylesheet" href="https://unpkg.com/nprogress/nprogress.css">
-    <title>Riwayat Laporan Monev</title>
+    <title>Detail Laporan Monev - Monitoring Beasiswa</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 </head>
 
 <body class="bg-[#F8F6F6] min-h-screen">

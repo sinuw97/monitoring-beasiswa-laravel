@@ -1,5 +1,7 @@
 @extends('admin.layout')
 
+@section('title', 'Edit Pengumuman')
+
 @section('content')
 <main class="min-h-screen p-6 bg-gray-50 font-sans">
     <div class="max-w-4xl mx-auto">

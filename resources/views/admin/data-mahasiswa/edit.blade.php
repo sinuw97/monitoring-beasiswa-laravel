@@ -1,5 +1,7 @@
 @extends('admin.layout')
 
+@section('title', 'Edit Data Mahasiswa')
+
 @section('content')
     <main class="block bg-white max-w-5xl mx-auto shadow-lg rounded-xl p-6 border-l-4 border-[#09697E] my-2 sm:my-8">
         {{-- Form Edit Data Mahasiswa --}}
