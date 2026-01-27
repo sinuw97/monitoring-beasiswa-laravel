@@ -40,9 +40,9 @@
                         <p class="font-bold text-[#000000]">{{ $dataAdmin->email }}</p>
                     </div>
                     <div>
-                        <p class="text-gray-500">Tanggal akun dibuat</p>
+                        <p class="text-gray-500">Tanggal akun diupdate</p>
                         <p class="font-bold text-[#000000]">
-                            {{ \Carbon\Carbon::parse($dataAdmin->created_at)->format('d M Y') }}</p>
+                            {{ \Carbon\Carbon::parse($dataAdmin->updated_at)->format('d M Y') }}</p>
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                             </svg>
                         </div>
                     </div>
-                    <p class="text-2xl font-bold text-gray-800">Ganjil 2025/2026</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ $tahunAjaran?->semester }} {{ $tahunAjaran?->tahun_akademik }}</p>
                     <div class="mt-4 flex items-center text-sm text-gray-500">
                         <span class="text-[#09697E] font-medium">Aktif</span>
                     </div>
