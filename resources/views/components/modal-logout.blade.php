@@ -12,12 +12,12 @@
                 <!-- Action -->
                 <div class="flex justify-start gap-2">
                     <button @click="show = false"
-                        class="px-2 py-1.5 text-xs sm:text-sm bg-[#09697E] hover:bg-[#167b92] text-[#fefefe] rounded-md">
+                        class="px-2 py-1.5 text-xs sm:text-sm bg-[#09697E] hover:bg-[#145f70] text-[#fefefe] rounded-md cursor-pointer">
                         Tutup
                     </button>
                     <form method="POST" action="{{ url('mahasiswa/logout') }}">
                         @csrf
-                        <button type="submit" class="px-2 py-1.5 bg-red-600 text-white rounded-md text-sm">
+                        <button type="submit" class="px-2 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm cursor-pointer">
                             Logout
                         </button>
                     </form>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    
+
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -33,45 +33,44 @@
     <x-navbar-mhs mhsName='{{ $dataMahasiswa->name }}' mhsAvatar='{{ $dataMahasiswa->avatar }}' />
 
     <div class="flex flex-col lg:flex-row">
-        
+
         {{-- Sidebar --}}
-        {{-- x-data: inisialisasi status menu (false = tertutup) --}}
-        <aside class="w-full lg:w-[20%] bg-[#FEFEFE] flex-shrink-0 flex flex-col lg:sticky lg:top-0 lg:h-screen shadow-sm z-10"
-               x-data="{ sidebarOpen: false }">
-            
+        <aside
+            class="w-full lg:w-[20%] bg-[#FEFEFE] flex-shrink-0 flex flex-col lg:sticky lg:top-0 lg:h-screen shadow-sm z-10"
+            x-data="{ sidebarOpen: false }">
+
             {{-- TOMBOL TOGGLE KHUSUS HP (Hidden di Desktop) --}}
             <div class="lg:hidden flex justify-between items-center p-4 border-b border-gray-200 cursor-pointer bg-white"
-                 @click="sidebarOpen = !sidebarOpen">
+                @click="sidebarOpen = !sidebarOpen">
                 <div class="flex items-center gap-2 font-bold text-[#09697E]">
                     {{-- Icon Menu --}}
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7" />
                     </svg>
                     <span>Profile Mahasiswa</span>
                 </div>
                 {{-- Icon Panah (Berputar saat dibuka) --}}
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                     class="h-5 w-5 transform transition-transform duration-200"
-                     :class="sidebarOpen ? 'rotate-180' : ''" 
-                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-200"
+                    :class="sidebarOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </div>
 
             {{-- ISI SIDEBAR --}}
-            {{-- Logika: Jika di HP (lg:hidden), ikuti status 'sidebarOpen'. Jika di Desktop (lg:block), SELALU TAMPIL. --}}
             <div :class="sidebarOpen ? 'block' : 'hidden lg:block'">
-                <div class="mx-6 my-6 lg:my-10">
-                    <div class="flex flex-col justify-center gap-3 items-center pb-6 lg:pb-10 border-b border-[#909090]">
+                <div class="mx-6 my-6 lg:my-10 lg:text-md">
+                    <div
+                        class="flex flex-col justify-center gap-3 items-center pb-6 lg:pb-10 border-b border-[#909090]">
                         <img src="{{ $dataMahasiswa->avatar }}" alt="avatar-mhs"
                             class="w-12 h-12 lg:w-[50px] lg:h-[50px] rounded-full object-cover">
                         <h1 class="text-sm lg:text-base text-center">{{ $dataMahasiswa->name }}</h1>
                     </div>
 
-                    <div class="mt-4 space-y-3 text-sm lg:text-base">
+                    <div class="mt-4 space-y-3 text-sm">
                         <div class="flex items-center gap-2">
-                            <svg viewBox="0 0 24 24" fill="none" class="w-[20px] h-[20px]"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -80,8 +79,10 @@
                                         fill="#09697E"></path>
                                 </g>
                             </svg>
-                            <p class="mr-2">NIM</p>
-                            <span class="truncate">: {{ $dataMahasiswa->nim }}</span>
+                            <p class="w-20 shrink-0">NIM</p>
+                            <span class="truncate text-left">
+                                {{ $dataMahasiswa->nim }}
+                            </span>
                         </div>
 
                         <div class="flex items-center gap-2 border-b border-[#909090] pb-2">
@@ -97,7 +98,8 @@
                                             transform="translate(-28.000000, -272.000000)">
                                             <g id="学术" transform="translate(28.000000, 272.000000)">
                                                 <g id="编组" transform="translate(1.000000, 4.000000)">
-                                                    <polygon id="路径" points="0 2.75 11 0 22 2.75 11 5.5"></polygon>
+                                                    <polygon id="路径" points="0 2.75 11 0 22 2.75 11 5.5">
+                                                    </polygon>
                                                     <path
                                                         d="M4.95,4.4 L4.95,9.88383 C4.95,9.88383 7.7,11.55 11,11.55 C14.3,11.55 17.05,9.88383 17.05,9.88383 L17.05,4.4"
                                                         id="路径"></path>
@@ -111,8 +113,8 @@
                                     </g>
                                 </g>
                             </svg>
-                            <p class="mr-2">Angkatan</p>
-                            <span class="truncate">: {{ $dataMahasiswa->detailMahasiswa->angkatan }}</span>
+                            <p class="w-20 shrink-0">Angkatan</p>
+                            <span class="truncate text-left">{{ $dataMahasiswa->detailMahasiswa->angkatan }}</span>
                         </div>
 
                         <div class="flex items-center gap-2">
@@ -127,19 +129,22 @@
                                     <path
                                         d="M19.8978 16H7.89778C6.96781 16 6.50282 16 6.12132 16.1022C5.08604 16.3796 4.2774 17.1883 4 18.2235"
                                         stroke="#09697E" stroke-width="1.5"></path>
-                                    <path d="M8 7H16" stroke="#09697E" stroke-width="1.5" stroke-linecap="round"></path>
-                                    <path d="M8 10.5H13" stroke="#09697E" stroke-width="1.5" stroke-linecap="round"></path>
+                                    <path d="M8 7H16" stroke="#09697E" stroke-width="1.5" stroke-linecap="round">
+                                    </path>
+                                    <path d="M8 10.5H13" stroke="#09697E" stroke-width="1.5" stroke-linecap="round">
+                                    </path>
                                     <path
                                         d="M13 16V19.5309C13 19.8065 13 19.9443 12.9051 20C12.8103 20.0557 12.6806 19.9941 12.4211 19.8708L11.1789 19.2808C11.0911 19.2391 11.0472 19.2182 11 19.2182C10.9528 19.2182 10.9089 19.2391 10.8211 19.2808L9.57889 19.8708C9.31943 19.9941 9.18971 20.0557 9.09485 20C9 19.9443 9 19.8065 9 19.5309V16.45"
                                         stroke="#09697E" stroke-width="1.5" stroke-linecap="round"></path>
                                 </g>
                             </svg>
-                            <p class="mr-2">Prodi</p>
-                            <span class="truncate">: {{ $dataMahasiswa->detailMahasiswa->prodi }}</span>
+                            <p class="w-20 shrink-0">Prodi</p>
+                            <span class="truncate text-left">{{ $dataMahasiswa->detailMahasiswa->prodi }}</span>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                class="w-5 h-5">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                                 <g id="SVGRepo_iconCarrier">
@@ -163,18 +168,27 @@
                                         fill="#09697E"></path>
                                 </g>
                             </svg>
-                            <p class="mr-2">Kelas</p>
-                            <span class="truncate">: {{ $dataMahasiswa->detailMahasiswa->kelas }}</span>
+                            <p class="w-20 shrink-0">Kelas</p>
+                            <span class="truncate text-left">{{ $dataMahasiswa->detailMahasiswa->kelas }}</span>
                         </div>
 
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 flex-nowrap">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5">
                                 <path fill="#09697E"
                                     d="M21.38,5.76a1,1,0,0,0-.47-.61l-5.2-3a1,1,0,0,0-1.37.36L12,6.57,9.66,2.51a1,1,0,0,0-1.37-.36l-5.2,3a1,1,0,0,0-.47.61,1,1,0,0,0,.1.75l4,6.83A5.91,5.91,0,0,0,6,16a6,6,0,1,0,11.34-2.72l3.9-6.76A1,1,0,0,0,21.38,5.76ZM5,6.38l3.46-2L11.68,10A5.94,5.94,0,0,0,8,11.58ZM12,20a4,4,0,0,1-4-4,4,4,0,0,1,4-4,4,4,0,1,1,0,8Zm4-8.45a5.9,5.9,0,0,0-1.86-1.15L13.16,8.57l2.42-4.19,3.46,2Z">
                                 </path>
                             </svg>
-                            <p class="mr-2">Beasiswa</p>
-                            <span class="truncate">: {{ $dataMahasiswa->detailMahasiswa->jenis_beasiswa }}</span>
+                            <p class="w-20 shrink-0">Beasiswa</p>
+
+                            {{-- MOBILE: full text --}}
+                            <span class="block lg:hidden text-left">
+                                {{ $dataMahasiswa->detailMahasiswa->jenis_beasiswa }}
+                            </span>
+
+                            {{-- DESKTOP: substr --}}
+                            <span class="hidden lg:inline-block truncate text-left max-w-[90px]">
+                                {{ substr($dataMahasiswa->detailMahasiswa->jenis_beasiswa, 0, 12) }}
+                            </span>
                         </div>
 
                         <div class="flex items-center gap-2 border-b border-[#909090] pb-2">
@@ -183,8 +197,8 @@
                                     d="M14.72,8.79l-4.29,4.3L8.78,11.44a1,1,0,1,0-1.41,1.41l2.35,2.36a1,1,0,0,0,.71.29,1,1,0,0,0,.7-.29l5-5a1,1,0,0,0,0-1.42A1,1,0,0,0,14.72,8.79ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z">
                                 </path>
                             </svg>
-                            <p class="mr-2">Status</p>
-                            <span class="truncate">: {{ $dataMahasiswa->detailMahasiswa->status }}</span>
+                            <p class="w-20 shrink-0">Status</p>
+                            <span class="truncate text-left">{{ $dataMahasiswa->detailMahasiswa->status }}</span>
                         </div>
                     </div>
 
@@ -196,7 +210,7 @@
                                 style="width: {{ min($presentaseLaporan, 100) }}%">
                             </div>
                         </div>
-                        <p class="text-xs mt-1">
+                        <p class="text-xs mt-2">
                             {{ $jumlahLaporanTerkirim }}/{{ $totalLaporan }}
                         </p>
                     </div>
@@ -430,10 +444,10 @@
                 {{-- Mobile Card : Laporan yg terkirim --}}
                 <div class="block lg:hidden space-y-4">
                     @forelse ($pendingLaporan as $pending)
-                        <div class="bg-white rounded-lg shadow-sm border-l-4 border-yellow-400 p-4">
+                        <div class="bg-white rounded-lg shadow-sm border-l-4 border-[#ffdd44] p-4">
                             {{-- Status --}}
                             <span
-                                class="inline-block mb-2 px-2 py-0.5 text-xs font-semibold rounded bg-yellow-100 text-yellow-700">
+                                class="inline-block mb-2 px-2 py-0.5 text-xs font-semibold rounded bg-[#ffdd44] text-[#0F0F0F]">
                                 {{ $pending->status }}
                             </span>
 

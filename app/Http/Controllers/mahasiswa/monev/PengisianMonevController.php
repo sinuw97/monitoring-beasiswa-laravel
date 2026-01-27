@@ -29,8 +29,9 @@ class PengisianMonevController extends Controller
         // jumlah semester S1/D3
         $totalSmt = str_contains($prodi, 'S1') ? 8 : 6;
 
-        // query ke periode
-        $periodeSemester = Periode::all()->toArray();
+        // ambil periode semester dimulai dari mhs awal masuk
+        $periodeSemester = Periode::where('semester_id', '>=', 'SM' . $angkatan . '01')
+            ->get();
         $periodeAktifBanner = Periode::where('status', 'Aktif')->first();
 
         $timeline = [];
@@ -59,15 +60,11 @@ class PengisianMonevController extends Controller
                     'laporan_id' => $laporan->laporan_id ?? null,
                     'semester' => $namaSemester,
                     'periode' => $periodeAkademik,
-                    // Aktif dan Aktif-Khusus sama-sama Dibuka
                     'status' => in_array($statusPeriode, ['Aktif', 'Aktif-Khusus']) ? 'Dibuka' : 'Ditutup',
-                    // kalau dibuka dan laporan belum ada → Buat
                     'aksi' => $laporan ? 'Lihat' : (in_array($statusPeriode, ['Aktif', 'Aktif-Khusus']) ? 'Buat' : '-'),
-                    // semester_id ngikut periode masing-masing, bukan lagi periodeAktif
                     'semester_id' => $semesterId,
                 ];
             } else {
-                // jika belum ada di tabel periode (misal semester 7/8 belum dibuat admin)
                 $timeline[] = [
                     'no' => $i,
                     'laporan_id' => null,
