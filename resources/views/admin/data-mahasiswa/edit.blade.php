@@ -110,6 +110,15 @@
                     @error('alamat') <small class="text-red-600">{{ $message }}</small> @enderror
                 </div>
 
+                <div class="relative">
+                    <label class="block text-gray-600">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Kosongi jika tidak ingin mengubah password" class="w-full border rounded-md px-3 py-2">
+                    <span id="togglePassword" class="absolute right-3 top-2/3 transform -translate-y-1/2 cursor-pointer">
+                        👁️
+                    </span>
+                    @error('password') <small class="text-red-600">{{ $message }}</small> @enderror
+                </div>
+
                 <div class="col-span-2 mt-4 flex justify-between">
                     <a href="{{ url('/admin/data-mahasiswa') }}"
                         class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md">Kembali</a>
@@ -122,3 +131,20 @@
 
     </main>
 @endsection
+
+<script>
+    window.addEventListener("DOMContentLoaded", function () {
+        const togglePassword = document.querySelector("#togglePassword");
+        const passwordInput = document.querySelector("#password");
+
+        togglePassword.addEventListener("click", function (e) {
+            // toggle the type attribute
+            togglePassword.innerHTML = passwordInput.getAttribute("type") === "password" ? "❌" : "👁️";
+            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+            passwordInput.setAttribute("type", type);
+
+            // Optional: toggle the eye icon (if using an icon library)
+            this.classList.toggle("bi-eye"); 
+        });
+    });
+</script>

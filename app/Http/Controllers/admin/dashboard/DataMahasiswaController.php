@@ -216,15 +216,13 @@ class DataMahasiswaController extends Controller
         //
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email',
             'nim' => 'required|string|max:8',
-            'prodi' => 'required|string|max:255',
+            'prodi' => 'max:255',
             'angkatan' => 'required|string|max:255',
-            'jenis_beasiswa' => 'string|max:100',
-            'jenis_kelamin' => 'string',
-            'status' => 'string',
-            'no_hp' => 'required|string|max:15',
-            'alamat' => 'required|string|max:255',
+            'jenis_beasiswa' => 'max:100',
+            'no_hp' => 'max:15',
+            'alamat' => 'max:255',
+            'password' => 'max:255',
         ]);
 
         $mahasiswa = Mahasiswa::where('nim', '=', $id)->first();
@@ -233,6 +231,9 @@ class DataMahasiswaController extends Controller
         $mahasiswa->name = $request->name;
         $mahasiswa->nim = $request->nim;
         $mahasiswa->email = $request->email;
+        if ($request->filled('password')) {
+            $mahasiswa->password = bcrypt($request->password);
+        }
         $mahasiswa->save();
 
         // Update kolom di tabel detail_mahasiswa (no_hp, alamat)
