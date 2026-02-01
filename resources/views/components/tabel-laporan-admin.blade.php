@@ -184,6 +184,14 @@
                                     </svg>
                                 </a>
 
+                                <a href="{{ url('/admin/laporan/' . $laporan->laporan_id . '/export-pdf') }}"
+                                   class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition"
+                                   title="Export PDF">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </a>
+
                                 <form method="POST" action="{{ url('/admin/laporan/' . $laporan->laporan_id) }}"
                                     onsubmit="return showConfirmationModal(event, 'Hapus data Laporan {{ $laporan->laporan_id }}?')">
                                     @csrf

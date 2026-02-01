@@ -197,6 +197,30 @@ class LaporanMonevController extends Controller
     }
 
     /**
+     * Export single report to PDF.
+     */
+    public function exportPdf(string $id)
+    {
+        $laporan = LaporanMonevMahasiswa::with([
+            'periodeSemester',
+            'academicReports',
+            'academicActivities',
+            'committeeActivities',
+            'organizationActivities',
+            'studentAchievements',
+            'independentActivities',
+            'evaluations',
+            'targetNextSemester',
+        ])->where('laporan_id', $id)->firstOrFail();
+
+        $dataMahasiswa = Mahasiswa::where('nim', $laporan->nim)->firstOrFail();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact('laporan', 'dataMahasiswa'));
+
+        return $pdf->download('laporan_monev_' . $dataMahasiswa->nim . '_' . $laporan->periodeSemester?->semester . '.pdf');
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(string $id)

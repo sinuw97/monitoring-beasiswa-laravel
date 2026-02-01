@@ -116,6 +116,7 @@ Route::prefix('admin')->group(function () {
         Route::put('/dashboard/{id}/aktifkan', [DashboardAdminController::class, 'activatePeriode'])->name('admin.dashboard.activatePeriode');
         Route::put('/dashboard/{id}/nonaktifkan', [DashboardAdminController::class, 'deactivatePeriode'])->name('admin.dashboard.deactivatePeriode');
         Route::get('/laporan/export', [LaporanMonevController::class, 'export'])->name('admin.laporan.export');
+        Route::get('/laporan/{id}/export-pdf', [LaporanMonevController::class, 'exportPdf'])->name('admin.laporan.export-pdf');
         Route::get('/laporan', [LaporanMonevController::class, 'index'])->name('admin.laporan');
         Route::get('/laporan/{id}', [LaporanMonevController::class, 'show'])->name('admin.show');
         Route::put('/laporan/{id}', [LaporanMonevController::class, 'update'])->name('admin.update');
@@ -134,7 +135,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/data-mahasiswa/edit/{id}', [DataMahasiswaController::class, 'edit'])->name('admin.data-mahasiswa.edit');
         Route::put('/data-mahasiswa/edit/{id}', [DataMahasiswaController::class, 'update'])->name('admin.data-mahasiswa.update');
         Route::delete('/data-mahasiswa/{id}', [DataMahasiswaController::class, 'destroy'])->name('admin.data-mahasiswa.destroy');
-        
+
         // Pengumuman Routes
         Route::resource('pengumuman', PengumumanController::class, ['names' => 'admin.pengumuman']);
 
