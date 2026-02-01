@@ -39,11 +39,11 @@ class LaporanMonevController extends Controller
         // Ambil periode aktif
         $periodeCheck1 = Periode::where('status', '=', 'Aktif')->get();
         $periodeCheck2 = Periode::where('status', '=', 'Aktif Sementara')->get();
-        
+
 
         if ($periodeCheck1->count() > 0 || $periodeCheck2->count() > 0) {
             $periode = Periode::where('status', '=', 'Aktif')->orWhere('status', '=', 'Aktif Sementara')->first();
-            
+
             $tahun = substr($periode->tahun_akademik, 0, 4);
             $semesterKode = $periode->semester == 'Ganjil' ? '01' : '02';
             $semesterId = 'SM' . $tahun . $semesterKode;
@@ -91,7 +91,7 @@ class LaporanMonevController extends Controller
         }else{
             $dataLaporan = [];
             $periode = [];
-            
+
             // Ambil semua periode untuk filter dropdown
             $daftarPeriode = Periode::orderBy('tahun_akademik', 'desc')->get();
 
@@ -135,12 +135,12 @@ class LaporanMonevController extends Controller
         // Ambil periode aktif
         $periodeCheck1 = Periode::where('status', '=', 'Aktif')->get();
         $periodeCheck2 = Periode::where('status', '=', 'Aktif Sementara')->get();
-        
+
         $dataLaporan = [];
 
         if ($periodeCheck1->count() > 0 || $periodeCheck2->count() > 0) {
             $periode = Periode::where('status', '=', 'Aktif')->orWhere('status', '=', 'Aktif Sementara')->first();
-            
+
             $tahun = substr($periode->tahun_akademik, 0, 4);
             $semesterKode = $periode->semester == 'Ganjil' ? '01' : '02';
             $semesterId = 'SM' . $tahun . $semesterKode;
@@ -174,10 +174,26 @@ class LaporanMonevController extends Controller
             }
 
             // Ambil data (GET) bukan paginate
-            $dataLaporan = $query->select('laporan_mahasiswa.*', 'mahasiswa.*')->get();
+            $dataLaporan = $query->join('detail_mahasiswa', 'mahasiswa.nim', '=', 'detail_mahasiswa.nim')
+                ->leftJoin('academic_reports', 'laporan_mahasiswa.laporan_id', '=', 'academic_reports.laporan_id')
+                ->select(
+                    'laporan_mahasiswa.*',
+                    'mahasiswa.name',
+                    'mahasiswa.email',
+                    'detail_mahasiswa.prodi',
+                    'detail_mahasiswa.angkatan',
+                    'detail_mahasiswa.kelas',
+                    'detail_mahasiswa.jenis_beasiswa',
+                    'detail_mahasiswa.no_hp',
+                    'detail_mahasiswa.alamat',
+                    'academic_reports.ips',
+                    'academic_reports.ipk'
+                )
+                ->get();
+
         }
 
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\LaporanDataExport($dataLaporan), 'laporan_monev_' . date('Y-m-d_H-i-s') . '.xlsx');
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\LaporanMonevExport($dataLaporan), 'laporan_monev_' . date('Y-m-d_H-i-s') . '.xlsx');
     }
 
     /**
