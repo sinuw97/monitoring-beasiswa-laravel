@@ -197,6 +197,108 @@ class LaporanMonevController extends Controller
     }
 
     /**
+     * Export multiple reports to PDF as ZIP.
+     */
+    public function exportPdfZip(Request $request)
+    {
+        // Ambil periode aktif
+        $periodeCheck1 = Periode::where('status', '=', 'Aktif')->get();
+        $periodeCheck2 = Periode::where('status', '=', 'Aktif Sementara')->get();
+
+        if ($periodeCheck1->count() == 0 && $periodeCheck2->count() == 0) {
+            return back()->with('error', 'Tidak ada periode aktif.');
+        }
+
+        $periode = Periode::where('status', '=', 'Aktif')->orWhere('status', '=', 'Aktif Sementara')->first();
+        $tahun = substr($periode->tahun_akademik, 0, 4);
+        $semesterKode = $periode->semester == 'Ganjil' ? '01' : '02';
+        $semesterId = 'SM' . $tahun . $semesterKode;
+
+        // Ambil filter dan search dari request
+        $angkatan = $request->angkatan;
+        $status = $request->status;
+        $periodeFilter = $request->periode;
+        $search = $request->search;
+
+        // Query dasar dengan eager loading yang sama dengan exportPdf
+        $query = LaporanMonevMahasiswa::with([
+            'periodeSemester',
+            'academicReports',
+            'academicActivities',
+            'committeeActivities',
+            'organizationActivities',
+            'studentAchievements',
+            'independentActivities',
+            'evaluations',
+            'targetNextSemester',
+        ])
+        ->join('mahasiswa', 'laporan_mahasiswa.nim', '=', 'mahasiswa.nim') // Join untuk filter nama/nim
+        ->where('semester_id', '=', $periodeFilter ?? $semesterId)
+        ->select('laporan_mahasiswa.*'); // Pastikan hanya ambil kolom laporan agar tidak bentrok id
+
+        // Filter angkatan
+        if (!empty($angkatan)) {
+            $query->whereRaw('LEFT(mahasiswa.nim, 2) = ?', [$angkatan]);
+        }
+
+        // Filter status
+        if (!empty($status)) {
+            $query->where('laporan_mahasiswa.status', '=', $status);
+        }
+
+        // Search by NIM or Nama
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('mahasiswa.nim', 'like', "%{$search}%")
+                ->orWhere('mahasiswa.name', 'like', "%{$search}%");
+            });
+        }
+
+        $dataLaporan = $query->get();
+
+        if ($dataLaporan->isEmpty()) {
+            return back()->with('error', 'Tidak ada data laporan untuk diexport.');
+        }
+
+        // Buat file ZIP sementara
+        $zipFileName = 'laporan_monev_' . date('Y-m-d_H-i-s') . '.zip';
+        $zipFilePath = storage_path('app/public/' . $zipFileName); // Simpan sementara di storage
+
+        // Pastikan direktori ada
+        if (!file_exists(dirname($zipFilePath))) {
+            mkdir(dirname($zipFilePath), 0755, true);
+        }
+
+        $zip = new \ZipArchive;
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+            foreach ($dataLaporan as $laporan) {
+                $dataMahasiswa = Mahasiswa::where('nim', $laporan->nim)->first();
+
+                if ($dataMahasiswa) {
+                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact('laporan', 'dataMahasiswa'));
+                    $content = $pdf->output();
+
+                    // Format nama file: [NIM]_[Semester]_[Tahun].pdf
+                    // Ambil semester dan tahun dari relasi periodeSemester
+                    $smt = $laporan->periodeSemester ? $laporan->periodeSemester->semester : 'Unit';
+                    $thn = $laporan->periodeSemester ? $laporan->periodeSemester->tahun_akademik : 'Unknown';
+
+                    // Bersihkan nama file dari karakter ilegal
+                    $fileName = $dataMahasiswa->nim . '_' . $smt . '_' . $thn . '.pdf';
+                    $fileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $fileName);
+
+                    $zip->addFromString($fileName, $content);
+                }
+            }
+            $zip->close();
+        } else {
+            return back()->with('error', 'Gagal membuat file ZIP.');
+        }
+
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    }
+
+    /**
      * Export single report to PDF.
      */
     public function exportPdf(string $id)

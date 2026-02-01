@@ -116,6 +116,7 @@ Route::prefix('admin')->group(function () {
         Route::put('/dashboard/{id}/aktifkan', [DashboardAdminController::class, 'activatePeriode'])->name('admin.dashboard.activatePeriode');
         Route::put('/dashboard/{id}/nonaktifkan', [DashboardAdminController::class, 'deactivatePeriode'])->name('admin.dashboard.deactivatePeriode');
         Route::get('/laporan/export', [LaporanMonevController::class, 'export'])->name('admin.laporan.export');
+        Route::get('/laporan/export-pdf-zip', [LaporanMonevController::class, 'exportPdfZip'])->name('admin.laporan.export-pdf-zip');
         Route::get('/laporan/{id}/export-pdf', [LaporanMonevController::class, 'exportPdf'])->name('admin.laporan.export-pdf');
         Route::get('/laporan', [LaporanMonevController::class, 'index'])->name('admin.laporan');
         Route::get('/laporan/{id}', [LaporanMonevController::class, 'show'])->name('admin.show');
