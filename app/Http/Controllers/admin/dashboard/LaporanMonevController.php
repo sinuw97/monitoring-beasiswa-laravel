@@ -66,6 +66,8 @@ class LaporanMonevController extends Controller
             // Filter status
             if (!empty($status)) {
                 $query->where('laporan_mahasiswa.status', '=', $status);
+            } else {
+                $query->where('laporan_mahasiswa.status', '!=', 'Draft');
             }
 
             // Search by NIM or Nama
@@ -163,6 +165,8 @@ class LaporanMonevController extends Controller
             // Filter status
             if (!empty($status)) {
                 $query->where('laporan_mahasiswa.status', '=', $status);
+            } else {
+                $query->where('laporan_mahasiswa.status', '!=', 'Draft');
             }
 
             // Search by NIM or Nama
@@ -244,6 +248,8 @@ class LaporanMonevController extends Controller
         // Filter status
         if (!empty($status)) {
             $query->where('laporan_mahasiswa.status', '=', $status);
+        } else {
+            $query->where('laporan_mahasiswa.status', '!=', 'Draft');
         }
 
         // Search by NIM or Nama

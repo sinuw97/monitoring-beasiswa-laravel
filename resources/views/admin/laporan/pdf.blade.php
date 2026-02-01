@@ -262,9 +262,15 @@
 
     <div class="section-title">C. Evaluasi Diri</div>
     <div class="evaluasi-box">
+        <p style="font-weight: bold; margin-bottom: 5px;">Faktor Pendukung</p>
         @if($laporan->evaluations->first())
             {{ $laporan->evaluations->first()->support_factors }}
             <br><br>
+        @else
+            Tidak ada evaluasi diri.
+        @endif
+        <p style="font-weight: bold; margin-bottom: 5px;">Faktor Penghambat</p>
+        @if($laporan->evaluations->first())
             {{ $laporan->evaluations->first()->barrier_factors }}
         @else
             Tidak ada evaluasi diri.
