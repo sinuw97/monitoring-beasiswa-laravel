@@ -28,35 +28,37 @@ class DataMahasiswaController extends Controller
     $dataAdmin->makeHidden(['password']);
 
     // --- QUERY DASAR UNTUK DATA MAHASISWA ---
-    $query = Mahasiswa::query();
+    $query = Mahasiswa::leftJoin('detail_mahasiswa', 'mahasiswa.nim', '=', 'detail_mahasiswa.nim')
+        ->select('mahasiswa.*');
 
-    // --- AMBIL DAFTAR ANGKATAN (2 DIGIT PERTAMA NIM) ---
-    $angkatanList = Mahasiswa::selectRaw('LEFT(nim, 2) as angkatan')
+    // --- AMBIL DAFTAR ANGKATAN (DARI TABLE DETAIL MAHASISWA) ---
+    $angkatanList = DetailMahasiswa::select('angkatan')
         ->distinct()
+        ->orderBy('angkatan', 'desc')
         ->pluck('angkatan');
 
     // --- FILTER ANGKATAN JIKA ADA REQUEST ---
     if ($request->filled('angkatan')) {
         $angkatan = $request->angkatan;
-        $query->whereRaw('LEFT(nim, 2) = ?', [$angkatan]);
+        $query->where('detail_mahasiswa.angkatan', $angkatan);
     }
 
     if ($request->filled('search')) {
         $search = $request->search;
         $query->where(function ($q) use ($search) {
-            $q->where('name', 'LIKE', "%{$search}%")
-              ->orWhere('nim', 'LIKE', "%{$search}%");
+            $q->where('mahasiswa.name', 'LIKE', "%{$search}%")
+              ->orWhere('mahasiswa.nim', 'LIKE', "%{$search}%");
         });
     }
 
     // --- SORTING NAMA JIKA ADA REQUEST ---
     if ($request->sort === 'asc') {
-        $query->orderBy('name', 'asc');
+        $query->orderBy('mahasiswa.name', 'asc');
     } elseif ($request->sort === 'desc') {
-        $query->orderBy('name', 'desc');
+        $query->orderBy('mahasiswa.name', 'desc');
     } else {
         // Default: urut berdasarkan NIM
-        $query->orderBy('nim', 'asc');
+        $query->orderBy('mahasiswa.nim', 'asc');
     }
 
     // --- PAGINATION ---
@@ -77,30 +79,31 @@ class DataMahasiswaController extends Controller
     public function export(Request $request)
     {
         // --- QUERY DASAR UNTUK DATA MAHASISWA ---
-        $query = Mahasiswa::query();
+        $query = Mahasiswa::leftJoin('detail_mahasiswa', 'mahasiswa.nim', '=', 'detail_mahasiswa.nim')
+            ->select('mahasiswa.*', 'detail_mahasiswa.angkatan');
 
         // --- FILTER ANGKATAN JIKA ADA REQUEST ---
         if ($request->filled('angkatan')) {
             $angkatan = $request->angkatan;
-            $query->whereRaw('LEFT(nim, 2) = ?', [$angkatan]);
+            $query->where('detail_mahasiswa.angkatan', $angkatan);
         }
 
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('nim', 'LIKE', "%{$search}%");
+                $q->where('mahasiswa.name', 'LIKE', "%{$search}%")
+                  ->orWhere('mahasiswa.nim', 'LIKE', "%{$search}%");
             });
         }
 
         // --- SORTING NAMA JIKA ADA REQUEST ---
         if ($request->sort === 'asc') {
-            $query->orderBy('name', 'asc');
+            $query->orderBy('mahasiswa.name', 'asc');
         } elseif ($request->sort === 'desc') {
-            $query->orderBy('name', 'desc');
+            $query->orderBy('mahasiswa.name', 'desc');
         } else {
             // Default: urut berdasarkan NIM
-            $query->orderBy('nim', 'asc');
+            $query->orderBy('mahasiswa.nim', 'asc');
         }
 
         // --- AMBIL DATA (GET) BUKAN PAGINATE ---

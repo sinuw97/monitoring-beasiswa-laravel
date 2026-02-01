@@ -122,7 +122,7 @@
                         <option value="">Semua Angkatan</option>
                         @foreach ($angkatanList as $angkatan)
                             <option value="{{ $angkatan }}" {{ request('angkatan') == $angkatan ? 'selected' : '' }}>
-                                20{{ $angkatan }}
+                                {{ $angkatan }}
                             </option>
                         @endforeach
                     </select>

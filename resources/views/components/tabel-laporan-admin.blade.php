@@ -21,6 +21,21 @@
     <form method="GET" action="{{ url('/admin/laporan') }}"
         class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-100">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1">Cari Mahasiswa</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Nama atau NIM..."
+                        class="w-full border-gray-300 pl-10 p-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 text-sm transition">
+                </div>
+            </div>
+
             {{-- Filter angkatan --}}
             <div>
                 <label class="block text-xs font-medium text-gray-700 mb-1">Angkatan</label>
@@ -29,7 +44,7 @@
                     <option value="">Semua Angkatan</option>
                     @foreach ($daftarAngkatan as $a)
                         <option value="{{ $a->angkatan }}" {{ request('angkatan') == $a->angkatan ? 'selected' : '' }}>
-                            20{{ $a->angkatan }}
+                            {{ $a->angkatan }}
                         </option>
                     @endforeach
                 </select>
@@ -79,21 +94,19 @@
                 </select>
             </div>
 
-            {{-- Search --}}
+            {{-- Sorting Nama --}}
             <div>
-                <label class="block text-xs font-medium text-gray-700 mb-1">Pencarian</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </div>
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Cari NIM atau Nama..."
-                        class="w-full border-gray-300 pl-10 p-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 text-sm transition">
-                </div>
+                <label class="block text-xs font-medium text-gray-700 mb-1">Urutkan Nama</label>
+                <select name="sort"
+                    class="w-full py-2 px-2 border-gray-300 rounded-lg shadow-sm focus:border-[#09697E] focus:ring focus:ring-[#09697E] focus:ring-opacity-20 cursor-pointer text-sm transition">
+                    <option value="">Default</option>
+                    <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>A - Z</option>
+                    <option value="desc" {{ request('sort') == 'desc' ? 'selected' : '' }}>Z - A</option>
+                </select>
             </div>
+
+            {{-- Search --}}
+
         </div>
 
         {{-- Tombol --}}

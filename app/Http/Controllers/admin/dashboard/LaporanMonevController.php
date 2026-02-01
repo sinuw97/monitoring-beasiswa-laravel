@@ -56,11 +56,12 @@ class LaporanMonevController extends Controller
 
             // Query dasar
             $query = LaporanMonevMahasiswa::join('mahasiswa', 'laporan_mahasiswa.nim', '=', 'mahasiswa.nim')
+                ->join('detail_mahasiswa', 'mahasiswa.nim', '=', 'detail_mahasiswa.nim')
                 ->where('semester_id', '=', $periodeFilter ?? $semesterId);
 
             // Filter angkatan
             if (!empty($angkatan)) {
-                $query->whereRaw('LEFT(mahasiswa.nim, 2) = ?', [$angkatan]);
+                $query->where('detail_mahasiswa.angkatan', $angkatan);
             }
 
             // Filter status
@@ -78,6 +79,13 @@ class LaporanMonevController extends Controller
                 });
             }
 
+            // Sorting by Name
+            if ($request->sort === 'asc') {
+                $query->orderBy('mahasiswa.name', 'asc');
+            } elseif ($request->sort === 'desc') {
+                $query->orderBy('mahasiswa.name', 'desc');
+            }
+
             // Ambil data dengan pagination
             $dataLaporan = $query->select('laporan_mahasiswa.*', 'mahasiswa.*')
                 ->paginate(50)
@@ -87,8 +95,9 @@ class LaporanMonevController extends Controller
             $daftarPeriode = Periode::orderBy('tahun_akademik', 'desc')->get();
 
             // Ambil daftar angkatan
-            $daftarAngkatan = Mahasiswa::selectRaw('LEFT(nim, 2) as angkatan')
+            $daftarAngkatan = \App\Models\users\DetailMahasiswa::select('angkatan')
             ->distinct()
+            ->orderBy('angkatan', 'desc')
             ->get();
         }else{
             $dataLaporan = [];
@@ -98,8 +107,9 @@ class LaporanMonevController extends Controller
             $daftarPeriode = Periode::orderBy('tahun_akademik', 'desc')->get();
 
             // Ambil daftar angkatan
-            $daftarAngkatan = Mahasiswa::selectRaw('LEFT(nim, 2) as angkatan')
+            $daftarAngkatan = \App\Models\users\DetailMahasiswa::select('angkatan')
             ->distinct()
+            ->orderBy('angkatan', 'desc')
             ->get();
         }
 
@@ -159,7 +169,8 @@ class LaporanMonevController extends Controller
 
             // Filter angkatan
             if (!empty($angkatan)) {
-                $query->whereRaw('LEFT(mahasiswa.nim, 2) = ?', [$angkatan]);
+                $query->join('detail_mahasiswa', 'mahasiswa.nim', '=', 'detail_mahasiswa.nim')
+                      ->where('detail_mahasiswa.angkatan', $angkatan);
             }
 
             // Filter status
@@ -175,6 +186,13 @@ class LaporanMonevController extends Controller
                     $q->where('mahasiswa.nim', 'like', "%{$search}%")
                     ->orWhere('mahasiswa.name', 'like', "%{$search}%");
                 });
+            }
+
+            // Sorting by Name
+            if ($request->sort === 'asc') {
+                $query->orderBy('mahasiswa.name', 'asc');
+            } elseif ($request->sort === 'desc') {
+                $query->orderBy('mahasiswa.name', 'desc');
             }
 
             // Ambil data (GET) bukan paginate
@@ -242,7 +260,8 @@ class LaporanMonevController extends Controller
 
         // Filter angkatan
         if (!empty($angkatan)) {
-            $query->whereRaw('LEFT(mahasiswa.nim, 2) = ?', [$angkatan]);
+            $query->join('detail_mahasiswa', 'mahasiswa.nim', '=', 'detail_mahasiswa.nim')
+                  ->where('detail_mahasiswa.angkatan', $angkatan);
         }
 
         // Filter status
@@ -258,6 +277,13 @@ class LaporanMonevController extends Controller
                 $q->where('mahasiswa.nim', 'like', "%{$search}%")
                 ->orWhere('mahasiswa.name', 'like', "%{$search}%");
             });
+        }
+
+        // Sorting by Name
+        if ($request->sort === 'asc') {
+            $query->orderBy('mahasiswa.name', 'asc');
+        } elseif ($request->sort === 'desc') {
+            $query->orderBy('mahasiswa.name', 'desc');
         }
 
         $dataLaporan = $query->get();
