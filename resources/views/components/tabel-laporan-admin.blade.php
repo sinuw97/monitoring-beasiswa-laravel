@@ -58,7 +58,6 @@
                     <option value="">Semua Status</option>
                     <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
                     <option value="Lolos" {{ request('status') == 'Lolos' ? 'selected' : '' }}>Lolos</option>
-                    <option value="Draft" {{ request('status') == 'Draft' ? 'selected' : '' }}>Draft</option>
                     <option value="Ditolak SP-1" {{ request('status') == 'Ditolak SP-1' ? 'selected' : '' }}>Ditolak
                         SP-1</option>
                     <option value="Ditolak SP-2" {{ request('status') == 'Ditolak SP-2' ? 'selected' : '' }}>Ditolak
