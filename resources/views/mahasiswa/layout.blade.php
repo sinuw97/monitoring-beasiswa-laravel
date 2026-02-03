@@ -50,7 +50,11 @@
 
     </div>
 
+    {{-- NP Progress --}}
     <script src="https://unpkg.com/nprogress/nprogress.js"></script>
+    {{-- Sweet ALret --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         // load / submit form
         document.addEventListener('DOMContentLoaded', () => {

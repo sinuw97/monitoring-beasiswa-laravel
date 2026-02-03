@@ -20,7 +20,7 @@ class NilaiIPSnIPKMonevController extends Controller
       'semester' => 'required|integer|min:1|max:8',
       'ips' => 'required|numeric|between:0,4',
       'ipk' => 'required|numeric|between:0,4',
-      'bukti' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+      'bukti' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
     ]);
 
     if ($request->hasFile('bukti')) {
@@ -73,7 +73,7 @@ class NilaiIPSnIPKMonevController extends Controller
       'semester' => 'required|integer|min:1|max:8',
       'ips' => 'required|numeric|between:0,4',
       'ipk' => 'required|numeric|between:0,4',
-      'bukti'    => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+      'bukti'    => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
     ]);
 
     $report->semester = $validated['semester'];

@@ -183,8 +183,9 @@
                             <div class="mb-3">
                                 <label class="block text-sm font-medium">Bukti <span class="italic">(pdf, jpg,
                                         jpeg, atau png)</span>
-                                    maks 4MB<span class="text-red-500">*</span></label>
-                                <input type="file" name="bukti" class="w-full border rounded px-2 py-1">
+                                    maks 5MB<span class="text-red-500">*</span></label>
+                                <input type="file" name="bukti" id="bukti" accept=".jpg,.jpeg,.png,.pdf"
+                                    class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                                 <div class="text-sm mt-1" x-show="editDataReports.bukti">
                                 </div>
                             </div>
@@ -310,9 +311,9 @@
                             <div class="mb-3">
                                 <label class="block text-sm font-medium">Bukti <span class="italic">(pdf, jpg,
                                         jpeg, atau png)</span>
-                                    maks 4MB<span class="text-red-500">*</span></label>
+                                    maks 5MB<span class="text-red-500">*</span></label>
                                 </label>
-                                <input type="file" name="bukti"
+                                <input type="file" name="bukti" id="bukti" accept=".jpg,.jpeg,.png,.pdf"
                                     class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                             </div>
 
@@ -443,8 +444,8 @@
                             <div class="mb-3">
                                 <label class="block text-sm font-medium">Bukti <span class="italic">(pdf, jpg,
                                         jpeg, atau png)</span>
-                                    maks 4MB<span class="text-red-500">*</span></label>
-                                <input type="file" name="bukti"
+                                    maks 5MB<span class="text-red-500">*</span></label>
+                                <input type="file" name="bukti" id="bukti" accept=".jpg,.jpeg,.png,.pdf"
                                     class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                             </div>
 
@@ -558,9 +559,9 @@
                             <div class="mb-3">
                                 <label class="block text-sm font-medium">Bukti <span class="italic">(pdf, jpg,
                                         jpeg, atau png)</span>
-                                    maks 4MB<span class="text-red-500">*</span></label>
+                                    maks 5MB<span class="text-red-500">*</span></label>
                                 </label>
-                                <input type="file" name="bukti"
+                                <input type="file" name="bukti" id="bukti" accept=".jpg,.jpeg,.png,.pdf"
                                     class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                             </div>
 
@@ -761,9 +762,9 @@
                             <div class="mb-3">
                                 <label class="block text-sm font-medium">Bukti <span class="italic">(pdf, jpg,
                                         jpeg, atau png)</span>
-                                    maks 4MB<span class="text-red-500">*</span></label>
+                                    maks 5MB<span class="text-red-500">*</span></label>
                                 </label>
-                                <input type="file" name="bukti"
+                                <input type="file" name="bukti" id="bukti" accept=".jpg,.jpeg,.png,.pdf"
                                     class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                             </div>
 
@@ -965,9 +966,9 @@
                             <div class="mb-3">
                                 <label class="block text-sm font-medium">Bukti <span class="italic">(pdf, jpg,
                                         jpeg, atau png)</span>
-                                    maks 4MB<span class="text-red-500">*</span></label>
+                                    maks 5MB<span class="text-red-500">*</span></label>
                                 </label>
-                                <input type="file" name="bukti"
+                                <input type="file" name="bukti" id="bukti" accept=".jpg,.jpeg,.png,.pdf"
                                     class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                             </div>
 
@@ -1217,3 +1218,40 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.getElementById('bukti').addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) return;
+
+            const allowedTypes = [
+                'image/jpeg',
+                'image/jpg',
+                'image/png',
+                'application/pdf'
+            ];
+
+            const maxSize = 5 * 1024 * 1024;
+
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File tidak valid',
+                    text: 'Format file harus jpg, jpeg, png, png, atau pdf',
+                });
+                this.value = '';
+                return;
+            }
+
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ukuran file terlalu besar',
+                    text: 'Ukuran maksimal file adalah 5MB',
+                });
+                this.value = '';
+            }
+        });
+    </script>
+@endpush

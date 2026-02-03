@@ -33,7 +33,8 @@
                 <div
                     class="bg-white rounded-lg shadow-sm p-4 border-l-4 {{ $row['status'] === 'Dibuka' ? 'border-[#1D7D94]' : 'border-red-400' }}">
                     {{-- Status --}}
-                    <span class="inline-block mb-2 text-[10px] font-semibold tracking-wide uppercase px-2 py-1 rounded
+                    <span
+                        class="inline-block mb-2 text-[10px] font-semibold tracking-wide uppercase px-2 py-1 rounded
                                 {{ $row['status'] === 'Dibuka' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600' }}">
                         {{ $row['status'] }}
                     </span>
@@ -113,11 +114,14 @@
                                 @elseif ($row['aksi'] === 'Buat')
                                     <form
                                         action="{{ route('mahasiswa.buat-laporan', ['semesterId' => $row['semester_id'], 'semesterSekarang' => $row['semester']]) }}"
-                                        method="POST">
+                                        method="POST" x-data="{ submitting: false }" x-on:submit="submitting = true">
                                         @csrf
-                                        <button
-                                            class="px-3 py-1 bg-[#1298FF] text-white text-xs font-bold rounded hover:bg-[#0b6bcb] transition shadow-sm">
-                                            Buat
+                                        <button x-bind:disabled="submitting" x-text="submitting ? 'Membuat...' : 'Buat'"
+                                            :class="submitting
+                                                ?
+                                                'cursor-not-allowed bg-gray-400' :
+                                                'cursor-pointer bg-[#1298FF] hover:bg-[#0b6bcb]'"
+                                            class="px-3 py-1 text-white text-xs font-bold rounded transition shadow-sm">
                                         </button>
                                     </form>
                                 @elseif ($row['aksi'] === 'Lihat')

@@ -17,6 +17,10 @@ class PengisianMonevController extends Controller
         // ambil data mhs yg login
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
+        if (!$dataMahasiswa) {
+            abort(401, 'Mahasiswa belum login');
+        }
+
         // ambil angkatan dari tabel detail_mahasiswa
         $detailMhs = DetailMahasiswa::where('nim', $dataMahasiswa->nim)->first();
         $angkatan = $detailMhs->angkatan;
@@ -81,9 +85,15 @@ class PengisianMonevController extends Controller
     {
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
+        if (!$dataMahasiswa) {
+            abort(401, 'Mahasiswa belum login');
+        }
+
         // cek semester id dri param
         $cekSemesterId = Periode::where('semester_id', $semesterId)
-            ->where('status', 'Aktif');
+            ->where('status', 'Aktif')
+            ->exists();
+
         if (!$cekSemesterId) {
             return back()->with('error', 'Periode tidak ada atau sudah ditutup!');
         }
@@ -118,6 +128,11 @@ class PengisianMonevController extends Controller
     {
         // ambil data mhs yg login
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
+
+        if (!$dataMahasiswa) {
+            abort(401, 'Mahasiswa belum login');
+        }
+
         // ambil data monev mhs
         $laporan = LaporanMonevMahasiswa::with([
             'periodeSemester',
@@ -311,6 +326,11 @@ class PengisianMonevController extends Controller
     {
         // ambil data mhs yg login
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
+
+        if (!$dataMahasiswa) {
+            abort(401, 'Mahasiswa belum login');
+        }
+        
         // ambil data monev mhs
         $laporan = LaporanMonevMahasiswa::with([
             'periodeSemester',

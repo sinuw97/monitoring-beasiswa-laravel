@@ -26,7 +26,7 @@ class AcademicActMonevController extends Controller
       'tempat' => 'required|string|min:1|max:255',
       'tanggal-mulai' => 'required|date',
       'tanggal-selesai' => 'required|date|after_or_equal:tanggal-mulai',
-      'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+      'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
     ]);
 
     // Pengecekan apakah tanggal mulai dan selesai masih dalam satu periode?
@@ -113,7 +113,7 @@ class AcademicActMonevController extends Controller
       'tempat' => 'required|string|min:1|max:255',
       'tanggal-mulai' => 'required|date',
       'tanggal-selesai' => 'required|date|after_or_equal:tanggal-mulai',
-      'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+      'bukti' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
     ]);
 
     // Pengecekan apakah tanggal mulai dan selesai masih dalam satu periode?
