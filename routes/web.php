@@ -47,6 +47,8 @@ Route::prefix('mahasiswa')->group(function () {
 
         // Riwayat Laporan
         Route::get('/riwayat-laporan/{laporanId}',[DetailLaporanMonevController::class, 'showHalamanDetailLaporan'])->name('mahasiswa.detail-laporan');
+        Route::get('/riwayat-laporan/{laporanId}/export-pdf',[DetailLaporanMonevController::class, 'exportPdf'])->name('mahasiswa.laporan.export-pdf');
+        Route::get('/riwayat-laporan/{laporanId}/export-docx',[DetailLaporanMonevController::class, 'exportDocx'])->name('mahasiswa.laporan.export-docx');
 
         // Revisi Laporan
         Route::get('/riwayat-laporan/{laporanId}/revisi', [RevisiLaporanController::class, 'showHalamanRevisi'])->name('mahasiswa.revisi-laporan');

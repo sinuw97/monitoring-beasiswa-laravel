@@ -1,309 +1,544 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Laporan Monev</title>
+    <title>Laporan Hasil Belajar</title>
     <style>
         body {
-            font-family: sans-serif;
-            font-size: 12px;
+            font-family: Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.3;
         }
-        .header {
+        .page-break {
+            page-break-after: always;
+        }
+        .text-center {
             text-align: center;
-            margin-bottom: 20px;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 18px;
-            color: #09697E;
+        .text-bold {
+            font-weight: bold;
         }
-        .info-table {
+        .text-right {
+            text-align: right;
+        }
+        .mb-1 { margin-bottom: 5px; }
+        .mb-2 { margin-bottom: 10px; }
+        .mb-3 { margin-bottom: 15px; }
+        .mt-1 { margin-top: 5px; }
+        .mt-2 { margin-top: 10px; }
+        .mt-3 { margin-top: 15px; }
+        .mt-5 { margin-top: 30px; }
+
+        /* Cover Styles */
+        .cover-title {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 50px;
+            margin-bottom: 100px;
+        }
+        .cover-logo {
+            width: 600px;
+            margin-bottom: 100px;
+        }
+        .cover-info {
+            margin: 0 auto;
+            width: auto;
+        }
+        .cover-footer {
+            position: absolute;
+            bottom: 50px;
             width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-        }
-        .info-table td {
-            padding: 5px;
-            vertical-align: top;
-        }
-        .label {
+            text-align: center;
             font-weight: bold;
-            color: #666;
-            width: 120px;
         }
-        .value {
+
+        /* Section Styles */
+        .section-header {
             font-weight: bold;
-            color: #333;
-        }
-        .section-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: #09697E;
             margin-top: 20px;
             margin-bottom: 10px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
         }
-        table.data-table {
+        .sub-section-header {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        /* Table Styles */
+        table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
         }
-        table.data-table th, table.data-table td {
-            border: 1px solid #ddd;
-            padding: 6px;
-            text-align: left;
+        table.bordered th, table.bordered td {
+            border: 1px solid black;
+            padding: 5px;
+            vertical-align: top;
         }
-        table.data-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            color: #09697E;
+        table.bordered th {
+            background-color: #bffbf9; /* Light cyan matching reference */
+            text-align: center;
         }
-        .status-badge {
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: bold;
+        table.no-border td {
+            border: none;
+            padding: 2px;
         }
-        .evaluasi-box {
-            background-color: #f9fafb;
-            padding: 10px;
-            border: 1px solid #e5e7eb;
-            font-style: italic;
+
+        .signature-section {
+            margin-top: 50px;
+            width: 100%;
+        }
+        .signature-box {
+            float: left;
+            width: 45%;
+        }
+        .signature-box.right {
+            float: right;
+        }
+
+        /* Clear float */
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>DETAIL LAPORAN MONITORING DAN EVALUASI</h1>
-        <p>Tahun Akademik {{ $laporan->periodeSemester?->tahun_akademik }} - {{ $laporan->periodeSemester?->semester }}</p>
+    <!-- COVER PAGE -->
+    <div class="text-center page-break">
+        <div class="cover-title">
+            LAPORAN HASIL BELAJAR<br>
+            PENERIMA BANTUAN KIP KULIAH
+        </div>
+
+        <img src="{{ public_path('icon/Logo-TSU.png') }}" class="cover-logo" alt="Logo">
+
+        <table class="cover-info no-border">
+            <tr>
+                <td style="width: 200px;">NAMA</td>
+                <td style="width: 10px;">:</td>
+                <td>{{ $dataMahasiswa->name }}</td>
+            </tr>
+            <tr>
+                <td>NIM</td>
+                <td>:</td>
+                <td>{{ $dataMahasiswa->nim }}</td>
+            </tr>
+            <tr>
+                <td>ANGKATAN</td>
+                <td>:</td>
+                <td>{{ $dataMahasiswa->detailMahasiswa->angkatan ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td>JENJANG/PROGRAM STUDI</td>
+                <td>:</td>
+                <td>S1 / {{ $dataMahasiswa->detailMahasiswa->prodi ?? '-' }}</td>
+            </tr>
+        </table>
+
+        <div class="cover-footer">
+            Bantuan Biaya Pendidikan KIP KULIAH<br>
+            UNIVERSITAS TIGA SERANGKAI<br>
+            TAHUN {{ date('Y') }}
+        </div>
     </div>
 
-    <table class="info-table">
-        <tr>
-            <td class="label">Nama Mahasiswa</td>
-            <td class="value">: {{ $dataMahasiswa->name }}</td>
-            <td class="label">Periode</td>
-            <td class="value">: {{ $laporan->periodeSemester?->tahun_akademik }} {{ $laporan->periodeSemester?->semester }}</td>
-        </tr>
-        <tr>
-            <td class="label">NIM</td>
-            <td class="value">: {{ $dataMahasiswa->nim }}</td>
-            <td class="label">Status</td>
-            <td class="value">: {{ $laporan->status }}</td>
-        </tr>
-    </table>
-
-    <div class="section-title">A. Kegiatan Akademik (IPS & IPK)</div>
-    <table class="data-table">
-        <thead>
+    <!-- PAGE 2: DATA & AKADEMIK -->
+    <div class="page-break">
+        <div class="section-header">I. DATA MAHASISWA</div>
+        <table class="no-border" style="width: 100%; margin-left: 20px;">
             <tr>
-                <th>No</th>
-                <th>Semester</th>
-                <th>IPS</th>
-                <th>IPK</th>
-                <th>Status</th>
+                <td style="width: 200px;">Nama</td>
+                <td style="width: 10px;">:</td>
+                <td>{{ $dataMahasiswa->name }}</td>
             </tr>
-        </thead>
-        <tbody>
-            @forelse($laporan->academicReports as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->semester }}</td>
-                    <td>{{ $item->ips }}</td>
-                    <td>{{ $item->ipk }}</td>
-                    <td>{{ $item->status }}</td>
-                </tr>
-            @empty
-                <tr><td colspan="5" style="text-align: center;">Tidak ada data</td></tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <div class="section-title">Kegiatan Akademik Lainnya</div>
-    <table class="data-table">
-        <thead>
             <tr>
-                <th>No</th>
-                <th>Kegiatan</th>
-                <th>Tipe</th>
-                <th>Peran</th>
-                <th>Poin</th>
-                <th>Status</th>
+                <td>NIM</td>
+                <td>:</td>
+                <td>{{ $dataMahasiswa->nim }}</td>
             </tr>
-        </thead>
-        <tbody>
-            @forelse($laporan->academicActivities as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->activity_name }}</td>
-                    <td>{{ $item->activity_type }}</td>
-                    <td>{{ $item->participation }}</td>
-                    <td>{{ $item->points }}</td>
-                    <td>{{ $item->status }}</td>
-                </tr>
-            @empty
-                <tr><td colspan="6" style="text-align: center;">Tidak ada data</td></tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <div class="section-title">B. Kegiatan Non-Akademik (Organisasi)</div>
-    <table class="data-table">
-        <thead>
             <tr>
-                <th>No</th>
-                <th>UKM</th>
-                <th>Kegiatan</th>
-                <th>Tingkat</th>
-                <th>Posisi</th>
-                <th>Poin</th>
-                <th>Status</th>
+                <td>Tempat, Tanggal Lahir</td>
+                <td>:</td>
+                <td>-</td> <!-- Data not available in model -->
             </tr>
-        </thead>
-        <tbody>
-             @forelse($laporan->organizationActivities as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->ukm_name }}</td>
-                    <td>{{ $item->activity_name }}</td>
-                    <td>{{ $item->level }}</td>
-                    <td>{{ $item->position }}</td>
-                    <td>{{ $item->points }}</td>
-                    <td>{{ $item->status }}</td>
-                </tr>
-            @empty
-                <tr><td colspan="7" style="text-align: center;">Tidak ada data</td></tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <div class="section-title">Kegiatan Kepanitiaan</div>
-    <table class="data-table">
-        <thead>
-             <tr>
-                <th>No</th>
-                <th>Kegiatan</th>
-                <th>Partisipasi</th>
-                <th>Tingkat</th>
-                <th>Poin</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($laporan->committeeActivities as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->activity_name }}</td>
-                    <td>{{ $item->participation }}</td>
-                    <td>{{ $item->level }}</td>
-                    <td>{{ $item->points }}</td>
-                    <td>{{ $item->status }}</td>
-                </tr>
-            @empty
-                <tr><td colspan="6" style="text-align: center;">Tidak ada data</td></tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <div class="section-title">Prestasi</div>
-    <table class="data-table">
-        <thead>
             <tr>
-                <th>No</th>
-                <th>Prestasi</th>
-                <th>Tingkat</th>
-                <th>Juara</th>
-                <th>Poin</th>
-                <th>Status</th>
+                <td>Program Studi</td>
+                <td>:</td>
+                <td>{{ $dataMahasiswa->detailMahasiswa->prodi ?? '-' }}</td>
             </tr>
-        </thead>
-         <tbody>
-            @forelse($laporan->studentAchievements as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->achievements_name }}</td>
-                    <td>{{ $item->level }}</td>
-                    <td>{{ $item->award }}</td>
-                    <td>{{ $item->points }}</td>
-                    <td>{{ $item->status }}</td>
-                </tr>
-            @empty
-                <tr><td colspan="6" style="text-align: center;">Tidak ada data</td></tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <div class="section-title">Kegiatan Mandiri</div>
-    <table class="data-table">
-        <thead>
             <tr>
-                <th>No</th>
-                <th>Kegiatan</th>
-                <th>Partisipasi</th>
-                <th>Poin</th>
-                <th>Status</th>
+                <td>Jenjang</td>
+                <td>:</td>
+                <td>S1</td>
             </tr>
-        </thead>
-        <tbody>
-            @forelse($laporan->independentActivities as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->activity_name }}</td>
-                    <td>{{ $item->participation }}</td>
-                    <td>{{ $item->points }}</td>
-                    <td>{{ $item->status }}</td>
-                </tr>
-             @empty
-                <tr><td colspan="5" style="text-align: center;">Tidak ada data</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+            <tr>
+                <td>Fakultas</td>
+                <td>:</td>
+                <td>-</td> <!-- Data not available in model -->
+            </tr>
+            <tr>
+                <td>Perguruan Tinggi</td>
+                <td>:</td>
+                <td>Universitas Tiga Serangkai</td>
+            </tr>
+            <tr>
+                <td>Tahun Masuk</td>
+                <td>:</td>
+                <td>{{ $dataMahasiswa->detailMahasiswa->angkatan ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td>Tahun Lulus</td>
+                <td>:</td>
+                <td>-</td>
+            </tr>
+        </table>
 
-    <div class="section-title">C. Evaluasi Diri</div>
-    <div class="evaluasi-box">
-        <p style="font-weight: bold; margin-bottom: 5px;">Faktor Pendukung</p>
-        @if($laporan->evaluations->first())
-            {{ $laporan->evaluations->first()->support_factors }}
-            <br><br>
-        @else
-            Tidak ada evaluasi diri.
-        @endif
-        <p style="font-weight: bold; margin-bottom: 5px;">Faktor Penghambat</p>
-        @if($laporan->evaluations->first())
-            {{ $laporan->evaluations->first()->barrier_factors }}
-        @else
-            Tidak ada evaluasi diri.
-        @endif
+        <div class="section-header">II. LAPORAN PRESTASI AKADEMIK</div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">No.</th>
+                    <th>Semester</th>
+                    <th>IPS</th>
+                    <th>IPK</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop for Semester 1 to 8 -->
+                @for ($i = 1; $i <= 8; $i++)
+                    @php
+                        // Convert number to Roman
+                        $romans = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
+                        $romanSemester = $romans[$i-1];
+
+                        // Find data for this semester
+                        $report = $laporan->academicReports->where('semester', $i)->first();
+                    @endphp
+                    <tr>
+                        <td class="text-center">{{ $i }}</td>
+                        <td class="text-center">{{ $romanSemester }}</td>
+                        <td class="text-center">{{ $report ? $report->ips : '' }}</td>
+                        <td class="text-center">{{ $report ? $report->ipk : '' }}</td>
+                    </tr>
+                @endfor
+            </tbody>
+        </table>
+        <div style="font-size: 10pt; margin-top: 5px;">
+            *) Melampirkan KHS atau transkrip nilai keseluruhan sampai lulus yang dilegalisir oleh Jurusan/Program Studi<br>
+            *) Untuk D3 maksimal semester 6, untuk D4/S1 maksimal semester 8
+        </div>
+
+        <div class="section-header">III. LAPORAN PRESTASI NON AKADEMIK</div>
+        <div class="sub-section-header">a) Prestasi yang diraih selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">No.</th>
+                    <th>Kegiatan</th>
+                    <th>Tingkat</th>
+                    <th>Waktu pelaksanaan</th>
+                    <th>Hasil</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($laporan->studentAchievements as $item)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td>{{ $item->achievements_name }}</td>
+                        <td>{{ $item->level }}</td>
+                        <td>{{ $item->date ?? '-' }}</td>
+                        <td>{{ $item->award }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td class="text-center">&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        <div style="font-size: 10pt;">
+            *) Kolom ‘Tingkat’ diisi dengan pilihan kota/propinsi/nasional/internasional<br>
+            *) melampirkan copy sertifikat/piagam
+        </div>
+
+        <div class="sub-section-header">b) Keikutsertaan pada kegiatan organisasi kemahasiswaan intra kampus selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">No.</th>
+                    <th>Nama Organisasi</th>
+                    <th>Aktif sejak</th>
+                    <th>Akhir Keaktifan</th>
+                    <th>Jabatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($laporan->organizationActivities as $item)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td>{{ $item->ukm_name }}</td>
+                        <td>{{ $item->start_date ?? '-' }}</td>
+                        <td>{{ $item->end_date ?? '-' }}</td>
+                        <td>{{ $item->position }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td class="text-center">&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        <div style="font-size: 10pt;">
+            *) melampirkan copy sertifikat/surat keterangan dari pimpinan organisasi
+        </div>
     </div>
 
-    <div class="section-title">D. Rencana Semester Depan</div>
-
-    <p style="font-weight: bold; margin-bottom: 5px;">Target Akademik</p>
-    <table class="data-table">
-        <thead>
-             <tr>
-                <th>No</th>
-                <th>Semester</th>
-                <th>Target IPS</th>
-                <th>Target IPK</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($laporan->targetNextSemester as $item)
+    <!-- PAGE 3: CONTINUE NON-AKADEMIK & KEUANGAN -->
+    <div class="page-break">
+        <div class="sub-section-header">c) Keikutsertaan pada kegiatan kepanitiaan yang diikuti selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
+        <table class="bordered">
+            <thead>
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->semester }}</td>
-                    <td>{{ $item->target_ips }}</td>
-                    <td>{{ $item->target_ipk }}</td>
-                    <td>{{ $item->status }}</td>
+                    <th style="width: 30px;">No.</th>
+                    <th>Kegiatan</th>
+                    <th>Waktu pelaksanaan</th>
                 </tr>
-            @empty
-                <tr><td colspan="5" style="text-align: center;">Tidak ada data</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                 @forelse($laporan->committeeActivities as $item)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td>{{ $item->activity_name }}</td>
+                        <td>{{ $item->start_date ?? '-' }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td class="text-center">&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        <div style="font-size: 10pt;">
+            *) melampirkan copy sertifikat/surat keterangan dari ketua panitia
+        </div>
+
+        <div class="sub-section-header">d) Publikasi Ilmiah/Artikel/Karya Tulis/PKM yang dibuat selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">No.</th>
+                    <th>Judul karya tulis/karya ilmiah</th>
+                </tr>
+            </thead>
+            <tbody>
+                 @forelse($laporan->independentActivities as $item)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td>{{ $item->activity_name }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td class="text-center">&nbsp;</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">&nbsp;</td>
+                        <td></td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        <div style="font-size: 10pt;">
+            *) melampirkan copy hasil Karya Ilmiah/Karya Tulis/PKM yang telah dibuat
+        </div>
+
+        <div class="section-header">IV. LAPORAN KEUANGAN</div>
+        <div style="margin-bottom: 5px;">
+            Laporan rata-rata pemakaian dana biaya hidup yang diberikan sebesar Rp 5.700.000,- per semester oleh mahasiswa selama satu semester :
+        </div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">No</th>
+                    <th>Keperluan</th>
+                    <th>Nominal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    // Correct relation usage
+                    $laporanKeuangan = $laporan->laporanKeuanganMahasiswa;
+                    $detailKeuangan = $laporanKeuangan ? $laporanKeuangan->detailKeuanganMahasiswa : collect([]);
+                    $total = 0;
+                @endphp
+                @if($detailKeuangan->isNotEmpty())
+                    @foreach($detailKeuangan as $item)
+                        @php $total += $item->nominal; @endphp
+                        <tr>
+                            <td class="text-center">{{ $loop->iteration }}</td>
+                            <td>{{ $item->keperluan }}</td>
+                            <td>Rp {{ number_format($item->nominal, 0, ',', '.') }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td>Makan</td>
+                        <td>Rp </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">2</td>
+                        <td>Tempat Tinggal (kos)</td>
+                        <td>Rp </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">3</td>
+                        <td>Transportasi</td>
+                        <td>Rp </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">4</td>
+                        <td>.........................................</td>
+                        <td>Rp </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">5</td>
+                        <td>.........................................</td>
+                        <td>Rp </td>
+                    </tr>
+                @endif
+                <tr>
+                    <td colspan="2" class="text-center text-bold">Jumlah</td>
+                    <td class="text-bold">Rp {{ number_format($total, 0, ',', '.') }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-header">V. Kesan - kesan Mahasiswa</div>
+        <div style="font-style: italic; color: #09697E;">
+            Diisi kesan selama menerima beasiswa KIPdi Universitas Tiga Serangkai
+        </div>
+        <div style="border-bottom: 1px solid black; margin-top: 5px; min-height: 20px;">
+             @foreach($laporan->kesanPesanMahasiswa as $kesan)
+                {{ $kesan->kesan }} <br>
+             @endforeach
+        </div>
+        <div style="margin-top: 20px;">
+            Demikian laporan ini saya buat dengan sebenar-benarnya.
+        </div>
+
+        <div class="signature-section clearfix">
+            <div class="signature-box left">
+                Mengetahui,<br>
+                Wakil Rektor<br>
+                Bidang Akademik, Inovasi dan Kemahasiswaan<br>
+                <br><br><br><br>
+                <div class="mb-1" style="font-size: 8pt; color: #888;">CAP PTS - TTD</div>
+                <b>( Prof. Dr. Drajat Tri Kartono, M.Si )</b><br>
+                NIP. 102024039
+            </div>
+            <div class="signature-box right">
+                ...................., ...........................................<br>
+                Pembuat Laporan<br>
+                <br><br><br><br><br>
+                <div class="mb-1" style="font-size: 8pt; color: #888;">TTD + Materai Rp.10.000,-</div>
+                <b>( {{ $dataMahasiswa->name }} )</b><br>
+                NIM. {{ $dataMahasiswa->nim }}
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: ATTACHMENTS -->
+    <div>
+        <h3 class="text-center">Lampiran - lampiran</h3>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">No.</th>
+                    <th>Nama Dokumen</th>
+                    <th style="width: 100px;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">1</td>
+                    <td>Kartu Hasil Studi (KHS)</td>
+                    <td class="text-center">Ada / Tidak</td>
+                </tr>
+                <tr>
+                    <td class="text-center">2</td>
+                    <td>Surat Keterangan Aktif Kuliah</td>
+                    <td class="text-center">Ada / Tidak</td>
+                </tr>
+                <tr>
+                    <td class="text-center">3</td>
+                    <td>Copy sertifikat/piagam prestasi yang diraih selama menjadi mahasiswa</td>
+                    <td class="text-center">Ada / Tidak</td>
+                </tr>
+                <tr>
+                    <td class="text-center">4</td>
+                    <td>Copy sertifikat/surat keterangan keikutsertaan pada kegiatan organisasi kemahasiswaan intra kampus</td>
+                    <td class="text-center">Ada / Tidak</td>
+                </tr>
+                <tr>
+                    <td class="text-center">5</td>
+                    <td>Copy sertifikat/surat keterangan keikutsertaan pada kegiatan kepanitiaan</td>
+                    <td class="text-center">Ada / Tidak</td>
+                </tr>
+                <tr>
+                    <td class="text-center">6</td>
+                    <td>Copy hasil publikasi Ilmiah/Karya Tulis/PKM</td>
+                    <td class="text-center">Ada / Tidak</td>
+                </tr>
+                <tr>
+                    <td class="text-center">7</td>
+                    <td>Copy Surat Keterangan Lulus/ Copy Ijazah</td>
+                    <td class="text-center">Ada / Tidak</td>
+                </tr>
+                <tr>
+                    <td class="text-center">8</td>
+                    <td>Copy Transkrip Nilai</td>
+                    <td class="text-center">Ada / Tidak</td>
+                </tr>
+                <tr>
+                    <td class="text-center">9</td>
+                    <td>......................... (Lampiran lain)</td>
+                    <td class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center">Dst.</td>
+                    <td></td>
+                    <td class="text-center"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 </body>
 </html>
