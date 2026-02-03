@@ -210,4 +210,40 @@ class DetailLaporanMonevController extends Controller
             'parsingKesanPesan'
         ]));
     }
+    public function exportPdf(string $laporanId)
+    {
+        $dataMahasiswa = Auth::guard('mahasiswa')->user();
+
+        // Cari laporan milik mahasiswa ybs
+        $laporan = LaporanMonevMahasiswa::with([
+            'periodeSemester',
+            'academicReports',
+            'academicActivities',
+            'committeeActivities',
+            'organizationActivities',
+            'studentAchievements',
+            'independentActivities',
+            'evaluations',
+            'targetNextSemester',
+            'targetAcademicActivities',
+            'targetAchievements',
+            'targetIndependentActivities',
+            'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
+            'kesanPesanMahasiswa'
+        ])
+            ->where('laporan_id', $laporanId)
+            ->where('nim', $dataMahasiswa->nim)
+            ->firstOrFail();
+
+        // Cek Status (hanya boleh jika Lolos atau Approved)
+        if (!in_array(strtolower($laporan->status), ['lolos', 'approved'])) {
+             return back()->with('error', 'Laporan belum disetujui, tidak dapat mengunduh PDF.');
+        }
+
+        // Gunakan view yang sama dengan Admin
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact('laporan', 'dataMahasiswa'));
+
+        $fileName = 'Laporan_Monev_' . $dataMahasiswa->nim . '_' . $laporan->periodeSemester->semester . '.pdf';
+        return $pdf->download($fileName);
+    }
 }

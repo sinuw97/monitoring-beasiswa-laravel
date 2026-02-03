@@ -41,17 +41,28 @@
                             {{ $laporan->created_at ? $laporan->created_at->translatedFormat('d F Y') : '-' }}
                         </span>
 
-                        @if ($laporan->status === 'Dikembalikan')
-                            <a href="{{ route('mahasiswa.revisi-laporan', $laporan->laporan_id) }}"
-                                class="px-3 py-1.5 text-xs bg-[#1D7D94] text-white font-semibold rounded-md hover:bg-[#125d6f] transition shadow-sm">
-                                Revisi
-                            </a>
-                        @else
-                            <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
-                                class="px-3 py-1.5 text-xs bg-[#1D7D94] text-white font-semibold rounded-md hover:bg-[#125d6f] transition shadow-sm">
-                                Lihat
-                            </a>
-                        @endif
+                        <div class="flex gap-2">
+                             @if(in_array(strtolower($laporan->status), ['lolos', 'approved']))
+                                <a href="{{ route('mahasiswa.laporan.export-pdf', $laporan->laporan_id) }}"
+                                    class="px-3 py-1.5 text-xs bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition shadow-sm flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                </a>
+                            @endif
+
+                            @if ($laporan->status === 'Dikembalikan')
+                                <a href="{{ route('mahasiswa.revisi-laporan', $laporan->laporan_id) }}"
+                                    class="px-3 py-1.5 text-xs bg-[#1D7D94] text-white font-semibold rounded-md hover:bg-[#125d6f] transition shadow-sm">
+                                    Revisi
+                                </a>
+                            @else
+                                <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
+                                    class="px-3 py-1.5 text-xs bg-[#1D7D94] text-white font-semibold rounded-md hover:bg-[#125d6f] transition shadow-sm">
+                                    Lihat
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
             @empty
@@ -102,15 +113,29 @@
                                             {{ $laporan->created_at ? $laporan->created_at->translatedFormat('d F Y') : '-' }}
                                         </td>
                                         <td class="px-6 py-3 text-center">
-                                            @if ($laporan->status === 'Dikembalikan')
-                                                <a href="{{ route('mahasiswa.revisi-laporan', $laporan->laporan_id) }}"
-                                                    class="text-[#1D7D94] hover:text-[#0f4d5c] font-semibold text-sm hover:underline">
-                                                    Revisi</a>
-                                            @else
-                                                <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
-                                                    class="text-[#1D7D94] hover:text-[#0f4d5c] font-semibold text-sm hover:underline">
-                                                    Lihat</a>
-                                            @endif
+                                            <div class="flex justify-center items-center gap-3">
+                                                @if(in_array(strtolower($laporan->status), ['lolos', 'approved']))
+                                                     <a href="{{ route('mahasiswa.laporan.export-pdf', $laporan->laporan_id) }}"
+                                                        class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition"
+                                                        title="Download Laporan">
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                            </path>
+                                                        </svg>
+                                                    </a>
+                                                @endif
+
+                                                @if ($laporan->status === 'Dikembalikan')
+                                                    <a href="{{ route('mahasiswa.revisi-laporan', $laporan->laporan_id) }}"
+                                                        class="text-[#1D7D94] hover:text-[#0f4d5c] font-semibold text-sm hover:underline">
+                                                        Revisi</a>
+                                                @else
+                                                    <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
+                                                        class="text-[#1D7D94] hover:text-[#0f4d5c] font-semibold text-sm hover:underline">
+                                                        Lihat</a>
+                                                @endif
+                                            </div>
                                         </td>
                                     </tr>
                     @empty
