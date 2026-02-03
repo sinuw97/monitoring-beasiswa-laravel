@@ -7,11 +7,12 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 
-class GenericMonevSheet implements FromCollection, WithHeadings, ShouldAutoSize, WithTitle, WithStyles
+class GenericMonevSheet implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithTitle, WithStyles
 {
     protected $title;
     protected $data;
@@ -29,27 +30,58 @@ class GenericMonevSheet implements FromCollection, WithHeadings, ShouldAutoSize,
         return $this->data;
     }
 
+    public function map($row): array
+    {
+        // Convert row to array
+        $rowArray = $row->toArray();
+
+        // Columns to exclude
+        $excludedColumns = ['id', 'laporan_id', 'created_at', 'updated_at'];
+
+        // Filter valid columns
+        $filteredRow = array_diff_key($rowArray, array_flip($excludedColumns));
+
+        // Reorder to ensure NIM is first if it exists
+        $finalRow = [];
+
+        // Add 'nim' first if it exists
+        if (isset($filteredRow['nim'])) {
+            $finalRow['nim'] = $filteredRow['nim'];
+            unset($filteredRow['nim']);
+        }
+
+        // Add remaining columns
+        $finalRow = array_merge($finalRow, $filteredRow);
+
+        return $finalRow;
+    }
+
     public function headings(): array
     {
         if ($this->data->isEmpty()) {
-            if ($this->modelClass) {
+             if ($this->modelClass) {
                 // Try to get columns from schema if data is empty but model is provided
                 $table = (new $this->modelClass)->getTable();
-                return Schema::getColumnListing($table);
+                $columns = Schema::getColumnListing($table);
+
+                // Exclude unwanted columns for headings too
+                $excludedColumns = ['id', 'laporan_id', 'created_at', 'updated_at'];
+                $filteredColumns = array_diff($columns, $excludedColumns);
+
+                // Reorder 'nim' to front if present
+                if (in_array('nim', $filteredColumns)) {
+                    $filteredColumns = array_diff($filteredColumns, ['nim']);
+                    array_unshift($filteredColumns, 'nim');
+                }
+
+                return $filteredColumns;
             }
             return [];
         }
 
-        // Get keys from the first item
+        // Get keys from map logic using first item
         $firstItem = $this->data->first();
-        if (is_array($firstItem)) {
-            return array_keys($firstItem);
-        }
-        if (is_object($firstItem)) {
-            return array_keys($firstItem->toArray());
-        }
-
-        return [];
+        return array_keys($this->map($firstItem));
     }
 
     public function title(): string

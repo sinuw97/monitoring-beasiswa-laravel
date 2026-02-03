@@ -27,31 +27,17 @@ class LaporanUtamaSheet implements FromCollection, WithHeadings, WithMapping, Sh
 
     public function map($row): array
     {
-        // Calculate Total Score on the fly
-        $totalPoints = 0;
-        // Check if relationships exist before summing, just in case
-        if ($row->academicActivities) $totalPoints += $row->academicActivities->sum('points');
-        if ($row->organizationActivities) $totalPoints += $row->organizationActivities->sum('points');
-        if ($row->committeeActivities) $totalPoints += $row->committeeActivities->sum('points');
-        if ($row->studentAchievements) $totalPoints += $row->studentAchievements->sum('points');
-        if ($row->independentActivities) $totalPoints += $row->independentActivities->sum('points');
-
         return [
             $this->rowNumber++,
             $row->nim,
             $row->name,
             $row->prodi,             // Program Studi
             $row->angkatan,          // Angkatan
-            $row->kelas,             // Kelas
-            $row->jenis_beasiswa,    // Jenis Beasiswa
-            $row->no_hp,             // No HP
-            $row->email,             // Email
+            ucfirst($row->semester), // Semester Laporan (e.g., "Ganjil")
+            $row->created_at ? $row->created_at->format('Y-m-d') : '-', // Tanggal Laporan
             $row->ips,               // IPS
             $row->ipk,               // IPK
-            ucfirst($row->semester), // Semester Laporan (e.g., "Ganjil")
             $row->status,
-            $totalPoints,
-            '=HYPERLINK("' . url('/admin/laporan/' . $row->laporan_id) . '", "Lihat Detail")', // Link Detail
         ];
     }
 
@@ -63,16 +49,11 @@ class LaporanUtamaSheet implements FromCollection, WithHeadings, WithMapping, Sh
             'Nama',
             'Prodi',
             'Angkatan',
-            'Kelas',
-            'Jenis Beasiswa',
-            'No HP',
-            'Email',
+            'Semester Laporan',
+            'Tanggal Laporan',
             'IPS',
             'IPK',
-            'Semester Laporan',
             'Status',
-            'Total Skor Laporan',
-            'Link Detail',
         ];
     }
 
