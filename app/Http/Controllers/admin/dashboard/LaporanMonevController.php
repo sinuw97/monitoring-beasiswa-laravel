@@ -9,6 +9,8 @@ use App\Models\monev\AcademicReports;
 use App\Models\monev\CommitteeActivities;
 use App\Models\monev\Evaluations;
 use App\Models\monev\IndependentActivities;
+use App\Models\monev\KesanPesanMahasiswa;
+use App\Models\monev\LaporanKeuanganMahasiswa;
 use App\Models\monev\LaporanMonevMahasiswa;
 use App\Models\monev\OrganizationActivities;
 use App\Models\monev\StudentAchievements;
@@ -380,7 +382,11 @@ class LaporanMonevController extends Controller
         $targetNextSemester = TargetNextSemester::where('laporan_id', $id)->get();
         $targetAcademicActivities = TargetAcademicActivities::where('laporan_id', $id)->get();
         $targetAchievements = TargetAchievements::where('laporan_id', $id)->get();
+        $targetachievements = TargetAchievements::where('laporan_id', $id)->get();
         $targetIdependentActivities = TargetIdependentActivities::where('laporan_id', $id)->get();
+
+        $laporanKeuangan = LaporanKeuanganMahasiswa::with('detailKeuanganMahasiswa')->where('laporan_id', $id)->first();
+        $kesanPesan = KesanPesanMahasiswa::where('laporan_id', $id)->get();
 
         if (!$laporan) {
             return back()->with('error', 'Laporan tidak ditemukan.');
@@ -415,6 +421,8 @@ class LaporanMonevController extends Controller
             'targetAcademicActivities',
             'targetAchievements',
             'targetIdependentActivities',
+            'laporanKeuangan',
+            'kesanPesan',
             'totalPoints',
         ));
     }
@@ -592,6 +600,42 @@ class LaporanMonevController extends Controller
         }
 
         return redirect('/admin/laporan/'.$id)->with('success', 'Evaluasi berhasil diubah.');
+    }
+
+    public function laporanKeuangan(Request $request, string $id, string $idKeuangan){
+        // Note: idKeuangan here refers to the detail item ID (DetailKeuanganMahasiswa), not the parent LaporanKeuanganMahasiswa
+        $detailKeuangan = \App\Models\monev\DetailKeuanganMahasiswa::find($idKeuangan);
+
+        if (!$detailKeuangan) {
+             return redirect('/admin/laporan/'.$id)->with('error', 'Data keuangan tidak ditemukan.');
+        }
+
+        // Validate request if needed, though usually just status for admin
+        // $request->validate([...]);
+
+        if($request->status){
+            $detailKeuangan->update([
+                'status' => $request->status,
+                // 'comment' => $request->comment, // If table support comment
+            ]);
+        }
+         return redirect('/admin/laporan/'.$id)->with('success', 'Status keuangan berhasil diubah.');
+    }
+
+    public function kesanPesan(Request $request, string $id, string $idKesanPesan){
+
+        $kesanPesan = KesanPesanMahasiswa::find($idKesanPesan);
+
+        if (!$kesanPesan) {
+             return redirect('/admin/laporan/'.$id)->with('error', 'Data kesan pesan tidak ditemukan.');
+        }
+
+        if($request->status){
+            $kesanPesan->update([
+                'status' => $request->status,
+            ]);
+        }
+        return redirect('/admin/laporan/'.$id)->with('success', 'Status kesan pesan berhasil diubah.');
     }
 
     /**
