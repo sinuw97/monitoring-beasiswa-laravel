@@ -1163,6 +1163,208 @@
 
         <hr class="my-8 border-gray-300">
 
+        {{-- Bagian E: Laporan Keuangan --}}
+        <section class="mb-10">
+            <h2 class="text-2xl font-extrabold text-gray-800 mb-6">E. LAPORAN KEUANGAN</h2>
+
+            {{-- Ringkasan Total Keuangan --}}
+            <div class="mb-6">
+                <div class="flex items-center justify-between bg-white border-l-4 border-[#f9d223] rounded-lg shadow-sm px-4 py-3">
+                    <div>
+                        <p class="text-sm text-gray-500">Total Keuangan</p>
+                        @if($laporanKeuangan)
+                            <p class="text-xl lg:text-2xl font-bold text-[#013F4E]">
+                                Rp {{ number_format($laporanKeuangan->total_nominal, 0, ',', '.') }}
+                            </p>
+                        @else
+                            <p class="text-xl lg:text-2xl font-bold text-[#013F4E]">-</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            {{-- Tabel Keuangan --}}
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-[#09697E]">Rincian Pengeluaran</h3>
+                </div>
+                @if ($laporanKeuangan && $laporanKeuangan->detailKeuanganMahasiswa->count() > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 font-semibold">#</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Keperluan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Nominal</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Status</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center hidden sm:table-cell">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center sm:hidden">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($laporanKeuangan->detailKeuanganMahasiswa as $detail)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 text-xs sm:text-sm font-medium text-gray-900">{{ $detail->keperluan }}</td>
+                                        <td class="px-6 py-4 font-medium text-gray-900">Rp {{ number_format($detail->nominal, 0, ',', '.') }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @include('components.status-badge', ['status' => $detail->status])
+                                        </td>
+                                        <td class="px-6 py-4 text-center hidden sm:table-cell">
+                                            <a href="#editModal-laporan-keuangan-{{ $detail->id }}"
+                                                class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 text-center sm:hidden">
+                                            <a href="#detailModal-laporan-keuangan-{{ $detail->id }}"
+                                                class="text-[#09697E] bg-cyan-50 hover:bg-cyan-100 px-3 py-1 rounded-md text-xs font-medium transition">
+                                                Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-8 text-center">
+                        <p class="text-gray-500 italic">Tidak ada data keuangan yang dilaporkan.</p>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Modals for Laporan Keuangan --}}
+            @if ($laporanKeuangan && $laporanKeuangan->detailKeuanganMahasiswa->count() > 0)
+                @foreach ($laporanKeuangan->detailKeuanganMahasiswa as $detail)
+                    {{-- Convert object to array/collection compatible with component logic if needed, or adjust component usage --}}
+                    @php
+                         // We can cast to array or rely on Model ArrayAccess if available.
+                         // Let's create a temporary array wrapper or modify component usage expectation.
+                         // Looking at existing usage: $report['status']. Models implement ArrayAccess but it's safer to pass array.
+                         $detailArray = $detail->toArray();
+                         $detailArray['laporan_id'] = $laporanKeuangan->laporan_id;
+                    @endphp
+
+                    {{-- We need a custom modal or ensure the component works.
+                         components.modal-laporan-admin uses route('admin.type', parameters).
+                         We added 'admin.laporan-keuangan' route.
+                         Type should be 'financial-report' to match route /laporan/{id}/financial-report/{idKeuangan} ?
+                         Wait, the route is /laporan/{id}/financial-report/{idKeuangan}.
+                         The component constructs action: /admin/laporan/{reportId}/{type}/{itemId}.
+                         So type should be 'financial-report'.
+                    --}}
+                    @include('components.modal-laporan-admin', [
+                        'report' => $detailArray,
+                        'type' => 'financial-report',
+                        'modalId' => 'editModal-laporan-keuangan-' . $detail->id,
+                    ])
+
+                    {{-- Modal Detail Mobile --}}
+                     @include('components.detail-mobile-modal', [
+                        'report' => $detailArray,
+                        'modalId' => 'detailModal-laporan-keuangan-' . $detail->id,
+                        'type' => 'financial-report',
+                        'fields' => [
+                            'Keperluan' => $detail->keperluan,
+                            'Nominal' => 'Rp ' . number_format($detail->nominal, 0, ',', '.'),
+                            'Status' => $detail->status,
+                        ],
+                    ])
+                @endforeach
+            @endif
+        </section>
+
+        <hr class="my-8 border-gray-300">
+
+        {{-- Bagian F: Kesan dan Pesan Mahasiswa --}}
+        <section class="mb-10">
+            <h2 class="text-2xl font-extrabold text-gray-800 mb-6">F. KESAN DAN PESAN MAHASISWA</h2>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-[#09697E]">Kesan dan Pesan</h3>
+                </div>
+                @if (count($kesanPesan) > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 font-semibold">#</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Kesan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold">Pesan</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold hidden sm:table-cell">Status</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center hidden sm:table-cell">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 font-semibold text-center sm:hidden">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($kesanPesan as $item)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-medium text-gray-900">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 text-xs sm:text-sm font-medium text-gray-900 max-w-[200px] truncate" title="{{ $item->kesan }}">{{ $item->kesan }}</td>
+                                        <td class="px-6 py-4 text-xs sm:text-sm font-medium text-gray-900 max-w-[200px] truncate" title="{{ $item->pesan }}">{{ $item->pesan }}</td>
+                                        <td class="px-6 py-4 hidden sm:table-cell">
+                                            @include('components.status-badge', ['status' => $item->status])
+                                        </td>
+                                        <td class="px-6 py-4 text-center hidden sm:table-cell">
+                                            <a href="#editModal-kesan-pesan-{{ $item->id }}"
+                                                class="text-[#09697E] hover:text-[#075263] bg-cyan-50 hover:bg-cyan-100 p-2 rounded-lg transition inline-flex items-center justify-center">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </a>
+                                        </td>
+                                        <td class="px-6 py-4 text-center sm:hidden">
+                                            <a href="#detailModal-kesan-pesan-{{ $item->id }}"
+                                                class="text-[#09697E] bg-cyan-50 hover:bg-cyan-100 px-3 py-1 rounded-md text-xs font-medium transition">
+                                                Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-8 text-center">
+                        <p class="text-gray-500 italic">Tidak ada kesan dan pesan.</p>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Modals for Kesan Pesan --}}
+            @if (count($kesanPesan) > 0)
+                @foreach ($kesanPesan as $item)
+                    @php $itemArray = $item->toArray(); @endphp
+                    @include('components.modal-laporan-admin', [
+                        'report' => $itemArray,
+                        'type' => 'feedback',
+                        'modalId' => 'editModal-kesan-pesan-' . $item->id,
+                    ])
+                    {{-- Modal Detail Mobile --}}
+                     @include('components.detail-mobile-modal', [
+                        'report' => $itemArray,
+                        'modalId' => 'detailModal-kesan-pesan-' . $item->id,
+                        'type' => 'feedback',
+                        'fields' => [
+                            'Kesan' => $item->kesan,
+                            'Pesan' => $item->pesan,
+                            'Status' => $item->status,
+                        ],
+                    ])
+                @endforeach
+            @endif
+        </section>
+
+        <hr class="my-8 border-gray-300">
+
         {{-- Form Final Aksi Admin --}}
         <div class="bg-white p-6 rounded-xl shadow-2xl border border-indigo-100">
             <h3 class="text-xl font-bold text-indigo-700 mb-4">Finalisasi Status Laporan</h3>

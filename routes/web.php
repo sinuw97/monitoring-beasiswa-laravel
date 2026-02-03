@@ -136,6 +136,8 @@ Route::prefix('admin')->group(function () {
         Route::put('/laporan/{id}/student-achievements/{idStudentAchievements}', [LaporanMonevController::class, 'studentAchievements'])->name('admin.student-achievements');
         Route::put('/laporan/{id}/independent-activities/{idIndependentActivities}', [LaporanMonevController::class, 'independentActivities'])->name('admin.independent-activities');
         Route::put('/laporan/{id}/evaluations/{idEvaluations}', [LaporanMonevController::class, 'evaluations'])->name('admin.evaluations');
+        Route::put('/laporan/{id}/financial-report/{idKeuangan}', [LaporanMonevController::class, 'laporanKeuangan'])->name('admin.laporan-keuangan');
+        Route::put('/laporan/{id}/feedback/{idKesanPesan}', [LaporanMonevController::class, 'kesanPesan'])->name('admin.kesan-pesan');
         Route::get('/data-mahasiswa/template', [DataMahasiswaController::class, 'downloadTemplate'])->name('admin.data-mahasiswa.template');
         Route::post('/data-mahasiswa/import', [DataMahasiswaController::class, 'import'])->name('admin.data-mahasiswa.import');
         Route::get('/data-mahasiswa/export', [DataMahasiswaController::class, 'export'])->name('admin.data-mahasiswa.export');
