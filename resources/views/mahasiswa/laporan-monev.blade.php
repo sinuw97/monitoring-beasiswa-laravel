@@ -3,127 +3,157 @@
 @section('title', 'Isi Laporan Monev')
 
 @section('content')
-    <div class="bg-white w-full rounded-xl shadow-md p-6 border border-gray-100">
-        <h1 class="text-xl lg:text-2xl text-[#013F4E] font-bold mb-3">Laporan Monev Yang Tersimpan</h1>
-
-        {{-- Card --}}
-        <div
-            class="text-sm flex flex-col gap-1.5 h-auto bg-[#fefefe] border-l-4 border-[#09697E] text-[#09697E] font-semibold px-3 py-3 rounded mb-3 shadow-md">
-            <div class="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-[20px] h-[20px]" viewBox="0 0 24 24" id="user">
-                    <path fill="#09697E"
-                        d="M15.71,12.71a6,6,0,1,0-7.42,0,10,10,0,0,0-6.22,8.18,1,1,0,0,0,2,.22,8,8,0,0,1,15.9,0,1,1,0,0,0,1,.89h.11a1,1,0,0,0,.88-1.1A10,10,0,0,0,15.71,12.71ZM12,12a4,4,0,1,1,4-4A4,4,0,0,1,12,12Z">
-                    </path>
-                </svg>
-                <p>Nama : {{ $dataMahasiswa->name }}</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <svg viewBox="0 0 24 24" fill="none" class="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M3 5C2.44772 5 2 5.44771 2 6V18C2 18.5523 2.44772 19 3 19H21C21.5523 19 22 18.5523 22 18V6C22 5.44772 21.5523 5 21 5H3ZM0 6C0 4.34315 1.34314 3 3 3H21C22.6569 3 24 4.34315 24 6V18C24 19.6569 22.6569 21 21 21H3C1.34315 21 0 19.6569 0 18V6ZM6 10.5C6 9.67157 6.67157 9 7.5 9C8.32843 9 9 9.67157 9 10.5C9 11.3284 8.32843 12 7.5 12C6.67157 12 6 11.3284 6 10.5ZM10.1756 12.7565C10.69 12.1472 11 11.3598 11 10.5C11 8.567 9.433 7 7.5 7C5.567 7 4 8.567 4 10.5C4 11.3598 4.31002 12.1472 4.82438 12.7565C3.68235 13.4994 3 14.7069 3 16C3 16.5523 3.44772 17 4 17C4.55228 17 5 16.5523 5 16C5 15.1145 5.80048 14 7.5 14C9.19952 14 10 15.1145 10 16C10 16.5523 10.4477 17 11 17C11.5523 17 12 16.5523 12 16C12 14.7069 11.3177 13.4994 10.1756 12.7565ZM13 8C12.4477 8 12 8.44772 12 9C12 9.55228 12.4477 10 13 10H19C19.5523 10 20 9.55228 20 9C20 8.44772 19.5523 8 19 8H13ZM14 12C13.4477 12 13 12.4477 13 13C13 13.5523 13.4477 14 14 14H18C18.5523 14 19 13.5523 19 13C19 12.4477 18.5523 12 18 12H14Z"
-                            fill="#09697E"></path>
-                    </g>
-                </svg>
-                <p>NIM : {{ $dataMahasiswa->nim }}</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <svg viewBox="0 0 24 24" version="1.1" class="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <title></title>
-                        <g fill="none" fill-rule="evenodd" id="页面-1" stroke="none" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="1">
-                            <g id="导航图标" stroke="#09697E" stroke-width="1.5"
-                                transform="translate(-28.000000, -272.000000)">
-                                <g id="学术" transform="translate(28.000000, 272.000000)">
-                                    <g id="编组" transform="translate(1.000000, 4.000000)">
-                                        <polygon id="路径" points="0 2.75 11 0 22 2.75 11 5.5"></polygon>
-                                        <path
-                                            d="M4.95,4.4 L4.95,9.88383 C4.95,9.88383 7.7,11.55 11,11.55 C14.3,11.55 17.05,9.88383 17.05,9.88383 L17.05,4.4"
-                                            id="路径"></path>
-                                        <line id="路径" x1="1.65" x2="1.65" y1="3.3" y2="15.4">
-                                        </line>
-                                        <rect height="3.3" id="矩形" width="3.3" x="0" y="14.3"></rect>
+    <div class="mb-6 flex justify-between items-start">
+        <div>
+            <h1 class="font-bold text-3xl text-gray-800">Laporan Monev Yang Tersimpan</h1>
+            <p class="text-gray-600 mt-1">Anda dapat melihat, melanjutkan, atau memperbarui laporan monev yang
+                tersimpan di bawah ini.</p>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 gap-6">
+        {{-- Info Card --}}
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+            <div class="h-2 bg-[#09697E]"></div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 007-7z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Nama Mahasiswa</p>
+                            <p class="font-semibold text-gray-800">{{ $dataMahasiswa->name }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">NIM</p>
+                            <p class="font-semibold text-gray-800">{{ $dataMahasiswa->nim }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Periode</p>
+                            <p class="font-semibold text-gray-800">{{ $laporan->periodeSemester?->tahun_akademik }}
+                                {{ $laporan->periodeSemester?->semester }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
+                            <svg viewBox="0 0 24 24" version="1.1" class="w-[20px] h-[20px]"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                fill="#000000">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <title></title>
+                                    <g fill="none" fill-rule="evenodd" id="页面-1" stroke="none"
+                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+                                        <g id="导航图标" stroke="#09697E" stroke-width="1.5"
+                                            transform="translate(-28.000000, -272.000000)">
+                                            <g id="学术" transform="translate(28.000000, 272.000000)">
+                                                <g id="编组" transform="translate(1.000000, 4.000000)">
+                                                    <polygon id="路径" points="0 2.75 11 0 22 2.75 11 5.5"></polygon>
+                                                    <path
+                                                        d="M4.95,4.4 L4.95,9.88383 C4.95,9.88383 7.7,11.55 11,11.55 C14.3,11.55 17.05,9.88383 17.05,9.88383 L17.05,4.4"
+                                                        id="路径"></path>
+                                                    <line id="路径" x1="1.65" x2="1.65" y1="3.3"
+                                                        y2="15.4">
+                                                    </line>
+                                                    <rect height="3.3" id="矩形" width="3.3" x="0" y="14.3">
+                                                    </rect>
+                                                </g>
+                                            </g>
+                                        </g>
                                     </g>
                                 </g>
-                            </g>
-                        </g>
-                    </g>
-                </svg>
-                <p>Semester {{ $laporan->semester }}</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <svg viewBox="0 0 20 20" version="1.1" class="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <title>time / 27 - time, calendar, time, date, event, planner, shedule, task icon</title>
-                        <g id="Free-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <g transform="translate(-303.000000, -748.000000)" id="Group" stroke="#09697E"
-                                stroke-width="2">
-                                <g transform="translate(301.000000, 746.000000)" id="Shape">
-                                    <circle cx="15.5" cy="15.5" r="5.5"> </circle>
-                                    <polyline points="15.5 13.3440934 15.5 15.5 17 17"> </polyline>
-                                    <line x1="17" y1="3" x2="17" y2="5"> </line>
-                                    <line x1="7" y1="3" x2="7" y2="5"> </line>
-                                    <path
-                                        d="M8.03064542,21 C7.42550126,21 6.51778501,21 5.30749668,21 C4.50512981,21 4.2141722,20.9218311 3.92083887,20.7750461 C3.62750553,20.6282612 3.39729582,20.4128603 3.24041943,20.1383964 C3.08354305,19.8639324 3,19.5916914 3,18.8409388 L3,7.15906122 C3,6.4083086 3.08354305,6.13606756 3.24041943,5.86160362 C3.39729582,5.58713968 3.62750553,5.37173878 3.92083887,5.22495386 C4.2141722,5.07816894 4.50512981,5 5.30749668,5 L18.6925033,5 C19.4948702,5 19.7858278,5.07816894 20.0791611,5.22495386 C20.3724945,5.37173878 20.6027042,5.58713968 20.7595806,5.86160362 C20.9164569,6.13606756 21,7.24671889 21,7.99747152">
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Semester Ke</p>
+                            <p class="font-semibold text-gray-800">{{ $laporan->semester }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
+                            <svg fill="#000000" viewBox="0 0 24 24" class="w-[20px] h-[20px]" id="date-check"
+                                data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path id="primary"
+                                        d="M20,21H4a1,1,0,0,1-1-1V9H21V20A1,1,0,0,1,20,21ZM21,5a1,1,0,0,0-1-1H4A1,1,0,0,0,3,5V9H21Z"
+                                        style="fill: none; stroke: #09697E; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
                                     </path>
+                                    <path id="secondary" d="M16,3V6M8,3V6"
+                                        style="fill: none; stroke: #09697E; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
+                                    </path>
+                                    <polyline id="secondary-2" data-name="secondary" points="9 15 11 17 15 13"
+                                        style="fill: none; stroke: #09697E; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
+                                    </polyline>
                                 </g>
-                            </g>
-                        </g>
-                    </g>
-                </svg>
-                <p>Periode :
-                    {{ $laporan->periodeSemester?->tahun_akademik }}
-                    {{ $laporan->periodeSemester?->semester }}
-                </p>
-            </div>
-            <div class="flex items-center gap-2">
-                <svg fill="#000000" viewBox="0 0 24 24" class="w-[20px] h-[20px]" id="date-check"
-                    data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path id="primary"
-                            d="M20,21H4a1,1,0,0,1-1-1V9H21V20A1,1,0,0,1,20,21ZM21,5a1,1,0,0,0-1-1H4A1,1,0,0,0,3,5V9H21Z"
-                            style="fill: none; stroke: #09697E; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
-                        </path>
-                        <path id="secondary" d="M16,3V6M8,3V6"
-                            style="fill: none; stroke: #09697E; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
-                        </path>
-                        <polyline id="secondary-2" data-name="secondary" points="9 15 11 17 15 13"
-                            style="fill: none; stroke: #09697E; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
-                        </polyline>
-                    </g>
-                </svg>
-                <p>Dibuat : {{ $laporan->created_at->translatedFormat('d F Y') }}</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <svg fill="#09697E" class="w-[20px] h-[20px]" version="1.1" id="Icon"
-                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"
-                    enable-background="new 0 0 24 24" xml:space="preserve">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path
-                            d="M12,0C5.38,0,0,5.38,0,12s5.38,12,12,12s12-5.38,12-12S18.62,0,12,0z M12,22C6.49,22,2,17.51,2,12S6.49,2,12,2 s10,4.49,10,10S17.51,22,12,22z M10.5,10h3v8h-3V10z M10.5,5h3v3h-3V5z">
-                        </path>
-                    </g>
-                </svg>
-                <p>Status : {{ $laporan->status }}</p>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Tanggal Dibuat</p>
+                            <p class="font-semibold text-gray-800">{{ $laporan->created_at->translatedFormat('d F Y') }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Status Laporan</p>
+                            @php
+                                $warnaStatus = match ($laporan->status) {
+                                    'Lolos', 'Lolos dengan penugasan' => 'bg-green-100 text-green-700 border-green-200',
+                                    'Pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                                    'Dikembalikan' => 'bg-blue-100 text-blue-700 border-blue-200',
+                                    'Ditolak SP-1',
+                                    'Ditolak SP-2',
+                                    'Ditolak SP-3'
+                                        => 'bg-red-100 text-red-700 border-red-200',
+                                    default => 'bg-gray-100 text-gray-700',
+                                };
+                            @endphp
+                            <span
+                                class="px-2 py-0.5 rounded text-xs font-bold
+                                {{ $warnaStatus }}">
+                                {{ $laporan->status }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         {{-- Informasi Penting --}}
-        <div class="bg-[#EAF6F8] border-l-4 border-[#1D7D94] rounded-md px-4 py-3 mb-4">
+        <div class="bg-[#EAF6F8] border-l-4 border-[#1D7D94] rounded-md px-4 py-3">
             <div class="flex items-start gap-3">
                 <p class="text-sm text-[#0F3F4A] leading-relaxed">
                     Perhatikan bahwa <b>tanggal mulai</b> dan <b>tanggal selesai</b> kegiatan harus berada dalam
@@ -134,23 +164,23 @@
 
         {{-- Status Periode Laporan --}}
         @if ($laporan->periodeSemester && $laporan->periodeSemester->status === 'Non-Aktif')
-            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 w-full px-3 py-3 rounded mb-3">
+            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 w-full px-3 py-3 rounded">
                 Periode pengisian laporan sudah ditutup.
             </div>
         @endif
 
         @if (session('success'))
-            <div class="bg-green-100 border-l-4 border-green-600 text-[#013F4E] w-full px-3 py-3 rounded mb-3">
+            <div class="bg-green-100 border-l-4 border-green-600 text-[#013F4E] w-full px-3 py-3 rounded">
                 {{ session('success') }}
             </div>
         @elseif (session('error'))
-            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 w-full px-3 py-3 rounded mb-3">
+            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 w-full px-3 py-3 rounded">
                 {{ session('error') }}
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 p-2 rounded mb-3">
+            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 p-2 rounded">
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>- {{ $error }}</li>
@@ -159,10 +189,10 @@
             </div>
         @endif
 
-        {{-- Section Monev --}}
-        <div>
+        {{-- Tables Section --}}
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 space-y-8">
             {{-- Reports --}}
-            <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="mb-3 mt-5 cursor-default"
+            <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="cursor-default"
                 x-on:edit-reports.window="editDataReports = $event.detail; openEditReports = true">
                 <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">A. Kegiatan Akademik (IPS &
                     IPK Semester ini)</h3>
@@ -295,7 +325,7 @@
             </div>
 
             {{-- Academic Activities --}}
-            <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="cursor-default"
                 x-on:edit-academic.window="editDataAcademy = $event.detail; openEditAcademic = true">
                 <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">B. Kegiatan Non-Akademik
                     (Organisasi)</h3>
@@ -508,7 +538,7 @@
             </div>
 
             {{-- Organization Activities --}}
-            <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="cursor-default"
                 x-on:edit-org.window="editDataOrg = $event.detail; openEditOrg = true">
                 <h2 class="text-xl lg:text-2xl font-bold text-[#013F4E] mt-4">B. KEGIATAN NON-AKADEMIK</h2>
                 <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kegiatan Organisasi Mahasiswa</p>
@@ -744,7 +774,7 @@
             </div>
 
             {{-- Committee Activities --}}
-            <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="cursor-default"
                 x-on:edit-committee.window="editDataCommittee = $event.detail; openEditCommittee = true">
                 <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Kepanitiaan</h3>
 
@@ -997,7 +1027,7 @@
             </div>
 
             {{-- Achievements --}}
-            <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="cursor-default"
                 x-on:edit-achievement.window="editDataAchievement = $event.detail; openEditAchievement = true">
                 <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Prestasi</h3>
 
@@ -1408,7 +1438,7 @@
             </div>
 
             {{-- Independent Activities --}}
-            <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="cursor-default"
                 x-on:edit-independent="editDataIndependent = $event.detail; openEditIndependent = true">
                 <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Mandiri</h3>
 
@@ -1606,7 +1636,7 @@
             </div>
 
             {{-- Evaluations --}}
-            <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="mb-2 mt-4 cursor-default">
+            <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="cursor-default">
                 <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">C. Evaluasi Diri</h3>
                 {{-- Data yg ditampilkan --}}
                 <div>
@@ -1717,7 +1747,7 @@
             </div>
 
             {{-- Target Next SMT --}}
-            <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }" class="mb-2 mt-2 cursor-default"
+            <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }" class="cursor-default"
                 x-on:edit-target-rep.window="editDataTargetRep = $event.detail; openEditTargetRep = true">
                 <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">D. Rencana Semester Depan
                 </h3>
@@ -1839,7 +1869,7 @@
             </div>
 
             {{-- Target Keg Akademik --}}
-            <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }" class="cursor-default"
                 x-on:edit-target-academic.window="editDataTargetAcademic = $event.detail; openEditTargetAcademic = true">
                 <h4 class="font-semibold text-gray-700 mb-1">Rencana Kegiatan Akademik</h4>
 
@@ -1927,7 +1957,7 @@
             </div>
 
             {{-- Target Achievements --}}
-            <div x-cloak x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }" class="cursor-default"
                 x-on:edit-target-achievement="editDatatargetAchievement = $event.detail; openEditTargetAchievement = true">
                 <h4 class="font-semibold text-gray-700 mb-1">Rencana Prestasi</h4>
 
@@ -2031,7 +2061,7 @@
             </div>
 
             {{-- Target Independent --}}
-            <div x-cloak x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }" class="cursor-default"
                 x-on:edit-target-independent="editDataTargetIndependent = $event.detail; openEditTargetIndependent = true">
                 <h4 class="font-semibold text-gray-700 mb-1">Rencana Kegiatan Mandiri</h4>
 
@@ -2137,7 +2167,7 @@
             </div>
 
             {{-- Keuangan --}}
-            <div x-cloak x-data="{ openKeuangan: false, openEditKeuangan: false, editDataKeuangan: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openKeuangan: false, openEditKeuangan: false, editDataKeuangan: {} }" class="cursor-default"
                 x-on:edit-keuangan="editDataKeuangan = $event.detail; openEditKeuangan = true">
                 <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">E. Laporan Keuangan</h3>
 
@@ -2240,7 +2270,7 @@
             </div>
 
             {{-- Kesan Pesan --}}
-            <div x-cloak x-data="{ openKesanPesan: false, openEditKesanPesan: false, editDataKesanPesan: {} }" class="mb-2 cursor-default"
+            <div x-cloak x-data="{ openKesanPesan: false, openEditKesanPesan: false, editDataKesanPesan: {} }" class="cursor-default"
                 x-on:edit-pesan-kesan="editDataKesanPesan = $event.detail; openEditKesanPesan = true">
                 <h2 class="text-xl lg:text-2xl font-bold text-[#013F4E]">F. Kesan dan Pesan Mahasiswa</h2>
                 <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kesan dan Pesan</p>
@@ -2331,66 +2361,65 @@
                     </x-modal>
                 @endif
             </div>
-        </div>
 
-        {{-- Delete Modal --}}
-        <x-modal-delete />
+            {{-- Delete Modal --}}
+            <x-modal-delete />
 
-        {{-- Button Aksi --}}
-        <div x-cloak x-data="{ openModalKonfirmasi: false }" class="mt-4 flex gap-2">
-            <button type="button"
-                class="button bg-[#09697E] hover:bg-[#27788a] text-white px-2 py-1 rounded-md cursor-pointer">
-                <a href="{{ route('mahasiswa.dashboard') }}">Kembali</a>
-            </button>
-            <button @click="openModalKonfirmasi = true"
-                class="button bg-[#3FAA54] hover:bg-[#48cc62] px-2 py-1 rounded-md cursor-pointer text-white">
-                Ajukan
-            </button>
-            {{-- Modal Konfirmasi --}}
-            <x-modal title="Konfirmasi Pengajuan Laporan" show="openModalKonfirmasi">
-                <h1 class="text-center font-semibold">Apakah Anda yakin ingin mengirim laporan?</h1>
-                {{-- icon --}}
-                <div class="flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" fill="none" class="w-[100px] h-[100px]"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M21.7605 15.92L15.3605 4.4C14.5005 2.85 13.3105 2 12.0005 2C10.6905 2 9.50047 2.85 8.64047 4.4L2.24047 15.92C1.43047 17.39 1.34047 18.8 1.99047 19.91C2.64047 21.02 3.92047 21.63 5.60047 21.63H18.4005C20.0805 21.63 21.3605 21.02 22.0105 19.91C22.6605 18.8 22.5705 17.38 21.7605 15.92ZM11.2505 9C11.2505 8.59 11.5905 8.25 12.0005 8.25C12.4105 8.25 12.7505 8.59 12.7505 9V14C12.7505 14.41 12.4105 14.75 12.0005 14.75C11.5905 14.75 11.2505 14.41 11.2505 14V9ZM12.7105 17.71C12.6605 17.75 12.6105 17.79 12.5605 17.83C12.5005 17.87 12.4405 17.9 12.3805 17.92C12.3205 17.95 12.2605 17.97 12.1905 17.98C12.1305 17.99 12.0605 18 12.0005 18C11.9405 18 11.8705 17.99 11.8005 17.98C11.7405 17.97 11.6805 17.95 11.6205 17.92C11.5605 17.9 11.5005 17.87 11.4405 17.83C11.3905 17.79 11.3405 17.75 11.2905 17.71C11.1105 17.52 11.0005 17.26 11.0005 17C11.0005 16.74 11.1105 16.48 11.2905 16.29C11.3405 16.25 11.3905 16.21 11.4405 16.17C11.5005 16.13 11.5605 16.1 11.6205 16.08C11.6805 16.05 11.7405 16.03 11.8005 16.02C11.9305 15.99 12.0705 15.99 12.1905 16.02C12.2605 16.03 12.3205 16.05 12.3805 16.08C12.4405 16.1 12.5005 16.13 12.5605 16.17C12.6105 16.21 12.6605 16.25 12.7105 16.29C12.8905 16.48 13.0005 16.74 13.0005 17C13.0005 17.26 12.8905 17.52 12.7105 17.71Z"
-                                fill="#f71d1d"></path>
-                        </g>
-                    </svg>
-                </div>
-                <p class="font-bold italic text-md text-center"><span
-                        class="text-red-500 font-bold text-md">*</span>Pastikan semua data beserta bukti kegiatan
-                    sudah benar!</p>
-                {{-- Button --}}
-                <div class="flex items-center justify-center gap-5">
-                    {{-- Batal --}}
-                    <button type="button" @click="openModalKonfirmasi = false"
-                        class="px-3 py-1 bg-[#f13636] text-[#fefefe] rounded hover:bg-[#d72626] transition cursor-pointer">
-                        Batal
-                    </button>
-                    {{-- Konfirmasi --}}
-                    <form action="{{ route('laporan.ajukan', $laporan->laporan_id) }}" method="POST"
-                        enctype="multipart/form-data" x-data="{ submitting: false }" x-on:submit="submitting = true">
-                        @csrf
-                        @method('PUT')
-                        <button type="submit" x-bind:disabled="submitting"
-                            x-text="submitting ? 'Mengirim...' : 'Simpan'"
-                            :class="submitting
-                                ?
-                                'cursor-not-allowed bg-gray-400' :
-                                'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
-                            class="px-3 py-1 text-[#fefefe] rounded transition">
-                            Konfirmasi
+            {{-- Button Aksi --}}
+            <div x-cloak x-data="{ openModalKonfirmasi: false }" class="mt-4 flex gap-2">
+                <button type="button"
+                    class="button bg-[#09697E] hover:bg-[#27788a] text-white px-2 py-1 rounded-md cursor-pointer">
+                    <a href="{{ route('mahasiswa.dashboard') }}">Kembali</a>
+                </button>
+                <button @click="openModalKonfirmasi = true"
+                    class="button bg-[#3FAA54] hover:bg-[#48cc62] px-2 py-1 rounded-md cursor-pointer text-white">
+                    Ajukan
+                </button>
+                {{-- Modal Konfirmasi --}}
+                <x-modal title="Konfirmasi Pengajuan Laporan" show="openModalKonfirmasi">
+                    <h1 class="text-center font-semibold">Apakah Anda yakin ingin mengirim laporan?</h1>
+                    {{-- icon --}}
+                    <div class="flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" fill="none" class="w-[100px] h-[100px]"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path
+                                    d="M21.7605 15.92L15.3605 4.4C14.5005 2.85 13.3105 2 12.0005 2C10.6905 2 9.50047 2.85 8.64047 4.4L2.24047 15.92C1.43047 17.39 1.34047 18.8 1.99047 19.91C2.64047 21.02 3.92047 21.63 5.60047 21.63H18.4005C20.0805 21.63 21.3605 21.02 22.0105 19.91C22.6605 18.8 22.5705 17.38 21.7605 15.92ZM11.2505 9C11.2505 8.59 11.5905 8.25 12.0005 8.25C12.4105 8.25 12.7505 8.59 12.7505 9V14C12.7505 14.41 12.4105 14.75 12.0005 14.75C11.5905 14.75 11.2505 14.41 11.2505 14V9ZM12.7105 17.71C12.6605 17.75 12.6105 17.79 12.5605 17.83C12.5005 17.87 12.4405 17.9 12.3805 17.92C12.3205 17.95 12.2605 17.97 12.1905 17.98C12.1305 17.99 12.0605 18 12.0005 18C11.9405 18 11.8705 17.99 11.8005 17.98C11.7405 17.97 11.6805 17.95 11.6205 17.92C11.5605 17.9 11.5005 17.87 11.4405 17.83C11.3905 17.79 11.3405 17.75 11.2905 17.71C11.1105 17.52 11.0005 17.26 11.0005 17C11.0005 16.74 11.1105 16.48 11.2905 16.29C11.3405 16.25 11.3905 16.21 11.4405 16.17C11.5005 16.13 11.5605 16.1 11.6205 16.08C11.6805 16.05 11.7405 16.03 11.8005 16.02C11.9305 15.99 12.0705 15.99 12.1905 16.02C12.2605 16.03 12.3205 16.05 12.3805 16.08C12.4405 16.1 12.5005 16.13 12.5605 16.17C12.6105 16.21 12.6605 16.25 12.7105 16.29C12.8905 16.48 13.0005 16.74 13.0005 17C13.0005 17.26 12.8905 17.52 12.7105 17.71Z"
+                                    fill="#f71d1d"></path>
+                            </g>
+                        </svg>
+                    </div>
+                    <p class="font-bold italic text-md text-center"><span
+                            class="text-red-500 font-bold text-md">*</span>Pastikan semua data beserta bukti kegiatan
+                        sudah benar!</p>
+                    {{-- Button --}}
+                    <div class="flex items-center justify-center gap-5">
+                        {{-- Batal --}}
+                        <button type="button" @click="openModalKonfirmasi = false"
+                            class="px-3 py-1 bg-[#f13636] text-[#fefefe] rounded hover:bg-[#d72626] transition cursor-pointer">
+                            Batal
                         </button>
-                    </form>
-                </div>
-            </x-modal>
+                        {{-- Konfirmasi --}}
+                        <form action="{{ route('laporan.ajukan', $laporan->laporan_id) }}" method="POST"
+                            enctype="multipart/form-data" x-data="{ submitting: false }" x-on:submit="submitting = true">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" x-bind:disabled="submitting"
+                                x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                :class="submitting
+                                    ?
+                                    'cursor-not-allowed bg-gray-400' :
+                                    'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                class="px-3 py-1 text-[#fefefe] rounded transition">
+                                Konfirmasi
+                            </button>
+                        </form>
+                    </div>
+                </x-modal>
+            </div>
         </div>
-    </div>
     </div>
 @endsection
 
