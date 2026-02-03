@@ -38,8 +38,9 @@
     <div class="flex flex-col lg:flex-row relative">
 
         {{-- Sidebar Component --}}
-        <x-sidebar-mhs :dataMahasiswa="$dataMahasiswa" :presentaseLaporan="$presentaseLaporan ?? 0"
-            :jumlahLaporanTerkirim="$jumlahLaporanTerkirim ?? 0" :totalLaporan="$totalLaporan ?? 0" />
+        <x-sidebar-mhs />
+        {{-- <x-sidebar-mhs :dataMahasiswa="$dataMahasiswa" :presentaseLaporan="$presentaseLaporan ?? 0"
+            :jumlahLaporanTerkirim="$jumlahLaporanTerkirim ?? 0" :totalLaporan="$totalLaporan ?? 0" /> --}}
 
         {{-- Main Content Wrapper --}}
         {{-- Added padding-left to account for fixed sidebar on desktop --}}

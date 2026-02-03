@@ -1249,6 +1249,7 @@
                     icon: 'error',
                     title: 'Ukuran file terlalu besar',
                     text: 'Ukuran maksimal file adalah 5MB',
+                    confirmButtonColor: '#09697E', // hijau
                 });
                 this.value = '';
             }

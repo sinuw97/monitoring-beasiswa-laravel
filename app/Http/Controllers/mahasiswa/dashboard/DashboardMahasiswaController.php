@@ -16,6 +16,10 @@ class DashboardMahasiswaController extends Controller
         // Ambil data mahasiswa yang login
         $mahasiswa = Auth::guard('mahasiswa')->user();
 
+        if (!$mahasiswa) {
+            abort(401, 'User belum login!');
+        }
+
         // Ambil data lengkap mahasiswa beserta detail
         $dataMahasiswa = Mahasiswa::with('detailMahasiswa')
             ->where('nim', $mahasiswa->nim)
