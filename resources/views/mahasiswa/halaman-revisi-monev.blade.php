@@ -37,14 +37,16 @@
                         <title></title>
                         <g fill="none" fill-rule="evenodd" id="页面-1" stroke="none" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="1">
-                            <g id="导航图标" stroke="#09697E" stroke-width="1.5" transform="translate(-28.000000, -272.000000)">
+                            <g id="导航图标" stroke="#09697E" stroke-width="1.5"
+                                transform="translate(-28.000000, -272.000000)">
                                 <g id="学术" transform="translate(28.000000, 272.000000)">
                                     <g id="编组" transform="translate(1.000000, 4.000000)">
                                         <polygon id="路径" points="0 2.75 11 0 22 2.75 11 5.5"></polygon>
                                         <path
                                             d="M4.95,4.4 L4.95,9.88383 C4.95,9.88383 7.7,11.55 11,11.55 C14.3,11.55 17.05,9.88383 17.05,9.88383 L17.05,4.4"
                                             id="路径"></path>
-                                        <line id="路径" x1="1.65" x2="1.65" y1="3.3" y2="15.4"></line>
+                                        <line id="路径" x1="1.65" x2="1.65" y1="3.3" y2="15.4">
+                                        </line>
                                         <rect height="3.3" id="矩形" width="3.3" x="0" y="14.3"></rect>
                                     </g>
                                 </g>
@@ -63,7 +65,8 @@
                         <title>time / 27 - time, calendar, time, date, event, planner, shedule, task icon</title>
                         <g id="Free-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"
                             stroke-linecap="round" stroke-linejoin="round">
-                            <g transform="translate(-303.000000, -748.000000)" id="Group" stroke="#09697E" stroke-width="2">
+                            <g transform="translate(-303.000000, -748.000000)" id="Group" stroke="#09697E"
+                                stroke-width="2">
                                 <g transform="translate(301.000000, 746.000000)" id="Shape">
                                     <circle cx="15.5" cy="15.5" r="5.5"> </circle>
                                     <polyline points="15.5 13.3440934 15.5 15.5 17 17"> </polyline>
@@ -83,8 +86,8 @@
                 </p>
             </div>
             <div class="flex items-center gap-2">
-                <svg fill="#000000" viewBox="0 0 24 24" class="w-[20px] h-[20px]" id="date-check" data-name="Line Color"
-                    xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                <svg fill="#000000" viewBox="0 0 24 24" class="w-[20px] h-[20px]" id="date-check"
+                    data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                     <g id="SVGRepo_iconCarrier">
@@ -103,9 +106,9 @@
                 <p>Dibuat : {{ $laporan->created_at->translatedFormat('d F Y') }}</p>
             </div>
             <div class="flex items-center gap-2">
-                <svg fill="#09697E" class="w-[20px] h-[20px]" version="1.1" id="Icon" xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" enable-background="new 0 0 24 24"
-                    xml:space="preserve">
+                <svg fill="#09697E" class="w-[20px] h-[20px]" version="1.1" id="Icon"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"
+                    enable-background="new 0 0 24 24" xml:space="preserve">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                     <g id="SVGRepo_iconCarrier">
@@ -135,27 +138,25 @@
 
         <div class="space-y-6">
             {{-- Reports --}}
-            <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }"
-                class="mb-3 mt-5 pr-3 cursor-default"
+            <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="mb-3 mt-5 pr-3 cursor-default"
                 x-on:edit-reports.window="editDataReports = $event.detail; openEditReports = true">
-                <h2 class="text-xl font-bold text-[#013F4E] ml-1 sm:ml-3">A. KEGIATAN AKADEMIK</h2>
-                <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5 ml-1 sm:ml-3">Nilai IPS dan IPK Semester
-                    Ini</p>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">A. Kegiatan Akademik (IPS &
+                    IPK Semester ini)</h3>
 
                 <div class="overflow-x-auto">
-                    <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Komentar', 'Status']"
-                        :columns="['semester', 'ips', 'ipk', 'bukti', 'komentar', 'status']" :rows="$parsingAcademicReports"
-                        idKey="id" editEvent="edit-reports" deleteRoute="laporan.academic-reports.delete"
-                        :status="$laporan->status" style="riwayat" />
+                    <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Komentar', 'Status']" :columns="['semester', 'ips', 'ipk', 'bukti', 'komentar', 'status']" :rows="$parsingAcademicReports" idKey="id" editEvent="edit-reports"
+                        deleteRoute="laporan.academic-reports.delete" :status="$laporan->status" style="riwayat" />
                 </div>
 
                 {{-- Modal --}}
                 @if ($laporan->status === 'Dikembalikan')
                     {{-- Modal edit data --}}
                     <x-modal title="Edit data IPS dan IPK" show="openEditReports">
-                        <form x-bind:action="'{{ route('laporan.academic-reports.update', ':id') }}'.replace(':id',
-                                            editDataReports
-                                            .id)" method="POST" enctype="multipart/form-data">
+                        <form
+                            x-bind:action="'{{ route('laporan.academic-reports.update', ':id') }}'.replace(':id',
+                                editDataReports
+                                .id)"
+                            method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
@@ -170,12 +171,14 @@
                             <div class="mb-3">
                                 <label>IPS <span class="text-red-500">*</span></label>
                                 <input type="number" name="ips" x-model="editDataReports.ips"
-                                    class="w-full border rounded px-2 py-1" step="0.01" min="0" max="4">
+                                    class="w-full border rounded px-2 py-1" step="0.01" min="0"
+                                    max="4">
                             </div>
                             <div class="mb-3">
                                 <label>IPK<span class="text-red-500">*</span></label>
                                 <input type="number" name="ipk" x-model="editDataReports.ipk"
-                                    class="w-full border rounded px-2 py-1" step="0.01" min="0" max="4">
+                                    class="w-full border rounded px-2 py-1" step="0.01" min="0"
+                                    max="4">
                             </div>
                             <div class="mb-3">
                                 <label class="block text-sm font-medium">Bukti <span class="italic">(pdf, jpg,
@@ -202,47 +205,50 @@
             </div>
 
             {{-- Academic Activities --}}
-            <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }"
-                class="mb-2 pr-3 cursor-default"
+            <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="mb-2 pr-3 cursor-default"
                 x-on:edit-academic.window="editDataAcademy = $event.detail; openEditAcademic = true">
-                <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5 ml-1 sm:ml-3">Kegiatan Akademik</p>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Akademik Lainnya
+                </h3>
 
                 {{-- Tabel --}}
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
-            'No',
-            'Nama Kegiatan',
-            'Tipe Kegiatan',
-            'Keikutsertaan',
-            'Tempat',
-            'Tanggal Mulai',
-            'Tanggal Selesai',
-            'Bukti',
-            'Point',
-            'Komentar',
-            'Status',
-        ]" :columns="[
-            'activity-name',
-            'activity-type',
-            'participation',
-            'place',
-            'start-date',
-            'end-date',
-            'bukti',
-            'point',
-            'komentar',
-            'status',
-        ]" :rows="$parsingAcademicActivities" idKey="id" editEvent="edit-academic"
-                        deleteRoute="laporan.academic-activities.delete" :status="$laporan->status" style="riwayat" />
+                        'No',
+                        'Nama Kegiatan',
+                        'Tipe Kegiatan',
+                        'Keikutsertaan',
+                        'Tempat',
+                        'Tanggal Mulai',
+                        'Tanggal Selesai',
+                        'Bukti',
+                        'Point',
+                        'Komentar',
+                        'Status',
+                    ]" :columns="[
+                        'activity-name',
+                        'activity-type',
+                        'participation',
+                        'place',
+                        'start-date',
+                        'end-date',
+                        'bukti',
+                        'point',
+                        'komentar',
+                        'status',
+                    ]" :rows="$parsingAcademicActivities" idKey="id"
+                        editEvent="edit-academic" deleteRoute="laporan.academic-activities.delete" :status="$laporan->status"
+                        style="riwayat" />
                 </div>
 
                 {{-- Modal --}}
                 @if ($laporan->status === 'Dikembalikan')
                     {{-- Edit Modal --}}
                     <x-modal title="Edit data Kegiatan Akademik" show="openEditAcademic">
-                        <form method="POST" x-bind:action="'{{ route('laporan.academic-activities.update', ':id') }}'.replace(':id',
-                                            editDataAcademy
-                                            .id)" enctype="multipart/form-data">
+                        <form method="POST"
+                            x-bind:action="'{{ route('laporan.academic-activities.update', ':id') }}'.replace(':id',
+                                editDataAcademy
+                                .id)"
+                            enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
@@ -322,40 +328,39 @@
             </div>
 
             {{-- Organization Activities --}}
-            <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }"
-                class="mb-2 pr-3 cursor-default" x-on:edit-org.window="editDataOrg = $event.detail; openEditOrg = true">
-                <h2 class="text-xl font-bold text-[#013F4E] ml-1 sm:ml-3 mt-4">B. KEGIATAN NON-AKADEMIK</h2>
-                <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5 ml-1 sm:ml-3">Kegiatan Organisasi
-                    Mahasiswa</p>
+            <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="mb-2 pr-3 cursor-default"
+                x-on:edit-org.window="editDataOrg = $event.detail; openEditOrg = true">
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">B. Kegiatan Non-Akademik
+                    (Organisasi)</h3>
 
                 {{-- tabel --}}
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
-            'No',
-            'Nama UKM',
-            'Nama Kegiatan',
-            'Tingkat',
-            'Posisi',
-            'Tempat',
-            'Tanggal Mulai',
-            'Tanggal Selesai',
-            'Bukti',
-            'Point',
-            'Komentar',
-            'Status',
-        ]" :columns="[
-            'ukm-name',
-            'activity-name',
-            'level',
-            'position',
-            'place',
-            'start-date',
-            'end-date',
-            'bukti',
-            'point',
-            'komentar',
-            'status',
-        ]" :rows="$parsingOrganizationActivities" idKey="id" editEvent="edit-org"
+                        'No',
+                        'Nama UKM',
+                        'Nama Kegiatan',
+                        'Tingkat',
+                        'Posisi',
+                        'Tempat',
+                        'Tanggal Mulai',
+                        'Tanggal Selesai',
+                        'Bukti',
+                        'Point',
+                        'Komentar',
+                        'Status',
+                    ]" :columns="[
+                        'ukm-name',
+                        'activity-name',
+                        'level',
+                        'position',
+                        'place',
+                        'start-date',
+                        'end-date',
+                        'bukti',
+                        'point',
+                        'komentar',
+                        'status',
+                    ]" :rows="$parsingOrganizationActivities" idKey="id" editEvent="edit-org"
                         deleteRoute="laporan.org-activities.delete" :status="$laporan->status" style="riwayat" />
                 </div>
 
@@ -369,8 +374,10 @@
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
-                                <label class="block text-sm font-medium">Nama UKM <span class="text-red-500">*</span></label>
-                                <select name="nama-ukm" class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
+                                <label class="block text-sm font-medium">Nama UKM <span
+                                        class="text-red-500">*</span></label>
+                                <select name="nama-ukm"
+                                    class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                     x-model="editDataOrg['ukm-name']">
                                     <option value="" class="italic">Pilih UKM</option>
                                     <option value="BEM">BEM</option>
@@ -389,16 +396,20 @@
                                     class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                             </div>
                             <div class="mb-3">
-                                <label class="block text-sm font-medium">Tingkat <span class="text-red-500">*</span></label>
-                                <select name="tingkat" class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
+                                <label class="block text-sm font-medium">Tingkat <span
+                                        class="text-red-500">*</span></label>
+                                <select name="tingkat"
+                                    class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                     x-model="editDataOrg['level']">
                                     <option value="" class="italic">Pilih Tingkat</option>
                                     <option value="Perguruan Tinggi">Perguruan Tinggi</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="block text-sm font-medium">Posisi <span class="text-red-500">*</span></label>
-                                <select name="posisi" class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
+                                <label class="block text-sm font-medium">Posisi <span
+                                        class="text-red-500">*</span></label>
+                                <select name="posisi"
+                                    class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                     x-model="editDataOrg['position']">
                                     <option value="" class="italic">Pilih Posisi</option>
                                     <option value="Ketua">Ketua</option>
@@ -449,50 +460,49 @@
             </div>
 
             {{-- Committee Activities --}}
-            <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }"
-                class="mb-2 pr-3 cursor-default"
+            <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="mb-2 pr-3 cursor-default"
                 x-on:edit-committee.window="editDataCommittee = $event.detail; openEditCommittee = true">
-                <p class="text-[#013F4E] text-[14pt] font-semibold ml-1 sm:ml-3 mb-0.5">Kegiatan Kepanitiaan Atau
-                    Penugasan</p>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Kepanitiaan</h3>
 
                 {{-- Tabel --}}
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
-            'No',
-            'Nama Kegiatan',
-            'Tipe Kegiatan',
-            'Keikutsertaan',
-            'Tingkat',
-            'Tempat',
-            'Tanggal Mulai',
-            'Tanggal Selesai',
-            'Bukti',
-            'Point',
-            'Komentar',
-            'Status',
-        ]" :columns="[
-            'activity-name',
-            'activity-type',
-            'participation',
-            'level',
-            'place',
-            'start-date',
-            'end-date',
-            'bukti',
-            'point',
-            'komentar',
-            'status',
-        ]" :rows="$parsingCommitteeActivities" idKey="id"
-                        editEvent="edit-committee" deleteRoute="laporan.committee-activities.hapus"
-                        :status="$laporan->status" style="riwayat" />
+                        'No',
+                        'Nama Kegiatan',
+                        'Tipe Kegiatan',
+                        'Keikutsertaan',
+                        'Tingkat',
+                        'Tempat',
+                        'Tanggal Mulai',
+                        'Tanggal Selesai',
+                        'Bukti',
+                        'Point',
+                        'Komentar',
+                        'Status',
+                    ]" :columns="[
+                        'activity-name',
+                        'activity-type',
+                        'participation',
+                        'level',
+                        'place',
+                        'start-date',
+                        'end-date',
+                        'bukti',
+                        'point',
+                        'komentar',
+                        'status',
+                    ]" :rows="$parsingCommitteeActivities" idKey="id"
+                        editEvent="edit-committee" deleteRoute="laporan.committee-activities.hapus" :status="$laporan->status"
+                        style="riwayat" />
                 </div>
 
                 {{-- Modal --}}
                 @if ($laporan->status === 'Dikembalikan')
                     {{-- Modal Edit --}}
                     <x-modal title="Tambah Data Kegiatan Penugasan dan Kepanitian" show="openEditCommittee">
-                        <form method="POST" enctype="multipart/form-data" x-bind:action="'{{ route('laporan.committee-activities.update', ':id') }}'.replace(':id',
-                                            editDataCommittee.id)">
+                        <form method="POST" enctype="multipart/form-data"
+                            x-bind:action="'{{ route('laporan.committee-activities.update', ':id') }}'.replace(':id',
+                                editDataCommittee.id)">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
@@ -565,7 +575,7 @@
 
                     {{-- JS (dipertahankan) --}}
                     <script>
-                        document.addEventListener("DOMContentLoaded", function () {
+                        document.addEventListener("DOMContentLoaded", function() {
                             const tipeKegiatan = document.getElementById("tipe-kegiatan");
                             const tingkat = document.getElementById("tingkat");
 
@@ -576,7 +586,7 @@
                                 ]
                             };
 
-                            tipeKegiatan.addEventListener("change", function () {
+                            tipeKegiatan.addEventListener("change", function() {
                                 const value = this.value;
                                 tingkat.innerHTML = '<option value="">Pilih Tingkatan</option>';
 
@@ -595,39 +605,38 @@
             </div>
 
             {{-- Achievements --}}
-            <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }"
-                class="mb-2 pr-3 cursor-default"
+            <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="mb-2 pr-3 cursor-default"
                 x-on:edit-achievement.window="editDataAchievement = $event.detail; openEditAchievement = true">
-                <p class="text-[#013F4E] text-[14pt] font-semibold ml-1 sm:ml-3 mb-0.5">Prestasi Mahasiswa</p>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Prestasi</h3>
 
                 {{-- Tabel --}}
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
-            'No',
-            'Nama Prestasi',
-            'Tipe Prestasi',
-            'Tingkat',
-            'Juara',
-            'Tempat',
-            'Tanggal Mulai',
-            'Tanggal Selesai',
-            'Bukti',
-            'Point',
-            'Komentar',
-            'Status',
-        ]" :columns="[
-            'achievements-name',
-            'achievements-type',
-            'level',
-            'award',
-            'place',
-            'start-date',
-            'end-date',
-            'bukti',
-            'point',
-            'komentar',
-            'status',
-        ]" :rows="$parsingAchievements" idKey="id"
+                        'No',
+                        'Nama Prestasi',
+                        'Tipe Prestasi',
+                        'Tingkat',
+                        'Juara',
+                        'Tempat',
+                        'Tanggal Mulai',
+                        'Tanggal Selesai',
+                        'Bukti',
+                        'Point',
+                        'Komentar',
+                        'Status',
+                    ]" :columns="[
+                        'achievements-name',
+                        'achievements-type',
+                        'level',
+                        'award',
+                        'place',
+                        'start-date',
+                        'end-date',
+                        'bukti',
+                        'point',
+                        'komentar',
+                        'status',
+                    ]" :rows="$parsingAchievements" idKey="id"
                         editEvent="edit-achievement" deleteRoute="laporan.achievements.hapus" :status="$laporan->status"
                         style="riwayat" />
                 </div>
@@ -636,15 +645,17 @@
                 @if ($laporan->status === 'Dikembalikan')
                     {{-- Modal Edit --}}
                     <x-modal title="Edit Data Prestasi" show="openEditAchievement">
-                        <form method="POST" enctype="multipart/form-data" x-bind:action="'{{ route('laporan.achievements.update', ':id') }}'.replace(':id', editDataAchievement
-                                            .id)">
+                        <form method="POST" enctype="multipart/form-data"
+                            x-bind:action="'{{ route('laporan.achievements.update', ':id') }}'.replace(':id', editDataAchievement
+                                .id)">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
                                 <label class="block text-sm font-medium">Nama Prestasi
                                     <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" name="nama-prestasi" x-model="editDataAchievement['achievements-name']"
+                                <input type="text" name="nama-prestasi"
+                                    x-model="editDataAchievement['achievements-name']"
                                     class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
                             </div>
                             <div class="mb-3">
@@ -709,7 +720,8 @@
                                 <label class="block text-sm font-medium">Raihan
                                     <span class="text-red-500">*</span>
                                 </label>
-                                <select name="raihan" class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
+                                <select name="raihan"
+                                    class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0"
                                     x-model="editDataAchievement['award']">
                                     <option value="Tidak Ada" class="italic">Pilih Juara</option>
                                     <option value="Juara 1">Juara 1</option>
@@ -765,7 +777,7 @@
                     </x-modal>
 
                     <script>
-                        document.addEventListener("DOMContentLoaded", function () {
+                        document.addEventListener("DOMContentLoaded", function() {
                             const tipePrestasi = document.getElementById("tipe-prestasi");
                             const tingkatPrestasi = document.getElementById("tingkat-prestasi");
                             const raihanPrestasi = document.getElementById("raihan-prestasi");
@@ -808,7 +820,7 @@
                                 "karya": ["Ketua", "Anggota"],
                             };
 
-                            tipePrestasi.addEventListener("change", function () {
+                            tipePrestasi.addEventListener("change", function() {
                                 const value = this.value;
                                 tingkatPrestasi.innerHTML = '<option value="">Pilih Tingkatan</option>';
 
@@ -826,27 +838,27 @@
                                 let listRaihan = [];
 
                                 if ([
-                                    "Kompetisi Pemerintahan Individu",
-                                    "Kompetisi Pemerintahan Kelompok",
-                                    "Kompetisi Non-Pemerintahan Individu",
-                                    "Kompetisi Non-Pemerintahan Kelompok",
-                                    "Lomba Mewakili Institusi"
-                                ].includes(value)) {
+                                        "Kompetisi Pemerintahan Individu",
+                                        "Kompetisi Pemerintahan Kelompok",
+                                        "Kompetisi Non-Pemerintahan Individu",
+                                        "Kompetisi Non-Pemerintahan Kelompok",
+                                        "Lomba Mewakili Institusi"
+                                    ].includes(value)) {
                                     listRaihan = raihanData["kompetisi"];
                                 } else if ([
-                                    "Kegiatan/Forum Ilmiah",
-                                    "Kegiatan Sosial / Kerohanian"
-                                ].includes(value)) {
+                                        "Kegiatan/Forum Ilmiah",
+                                        "Kegiatan Sosial / Kerohanian"
+                                    ].includes(value)) {
                                     listRaihan = raihanData["forum"];
                                 } else if ([
-                                    "Karya Yang Didanai",
-                                    "Karya Populer Yang Diterbitkan",
-                                    "Publikasi Jurnal Internasional/Nasional"
-                                ].includes(value)) {
+                                        "Karya Yang Didanai",
+                                        "Karya Populer Yang Diterbitkan",
+                                        "Publikasi Jurnal Internasional/Nasional"
+                                    ].includes(value)) {
                                     listRaihan = raihanData["karya"];
                                 } else if ([
-                                    "Juri/Wasit/Pelatih"
-                                ].includes(value)) {
+                                        "Juri/Wasit/Pelatih"
+                                    ].includes(value)) {
                                     listRaihan = raihanData['juri/wasit/pelatih']
                                 } else {
                                     listRaihan = ["Peserta"];
@@ -865,47 +877,47 @@
             </div>
 
             {{-- Independent Activities --}}
-            <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }"
-                class="mb-2 pr-3 cursor-default"
+            <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="mb-2 pr-3 cursor-default"
                 x-on:edit-independent="editDataIndependent = $event.detail; openEditIndependent = true">
-                <p class="text-[#013F4E] text-[14pt] font-semibold ml-1 sm:ml-3 mb-0.5">Kegiatan Mandiri Mahasiswa
-                    Selama Satu Semester</p>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Mandiri</h3>
 
                 {{-- Tabel --}}
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
-            'No',
-            'Nama Kegiatan',
-            'Tipe Kegiatan',
-            'Keikutsertaan',
-            'Tempat',
-            'Tanggal Mulai',
-            'Tanggal Selesai',
-            'Bukti',
-            'Point',
-            'Komentar',
-            'Status',
-        ]" :columns="[
-            'activity-name',
-            'activity-type',
-            'participation',
-            'place',
-            'start-date',
-            'end-date',
-            'bukti',
-            'point',
-            'komentar',
-            'status',
-        ]" :rows="$parsingIndependentActivities" idKey="id" editEvent="edit-independent"
-                        deleteRoute="laporan.independent-activities.hapus" :status="$laporan->status" style="riwayat" />
+                        'No',
+                        'Nama Kegiatan',
+                        'Tipe Kegiatan',
+                        'Keikutsertaan',
+                        'Tempat',
+                        'Tanggal Mulai',
+                        'Tanggal Selesai',
+                        'Bukti',
+                        'Point',
+                        'Komentar',
+                        'Status',
+                    ]" :columns="[
+                        'activity-name',
+                        'activity-type',
+                        'participation',
+                        'place',
+                        'start-date',
+                        'end-date',
+                        'bukti',
+                        'point',
+                        'komentar',
+                        'status',
+                    ]" :rows="$parsingIndependentActivities" idKey="id"
+                        editEvent="edit-independent" deleteRoute="laporan.independent-activities.hapus" :status="$laporan->status"
+                        style="riwayat" />
                 </div>
 
                 {{-- Modal --}}
                 @if ($laporan->status === 'Dikembalikan')
                     {{-- Modal Edit --}}
                     <x-modal title="Edit Data Kegiatan Mandiri" show="openEditIndependent">
-                        <form method="POST" enctype="multipart/form-data" x-bind:action="'{{ route('laporan.independent-activities.update', ':id') }}'.replace(':id',
-                                            editDataIndependent.id)">
+                        <form method="POST" enctype="multipart/form-data"
+                            x-bind:action="'{{ route('laporan.independent-activities.update', ':id') }}'.replace(':id',
+                                editDataIndependent.id)">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
@@ -971,9 +983,8 @@
             </div>
 
             {{-- Evaluations --}}
-            <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }"
-                class="pl-3 mb-2 mt-4 cursor-default">
-                <h2 class="text-xl font-bold text-[#013F4E]">C. EVALUASI</h2>
+            <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="pl-3 mb-2 mt-4 cursor-default">
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">C. Evaluasi Diri</h3>
                 <div class="flex flex-col sm:flex-row gap-4">
                     <div class="flex-1">
                         <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Pendukung</p>
@@ -989,26 +1000,22 @@
             </div>
 
             {{-- Target Next SMT --}}
-            <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }"
-                class="mb-2 mt-2 pr-3 cursor-default"
+            <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }" class="mb-2 mt-2 pr-3 cursor-default"
                 x-on:edit-target-rep.window="editDataTargetRep = $event.detail; openEditTargetRep = true">
-                <h2 class="text-xl font-bold text-[#013F4E] mt-4 ml-1 sm:ml-3">D. TARGET SEMESTER DEPAN</h2>
-                <p class="text-[#013F4E] text-[14pt] font-semibold ml-1 sm:ml-3 mb-0.5">Rencana Nilai IPS dan IPK
-                    Semester Depan</p>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">D. Rencana Semester Depan
+                </h3>
 
                 <div class="overflow-x-auto">
                     <x-tabel :headers="['No', 'Semester', 'Target IPS', 'Target IPK', 'Status']" :columns="['semester', 'target-ips', 'target-ipk', 'status']" :rows="$parsingNextReports" idKey="id"
-                        editEvent="edit-target-rep" deleteRoute="laporan.next-semester-reports.hapus"
-                        :status="$laporan->status" style="riwayat" />
+                        editEvent="edit-target-rep" deleteRoute="laporan.next-semester-reports.hapus" :status="$laporan->status"
+                        style="riwayat" />
                 </div>
             </div>
 
             {{-- Target Keg Akademik --}}
-            <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }"
-                class="mb-2 pr-3 cursor-default"
+            <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }" class="mb-2 pr-3 cursor-default"
                 x-on:edit-target-academic.window="editDataTargetAcademic = $event.detail; openEditTargetAcademic = true">
-                <p class="text-[#013F4E] text-[14pt] font-semibold ml-1 sm:ml-3 mb-0.5">Rencana Kegiatan Akademik
-                    Semester Depan</p>
+                <h4 class="font-semibold text-gray-700 mb-1">Rencana Kegiatan Akademik</h4>
 
                 <div class="overflow-x-auto">
                     <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Status']" :columns="['activity-name', 'strategy', 'status']" :rows="$parsingNextAcademicActivities" idKey="id"
@@ -1018,34 +1025,144 @@
             </div>
 
             {{-- Target Achievements --}}
-            <div x-cloak
-                x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }"
-                class="mb-2 pr-3 cursor-default"
+            <div x-cloak x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }" class="mb-2 pr-3 cursor-default"
                 x-on:edit-target-achievement="editDatatargetAchievement = $event.detail; openEditTargetAchievement = true">
-                <p class="text-[#013F4E] text-[14pt] font-semibold ml-1 sm:ml-3 mb-0.5">Rencana Prestasi</p>
+                <h4 class="font-semibold text-gray-700 mb-1">Rencana Prestasi</h4>
 
                 <div class="overflow-x-auto">
-                    <x-tabel :headers="['No', 'Nama Prestasi', 'Tingkat', 'Raihan', 'Status']"
-                        :columns="['achievements-name', 'level', 'award', 'status']" :rows="$parsingNextAchievements"
-                        idKey="id" editEvent="edit-target-achievement" deleteRoute="laporan.next-smt-achievements.hapus"
+                    <x-tabel :headers="['No', 'Nama Prestasi', 'Tingkat', 'Raihan', 'Status']" :columns="['achievements-name', 'level', 'award', 'status']" :rows="$parsingNextAchievements" idKey="id"
+                        editEvent="edit-target-achievement" deleteRoute="laporan.next-smt-achievements.hapus"
                         :status="$laporan->status" style="riwayat" />
                 </div>
             </div>
 
             {{-- Target Independent --}}
-            <div x-cloak
-                x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }"
-                class="mb-2 pr-3 cursor-default"
+            <div x-cloak x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }" class="mb-2 pr-3 cursor-default"
                 x-on:edit-target-independent="editDataTargetIndependent = $event.detail; openEditTargetIndependent = true">
                 <p class="text-[#013F4E] text-[14pt] font-semibold ml-1 sm:ml-3 mb-0.5">Rencana Kegiatan Mandiri
                 </p>
 
                 <div class="overflow-x-auto">
-                    <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Keikutsertaan', 'Status']"
-                        :columns="['activity-name', 'strategy', 'participation', 'status']"
-                        :rows="$parsingNextIndependentActivities" idKey="id" editEvent="edit-target-independent"
-                        deleteRoute="laporan.next-smt-independent.hapus" :status="$laporan->status" style="riwayat" />
+                    <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Keikutsertaan', 'Status']" :columns="['activity-name', 'strategy', 'participation', 'status']" :rows="$parsingNextIndependentActivities" idKey="id"
+                        editEvent="edit-target-independent" deleteRoute="laporan.next-smt-independent.hapus"
+                        :status="$laporan->status" style="riwayat" />
                 </div>
+            </div>
+
+            {{-- Keuangan --}}
+            <div x-cloak x-data="{ openKeuangan: false, openEditKeuangan: false, editDataKeuangan: {} }" class="mb-2 cursor-default"
+                x-on:edit-keuangan="editDataKeuangan = $event.detail; openEditKeuangan = true">
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">E. Laporan Keuangan</h3>
+
+                {{-- Ringkasan Total Keuangan --}}
+                <div class="mb-3">
+                    <div
+                        class="flex items-center justify-between bg-white border-l-4 border-[#f9d223] rounded-lg shadow-sm px-4 py-3">
+                        <div>
+                            <p class="text-sm text-gray-500">Total Keuangan</p>
+                            <p class="text-xl lg:text-2xl font-bold text-[#013F4E]">
+                                Rp {{ number_format($parsingLaporanKeuangan['total'], 0, ',', '.') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Tabel --}}
+                <div class="overflow-x-auto w-full">
+                    <x-tabel :headers="['No', 'Keperluan', 'Nominal', 'Status']" :columns="['keperluan', 'nominal', 'status']" :rows="$parsingLaporanKeuangan['detail']" idKey="id"
+                        editEvent="edit-keuangan" deleteRoute="laporan.keuangan.hapus" :status="$laporan->status"
+                        style="riwayat" />
+                </div>
+
+                @if ($laporan->status === 'Dikembalikan')
+                    {{-- Modal Edit --}}
+                    <x-modal title="Tambah Data Keuangan Mahasiswa" show="openEditKeuangan">
+                        <form method="POST"
+                            x-bind:action="'{{ route('laporan.keuangan.update', ':id') }}'.replace(':id',
+                                editDataKeuangan.id)"
+                            x-data="{ submitting: false }" x-on:submit="submitting = true">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium">Keperluan
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" name="keperluan" x-model="editDataKeuangan['keperluan']"
+                                    class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium">Nominal
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="numeric" name="nominal" x-model="editDataKeuangan['nominal']"
+                                    class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                            </div>
+
+                            <div class="flex justify-end gap-2 mt-4">
+                                <button type="button" @click="openEditKeuangan = false"
+                                    class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
+                                <button type="submit" x-bind:disabled="submitting"
+                                    x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                    :class="submitting
+                                        ?
+                                        'cursor-not-allowed bg-gray-400' :
+                                        'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                    class="px-3 py-1 transition text-white rounded"></button>
+                            </div>
+                        </form>
+                    </x-modal>
+                @endif
+            </div>
+
+            {{-- Kesan Pesan --}}
+            <div x-cloak x-data="{ openKesanPesan: false, openEditKesanPesan: false, editDataKesanPesan: {} }" class="mb-2 cursor-default"
+                x-on:edit-pesan-kesan="editDataKesanPesan = $event.detail; openEditKesanPesan = true">
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">F. Kesan dan Pesan Mahasiswa</h3>
+
+                <div class="overflow-x-auto w-full">
+                    <x-tabel :headers="['No', 'Kesan', 'Pesan', 'Status']" :columns="['kesan', 'pesan', 'status']" :rows="$parsingKesanPesan" idKey="id"
+                        editEvent="edit-pesan-kesan" deleteRoute="laporan.kesan-pesan.hapus" :status="$laporan->status"
+                        style="riwayat" />
+                </div>
+
+                @if ($laporan->status === 'Dikembalikan')
+                    {{-- Modal Edit --}}
+                    <x-modal title="Tambah Data Keuangan Mahasiswa" show="openEditKesanPesan">
+                        <form method="POST"
+                            x-bind:action="'{{ route('laporan.kesan-pesan.update', ':id') }}'.replace(':id',
+                                editDataKesanPesan.id)"
+                            x-data="{ submitting: false }" x-on:submit="submitting = true">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium">Kesan
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" name="kesan" x-model="editDataKesanPesan['kesan']"
+                                    class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium">Nominal
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" name="pesan" x-model="editDataKesanPesan['pesan']"
+                                    class="w-full border rounded px-2 py-1 focus:outline-none focus:ring-0">
+                            </div>
+
+                            <div class="flex justify-end gap-2 mt-4">
+                                <button type="button" @click="openEditKesanPesan = false"
+                                    class="px-3 py-1 bg-[#cecece] rounded hover:bg-[#dfdfdf] transition cursor-pointer">Batal</button>
+                                <button type="submit" x-bind:disabled="submitting"
+                                    x-text="submitting ? 'Mengirim...' : 'Simpan'"
+                                    :class="submitting
+                                        ?
+                                        'cursor-not-allowed bg-gray-400' :
+                                        'cursor-pointer bg-[#21C40F] hover:bg-[#0DD603]'"
+                                    class="px-3 py-1 transition text-white rounded"></button>
+                            </div>
+                        </form>
+                    </x-modal>
+                @endif
             </div>
         </div>
 
@@ -1064,7 +1181,8 @@
                 <h1 class="text-center font-semibold">Apakah Anda yakin ingin mengirim kembali revisi laporan?</h1>
                 {{-- icon --}}
                 <div class="flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" fill="none" class="w-[100px] h-[100px]" xmlns="http://www.w3.org/2000/svg">
+                    <svg viewBox="0 0 24 24" fill="none" class="w-[100px] h-[100px]"
+                        xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                         <g id="SVGRepo_iconCarrier">

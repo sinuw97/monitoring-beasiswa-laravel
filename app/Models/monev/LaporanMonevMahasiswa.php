@@ -138,4 +138,22 @@ class LaporanMonevMahasiswa extends Model
       'laporan_id',
     );
   }
+  // Relasi ke laporan_keuangan_mahasiswa
+  public function laporanKeuanganMahasiswa()
+  {
+    return $this->hasOne(
+      LaporanKeuanganMahasiswa::class,
+      'laporan_id',
+      'laporan_id'
+    );
+  }
+  // Relasi ke kesan_pesan_mahasiswa
+  public function kesanPesanMahasiswa()
+  {
+    return $this->hasMany(
+      KesanPesanMahasiswa::class,
+      'laporan_id',
+      'laporan_id'
+    );
+  }
 }

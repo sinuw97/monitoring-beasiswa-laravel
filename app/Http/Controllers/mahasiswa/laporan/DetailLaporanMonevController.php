@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Auth;
 class DetailLaporanMonevController extends Controller
 {
     // Untuk nampilin halaman Detail
-    public function showHalamanDetailLaporan(string $laporanId) {
+    public function showHalamanDetailLaporan(string $laporanId)
+    {
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
 
         $laporan = LaporanMonevMahasiswa::with([
@@ -25,6 +26,8 @@ class DetailLaporanMonevController extends Controller
             'targetAcademicActivities',
             'targetAchievements',
             'targetIndependentActivities',
+            'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
+            'kesanPesanMahasiswa'
         ])
             ->where('laporan_id', $laporanId)
             ->where('nim', $dataMahasiswa->nim)
@@ -160,6 +163,34 @@ class DetailLaporanMonevController extends Controller
                 'status' => $report->status,
             ];
         });
+        $laporanKeuangan = $laporan->laporanKeuanganMahasiswa;
+
+        $parsingLaporanKeuangan = null;
+
+        if ($laporanKeuangan) {
+            $parsingLaporanKeuangan = [
+                'id' => $laporanKeuangan->id,
+                'total' => $laporanKeuangan->total_nominal,
+                'status' => $laporanKeuangan->status,
+                'detail' => $laporanKeuangan->detailKeuanganMahasiswa->map(function ($detail) {
+                    return [
+                        'id' => $detail->id,
+                        'keperluan' => $detail->keperluan,
+                        'nominal' => $detail->nominal,
+                        'status' => $detail->status,
+                    ];
+                }),
+            ];
+        }
+
+        $parsingKesanPesan = $laporan->kesanPesanMahasiswa->map(function ($report) {
+            return [
+                'id' => $report->id,
+                'kesan' => $report->kesan,
+                'pesan' => $report->pesan,
+                'status' => $report->status,
+            ];
+        });
 
         return view('mahasiswa.detail-laporan', compact([
             'dataMahasiswa',
@@ -175,6 +206,8 @@ class DetailLaporanMonevController extends Controller
             'parsingNextAcademicActivities',
             'parsingNextAchievements',
             'parsingNextIndependentActivities',
+            'parsingLaporanKeuangan',
+            'parsingKesanPesan'
         ]));
     }
 }

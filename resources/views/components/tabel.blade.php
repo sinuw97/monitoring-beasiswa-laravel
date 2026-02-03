@@ -17,7 +17,7 @@
     $canDelete = $status === 'Draft' && $deleteRoute;
 @endphp
 
-<table class="min-w-full text-sm shadow-lg bg-white border-separate border-spacing-0 m-4">
+<table class="min-w-full table-fixed text-sm shadow-lg bg-white border-separate border-spacing-0 m-4">
     <thead>
         {{-- Style Detail laporan --}}
         @if ($style === 'riwayat')
@@ -33,7 +33,7 @@
                 @endif
             </tr>
 
-        {{-- Style Draft Laporan --}}
+            {{-- Style Draft Laporan --}}
         @elseif ($style === 'draft')
             <tr class="bg-[#E8BE00]">
                 @foreach ($headers as $header)
@@ -114,33 +114,42 @@
 
                 {{-- Aksi btn  --}}
                 @if ($showActionColumn)
-                    <td class="px-4 py-2">
-                        <div class="flex justify-center items-center gap-3">
-
+                    <td class="px-2 py-2 w-[72px] sm:w-auto">
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3">
                             {{-- Edit: Draft / Revisi --}}
                             @if (data_get($row, 'status') === 'Draft' || data_get($row, 'status') === 'Revisi')
                                 <button type="button"
-                                    class="flex items-center gap-2 px-3 py-0.5 bg-[#2179ca] hover:bg-[#1c6bb4] text-white rounded-sm"
+                                    class="
+                                        flex items-center justify-center
+                                        p-2 sm:px-3 sm:py-0.5
+                                        bg-[#2179ca] hover:bg-[#1c6bb4]
+                                        text-white rounded
+                                        gap-0 sm:gap-2
+                                    "
                                     @click="$dispatch('{{ $editEvent }}', {{ json_encode($row) }})">
                                     <img src="/icon/edit.svg" class="w-[15px] h-[15px]">
-                                    Edit
+                                    <span class="hidden sm:inline">
+                                        Edit
+                                    </span>
                                 </button>
                             @endif
 
                             {{-- Delete: HANYA Draft --}}
                             @if (data_get($row, 'status') === 'Draft' && $deleteRoute)
                                 <button type="button"
-                                    class="flex items-center gap-2 px-3 py-0.5 bg-red-500 hover:bg-red-600 text-white rounded-sm"
+                                    class=" flex items-center justify-center
+                                        p-2 sm:px-3 sm:py-0.5
+                                        bg-red-500 hover:bg-red-600 text-white rounded-sm gap-0 sm:gap-2"
                                     @click="$dispatch('delete-row', {
                                         id: '{{ data_get($row, $idKey) }}',
                                         route: '{{ route($deleteRoute, data_get($row, $idKey)) }}'
                                     })">
                                     <img src="/icon/delete.svg" class="w-[15px] h-[15px]">
-                                    Hapus
+                                    <span class="hidden sm:inline">
+                                        Hapus
+                                    </span>
                                 </button>
                             @endif
-                            
-                            <span>-</span>
                         </div>
                     </td>
                 @endif

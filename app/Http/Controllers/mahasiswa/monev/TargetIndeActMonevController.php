@@ -29,7 +29,7 @@ class TargetIndeActMonevController extends Controller
       'status' => 'Draft',
     ]);
 
-    return redirect()->back()->with('success', 'Data Target Kegiatan Mandiri berhasil ditambah!');
+    return back()->with('success', 'Data Target Kegiatan Mandiri berhasil ditambah!');
   }
   // Edit Data
   public function updateTargetKegMandiri(Request $request, string $idData)
@@ -48,7 +48,7 @@ class TargetIndeActMonevController extends Controller
     $report->participation = $validated['keikutsertaan'];
     $report->save();
 
-    return redirect()->back()->with('success', 'Data Target Kegiatan Akademik berhasil diupdate');
+    return back()->with('success', 'Data Target Kegiatan Akademik berhasil diupdate');
   }
   // Hapus Data
   public function hapusDataNextIndependent(string $idData)
@@ -57,6 +57,6 @@ class TargetIndeActMonevController extends Controller
     $cekData = TargetIdependentActivities::findOrFail($idData);
     $cekData->delete();
 
-    return redirect()->back()->with('success', 'Data rencana kegiatan independen berhasil dihapus!');
+    return back()->with('success', 'Data rencana kegiatan independen berhasil dihapus!');
   }
 }

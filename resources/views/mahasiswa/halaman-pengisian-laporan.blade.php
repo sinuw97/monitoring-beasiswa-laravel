@@ -83,7 +83,7 @@
         {{-- ================= Desktop View ================= --}}
         <div class="hidden sm:block overflow-x-auto">
             <table class="w-full text-sm text-left">
-                <thead class="bg-gray-50 text-gray-600 font-medium border-b border-gray-200">
+                <thead class="bg-[#ffdc3f] text-gray-600 font-medium border-b border-gray-200">
                     <tr>
                         <th class="px-6 py-3 text-center w-16">No</th>
                         <th class="px-6 py-3 text-center">Semester</th>

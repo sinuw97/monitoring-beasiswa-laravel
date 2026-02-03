@@ -11,10 +11,11 @@
     </div>
 
     {{-- Running Text Info --}}
-    @if($pengumuman)
+    @if ($pengumuman)
         <div class="mb-8 bg-white rounded-lg shadow-sm border-l-4 border-[#09697E] p-4 flex items-center gap-4">
             <div class="p-2 bg-teal-50 rounded-lg text-[#09697E] flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                 </svg>
@@ -75,7 +76,10 @@
 
         {{-- Laporan Tersimpan (Draft) --}}
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+            <div
+                class="px-6 py-4 border-b-2 flex justify-between items-center
+         bg-[#f3f3f3] lg:bg-gray-100
+         border-[#dfdfdf] lg:border-gray-100">
                 <h3 class="font-bold text-gray-800">Laporan Tersimpan (Draft)</h3>
                 <span
                     class="px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-200 text-gray-600">{{ count($draftedLaporan) }}
@@ -85,7 +89,7 @@
             {{-- Desktop Table --}}
             <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-50 text-gray-600 font-medium border-b border-gray-200">
+                    <thead class="bg-[#ebc311] text-gray-800 font-medium border-b border-gray-200">
                         <tr>
                             <th class="px-6 py-3">No</th>
                             <th class="px-6 py-3">Semester</th>
@@ -120,7 +124,8 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-500 italic">Belum ada laporan tersimpan.
+                                <td colspan="6" class="px-6 py-8 text-center text-gray-500 italic">Belum ada laporan
+                                    tersimpan.
                                 </td>
                             </tr>
                         @endforelse
@@ -156,18 +161,21 @@
         </div>
 
         {{-- Laporan Dikembalikan (Revisi) --}}
-        @if(count($laporanDikembalikan) > 0)
+        @if (count($laporanDikembalikan) > 0)
             <div class="bg-white rounded-xl shadow-md overflow-hidden border border-blue-100">
-                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-blue-50">
-                    <h3 class="font-bold text-blue-800">Laporan Dikembalikan (Perlu Revisi)</h3>
+                <div
+                    class="px-6 py-4 border-b-2 flex justify-between items-center
+         bg-[#caebff] lg:bg-gray-100
+         border-blue-100 lg:border-gray-100">
+                    <h3 class="font-bold text-blue-800">Laporan Dikembalikan<br>(Perlu Revisi)</h3>
                     <span
-                        class="px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-200 text-blue-800">{{ count($laporanDikembalikan) }}
+                        class="px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-300 text-blue-800">{{ count($laporanDikembalikan) }}
                         Item</span>
                 </div>
                 {{-- Desktop Table --}}
                 <div class="hidden lg:block overflow-x-auto">
                     <table class="w-full text-sm text-left">
-                        <thead class="bg-gray-50 text-gray-600 font-medium border-b border-gray-200">
+                        <thead class="bg-[#ebc311] text-gray-800 font-medium border-b border-gray-200">
                             <tr>
                                 <th class="px-6 py-3">No</th>
                                 <th class="px-6 py-3">Semester</th>
@@ -181,7 +189,8 @@
                             @foreach ($laporanDikembalikan as $dikembalikan)
                                 <tr class="hover:bg-blue-50/30 transition-colors">
                                     <td class="px-6 py-3">{{ $loop->iteration }}</td>
-                                    <td class="px-6 py-3 font-medium text-gray-800">{{ $dikembalikan->semester ?? '-' }}</td>
+                                    <td class="px-6 py-3 font-medium text-gray-800">{{ $dikembalikan->semester ?? '-' }}
+                                    </td>
                                     <td class="px-6 py-3">{{ $dikembalikan->periodeSemester?->tahun_akademik ?? '-' }}</td>
                                     <td class="px-6 py-3">
                                         <span
@@ -228,7 +237,10 @@
 
         {{-- Laporan Terkirim --}}
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+            <div
+                class="px-6 py-4 border-b-2 flex justify-between items-center
+         bg-[#ffdc3f] lg:bg-gray-100
+         border-[#edcb35] lg:border-gray-100">
                 <h3 class="font-bold text-gray-800">Riwayat Laporan Terkirim</h3>
                 <span
                     class="px-2.5 py-0.5 rounded-md text-xs font-medium bg-green-100 text-green-700">{{ count($pendingLaporan) }}
@@ -238,7 +250,7 @@
             {{-- Desktop Table --}}
             <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-50 text-gray-600 font-medium border-b border-gray-200">
+                    <thead class="bg-[#ebc311] text-gray-800 font-medium border-b border-gray-200">
                         <tr>
                             <th class="px-6 py-3">No</th>
                             <th class="px-6 py-3">Semester</th>
@@ -272,7 +284,8 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-500 italic">Belum ada riwayat laporan.
+                                <td colspan="6" class="px-6 py-8 text-center text-gray-500 italic">Belum ada riwayat
+                                    laporan.
                                 </td>
                             </tr>
                         @endforelse

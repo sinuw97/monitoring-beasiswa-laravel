@@ -6,11 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\monev\LaporanMonevMahasiswa;
 use App\Models\semester\Periode;
 use App\Models\users\DetailMahasiswa;
-use App\Services\Penilaian\KegAkademikService;
-use App\Services\Penilaian\KegKomiteService;
-use App\Services\Penilaian\KegMandiriService;
-use App\Services\Penilaian\KegOrgService;
-use App\Services\Penilaian\PrestasiService;
+use App\Services\Laporan\AjukanLaporanService;
 use Illuminate\Support\Facades\Auth;
 
 class PengisianMonevController extends Controller
@@ -136,6 +132,8 @@ class PengisianMonevController extends Controller
             'targetAcademicActivities',
             'targetAchievements',
             'targetIndependentActivities',
+            'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
+            'kesanPesanMahasiswa'
         ])
             ->where('laporan_id', $laporanId)
             ->where('nim', $dataMahasiswa->nim)
@@ -146,7 +144,7 @@ class PengisianMonevController extends Controller
         }
 
         // parsing setiap model
-        $parsingAcademicReports = $laporan->academicReports->map(function ($report, $i) {
+        $parsingAcademicReports = $laporan->academicReports->map(function ($report) {
             return [
                 'id' => $report->id,
                 'semester' => $report->semester,
@@ -156,7 +154,7 @@ class PengisianMonevController extends Controller
                 'status' => $report->status,
             ];
         });
-        $parsingAcademicActivities = $laporan->academicActivities->map(function ($report, $i) {
+        $parsingAcademicActivities = $laporan->academicActivities->map(function ($report) {
             return [
                 'id' => $report->id,
                 'activity-name' => $report->activity_name,
@@ -169,7 +167,7 @@ class PengisianMonevController extends Controller
                 'status' => $report->status,
             ];
         });
-        $parsingOrganizationActivities = $laporan->organizationActivities->map(function ($report, $i) {
+        $parsingOrganizationActivities = $laporan->organizationActivities->map(function ($report) {
             return [
                 'id' => $report->id,
                 'ukm-name' => $report->ukm_name,
@@ -183,7 +181,7 @@ class PengisianMonevController extends Controller
                 'status' => $report->status,
             ];
         });
-        $parsingCommitteeActivities = $laporan->committeeActivities->map(function ($report, $i) {
+        $parsingCommitteeActivities = $laporan->committeeActivities->map(function ($report) {
             return [
                 'id' => $report->id,
                 'activity-name' => $report->activity_name,
@@ -197,7 +195,7 @@ class PengisianMonevController extends Controller
                 'status' => $report->status,
             ];
         });
-        $parsingAchievements = $laporan->studentAchievements->map(function ($report, $i) {
+        $parsingAchievements = $laporan->studentAchievements->map(function ($report) {
             return [
                 'id' => $report->id,
                 'achievements-name' => $report->achievements_name,
@@ -211,7 +209,7 @@ class PengisianMonevController extends Controller
                 'status' => $report->status,
             ];
         });
-        $parsingIndependentActivities = $laporan->independentActivities->map(function ($report, $i) {
+        $parsingIndependentActivities = $laporan->independentActivities->map(function ($report) {
             return [
                 'id' => $report->id,
                 'activity-name' => $report->activity_name,
@@ -225,7 +223,7 @@ class PengisianMonevController extends Controller
             ];
         });
         $parsingEvaluations = $laporan->evaluations->first();
-        $parsingNextReports = $laporan->targetNextSemester->map(function ($report, $i) {
+        $parsingNextReports = $laporan->targetNextSemester->map(function ($report) {
             return [
                 'id' => $report->id,
                 'semester' => $report->semester,
@@ -234,7 +232,7 @@ class PengisianMonevController extends Controller
                 'status' => $report->status,
             ];
         });
-        $parsingNextAcademicActivities = $laporan->targetAcademicActivities->map(function ($report, $i) {
+        $parsingNextAcademicActivities = $laporan->targetAcademicActivities->map(function ($report) {
             return [
                 'id' => $report->id,
                 'activity-name' => $report->activity_name,
@@ -242,7 +240,7 @@ class PengisianMonevController extends Controller
                 'status' => $report->status,
             ];
         });
-        $parsingNextAchievements = $laporan->targetAchievements->map(function ($report, $i) {
+        $parsingNextAchievements = $laporan->targetAchievements->map(function ($report) {
             return [
                 'id' => $report->id,
                 'achievements-name' => $report->achievements_name,
@@ -251,12 +249,41 @@ class PengisianMonevController extends Controller
                 'status' => $report->status,
             ];
         });
-        $parsingNextIndependentActivities = $laporan->targetIndependentActivities->map(function ($report, $i) {
+        $parsingNextIndependentActivities = $laporan->targetIndependentActivities->map(function ($report) {
             return [
                 'id' => $report->id,
                 'activity-name' => $report->activity_name,
                 'participation' => $report->participation,
                 'strategy' => $report->strategy,
+                'status' => $report->status,
+            ];
+        });
+
+        $laporanKeuangan = $laporan->laporanKeuanganMahasiswa;
+
+        $parsingLaporanKeuangan = null;
+
+        if ($laporanKeuangan) {
+            $parsingLaporanKeuangan = [
+                'id' => $laporanKeuangan->id,
+                'total' => $laporanKeuangan->total_nominal,
+                'status' => $laporanKeuangan->status,
+                'detail' => $laporanKeuangan->detailKeuanganMahasiswa->map(function ($detail) {
+                    return [
+                        'id' => $detail->id,
+                        'keperluan' => $detail->keperluan,
+                        'nominal' => $detail->nominal,
+                        'status' => $detail->status,
+                    ];
+                }),
+            ];
+        }
+
+        $parsingKesanPesan = $laporan->kesanPesanMahasiswa->map(function ($report) {
+            return [
+                'id' => $report->id,
+                'kesan' => $report->kesan,
+                'pesan' => $report->pesan,
                 'status' => $report->status,
             ];
         });
@@ -275,10 +302,12 @@ class PengisianMonevController extends Controller
             'parsingNextAcademicActivities',
             'parsingNextAchievements',
             'parsingNextIndependentActivities',
+            'parsingLaporanKeuangan',
+            'parsingKesanPesan'
         ));
     }
     // Mengajukan laporan menjadi Pending
-    public function ajukanLaporanMonev(string $laporanId)
+    public function ajukanLaporanMonev(string $laporanId, AjukanLaporanService $service)
     {
         // ambil data mhs yg login
         $dataMahasiswa = Auth::guard('mahasiswa')->user();
@@ -296,6 +325,8 @@ class PengisianMonevController extends Controller
             'targetAcademicActivities',
             'targetAchievements',
             'targetIndependentActivities',
+            'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
+            'kesanPesanMahasiswa'
         ])
             ->where('laporan_id', $laporanId)
             ->where('nim', $dataMahasiswa->nim)
@@ -305,107 +336,11 @@ class PengisianMonevController extends Controller
             return back()->with('error', 'Laporan tidak ditemukan.');
         }
 
-        // cek apakah periode pengisian monev dibuka atau tutup, tolak kalau tutup
-        $isPeriodeOpen = Periode::where('semester_id', $laporan->semester_id)
-            ->whereIn('status', ['Aktif', 'Aktif-Khusus'])
-            ->exists();
+        // update
+        $service->handle($laporan);
 
-        if (!$isPeriodeOpen) {
-            return back()->with('error', 'Maaf periode ini sudah ditutup, mohon untuk menghubungi admin bila ingin periode dibuka');
-        }
-
-        // validasi isi data laporan (relasi laporan mahasiswa harus ada yg isi)
-        $relationsToCheck = [
-            'academicReports',
-            'academicActivities',
-            'committeeActivities',
-            'organizationActivities',
-            'studentAchievements',
-            'independentActivities',
-            'evaluations',
-            'targetNextSemester',
-            'targetAcademicActivities',
-            'targetAchievements',
-            'targetIndependentActivities',
-        ];
-
-        $isAllEmpty = collect($relationsToCheck)->every(fn($rel) => $laporan->$rel->isEmpty());
-
-        if ($isAllEmpty) {
-            return back()->with('error', 'Minimal satu data harus terisi!');
-        }
-
-        // inisiasi service
-        $penilaianKegAkademik = app(KegAkademikService::class);
-        $penilaianKegOrganisasi = app(KegOrgService::class);
-        $penilaianKegKomite = app(KegKomiteService::class);
-        $penilaianPrestasi = app(PrestasiService::class);
-        $penilaianKegMandiri = app(KegMandiriService::class);
-
-
-        // ==== Hitung nilai Kegiatan Akademik ====
-        foreach ($laporan->academicActivities as $item) {
-            $nilai = $penilaianKegAkademik->hitung($item->activity_type ?? '');
-            $item->update(['points' => $nilai]);
-        }
-
-        // ==== Hitung nilai Kegiatan Organisasi ====
-        foreach ($laporan->organizationActivities as $item) {
-            $nilai = $penilaianKegOrganisasi->hitung(
-                $item->position ?? '',
-                $item->level ?? ''
-            );
-            $item->update(['points' => $nilai]);
-        }
-
-        // ==== Hitung nilai Kegiatan Komite ====
-        foreach ($laporan->committeeActivities as $item) {
-            $nilai = $penilaianKegKomite->hitung(
-                $item->activity_type ?? '',
-                $item->level ?? '',
-                $item->participation ?? ''
-            );
-            $item->update(['points' => $nilai]);
-        }
-
-        // ==== Hitung nilai Prestasi ====
-        foreach ($laporan->studentAchievements as $item) {
-            $nilai = $penilaianPrestasi->hitung(
-                $item->achievements_type ?? '',
-                $item->level ?? '',
-                $item->award ?? ''
-            );
-            $item->update(['points' => $nilai]);
-        }
-
-        // ==== Hitung nilai Kegiatan Mandiri ====
-        foreach ($laporan->independentActivities as $item) {
-            $nilai = $penilaianKegMandiri->hitung($item->activity_type ?? '');
-            $item->update(['points' => $nilai]);
-        }
-
-
-        // update status tabel laporan mahasiswa
-        $laporan->update(['status' => 'Pending']);
-
-        foreach (
-            [
-                'academicReports',
-                'academicActivities',
-                'committeeActivities',
-                'organizationActivities',
-                'studentAchievements',
-                'independentActivities',
-                'evaluations',
-                'targetNextSemester',
-                'targetAcademicActivities',
-                'targetAchievements',
-                'targetIndependentActivities',
-            ] as $relation
-        ) {
-            $laporan->$relation()->update(['status' => 'Pending']);
-        }
-
-        return redirect()->route('mahasiswa.detail-laporan', $laporanId)->with('success', 'Laporan Berhasil Diajukan Dengan Status Pending');
+        return redirect()
+            ->route('mahasiswa.detail-laporan', $laporanId)
+            ->with('success', 'Laporan Berhasil Diajukan Dengan Status Pending');
     }
 }

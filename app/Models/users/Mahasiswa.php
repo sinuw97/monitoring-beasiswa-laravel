@@ -17,6 +17,9 @@ use App\Models\monev\TargetNextSemester;
 use App\Models\monev\TargetAcademicActivities;
 use App\Models\monev\TargetAchievements;
 use App\Models\monev\TargetIdependentActivities;
+use App\Models\monev\LaporanKeuanganMahasiswa;
+use App\Models\monev\DetailKeuanganMahasiswa;
+use App\Models\monev\KesanPesanMahasiswa;
 use Illuminate\Database\Eloquent\Model;
 
 class Mahasiswa extends Authenticate
@@ -147,6 +150,32 @@ class Mahasiswa extends Authenticate
       TargetIdependentActivities::class,
       'nim',
       'nim',
+    );
+  }
+  // Relasi ke laporan_keuangan_mahasiswa
+  public function laporanKeuanganMahasiswa()
+  {
+    return $this->hasMany(
+      LaporanKeuanganMahasiswa::class,
+      'nim',
+      'nim'
+    );
+  }
+  // Relasi ke kesan_pesan_mahasiswa
+  public function kesanPesanMahasiswa()
+  {
+    return $this->hasMany(
+      KesanPesanMahasiswa::class,
+      'nim',
+      'nim'
+    );
+  }
+  public function detailKeuanganMahasiswa()
+  {
+    return $this->hasMany(
+      DetailKeuanganMahasiswa::class,
+      'nim',
+      'nim'
     );
   }
 }

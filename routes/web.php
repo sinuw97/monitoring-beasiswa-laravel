@@ -26,6 +26,8 @@ use App\Http\Controllers\mahasiswa\monev\TargetAcademicActMonevController;
 use App\Http\Controllers\mahasiswa\monev\TargetAchievementsMonevController;
 use App\Http\Controllers\mahasiswa\profile\GantiPasswordController;
 use App\Http\Controllers\admin\PengumumanController;
+use App\Http\Controllers\mahasiswa\monev\KesanPesanCOntroller;
+use App\Http\Controllers\mahasiswa\monev\LaporanKeuanganCOntroller;
 
 Route::get('/', function () {
     $pengumuman = \App\Models\Pengumuman::where('is_active', true)->latest()->get();
@@ -61,6 +63,8 @@ Route::prefix('mahasiswa')->group(function () {
         Route::post('/isi-monev/{laporanId}/next-semester-activities',[TargetAcademicActMonevController::class,'submitTargetKegAkademik'])->name('laporan.next-smt-activities.store');
         Route::post('/isi-monev/{laporanId}/next-semester-achievements',[TargetAchievementsMonevController::class,'submitTargetAchievements'])->name('laporan.next-smt-achievements.store');
         Route::post('/isi-monev/{laporanId}/next-semester-independent',[TargetIndeActMonevController::class,'submitTargetKegMandiri'])->name('laporan.next-smt-independent.store');
+        Route::post('/isi-monev/{laporanId}/keuangan',[LaporanKeuanganCOntroller::class,'submitLaporanKeuangan'])->name('laporan.keuangan.store');
+        Route::post('/isi-monev/{laporanId}/kesan-pesan',[KesanPesanCOntroller::class,'submitKesanPesan'])->name('laporan.kesan-pesan.store');
 
         // Edit data
         Route::put('/laporan/academic-reports/{idData}', [NilaiIPSnIPKMonevController::class, 'updateNilaiIPKnIPS'])->name('laporan.academic-reports.update');
@@ -74,6 +78,8 @@ Route::prefix('mahasiswa')->group(function () {
         Route::put('/laporan/next-semester-activities/{idData}', [TargetAcademicActMonevController::class, 'updateTargetKegAkademik'])->name('laporan.next-smt-activities.update');
         Route::put('/laporan/next-semester-achievements/{idData}', [TargetAchievementsMonevController::class, 'updateTargetAchievements'])->name('laporan.next-smt-achievements.update');
         Route::put('/laporan/next-semester-independent/{idData}', [TargetIndeActMonevController::class, 'updateTargetKegMandiri'])->name('laporan.next-smt-independent.update');
+        Route::put('/laporan/keuangan/{idData}', [LaporanKeuanganCOntroller::class, 'updateLaporanKeuangan'])->name('laporan.keuangan.update');
+        Route::put('/laporan/kesan-pesan/{idData}', [KesanPesanCOntroller::class, 'updateKesanPesan'])->name('laporan.kesan-pesan.update');
 
         // Ajukan laporan
         Route::put('/laporan/{laporanId}/ajukan-laporan', [PengisianMonevController::class, 'ajukanLaporanMonev'])->name('laporan.ajukan');
@@ -90,6 +96,8 @@ Route::prefix('mahasiswa')->group(function () {
         Route::delete('/laporan/next-semester-activities/{idData}/hapus', [TargetAcademicActMonevController::class, 'hapusDataNextActivities'])->name('laporan.next-smt-activities.hapus');
         Route::delete('/laporan/next-semester-achievements/{idData}/hapus', [TargetAchievementsMonevController::class, 'hapusDataNextAchievement'])->name('laporan.next-smt-achievements.hapus');
         Route::delete('/laporan/next-semester-independent/{idData}/hapus', [TargetIndeActMonevController::class, 'hapusDataNextIndependent'])->name('laporan.next-smt-independent.hapus');
+        Route::delete('/laporan/keuangan/{idData}/hapus', [LaporanKeuanganCOntroller::class, 'hapusLaporanKeuangan'])->name('laporan.keuangan.hapus');
+        Route::delete('/laporan/kesan-pesan/{idData}/hapus', [KesanPesanCOntroller::class, 'hapusKesanPesan'])->name('laporan.kesan-pesan.hapus');
 
         //Profil
         Route::get('/profile', [ProfilMahasiswaController::class, 'show'])->name('mahasiswa.profile');

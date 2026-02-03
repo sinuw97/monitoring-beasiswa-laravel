@@ -8,25 +8,25 @@
             </h2>
 
             <div class="text-sm text-gray-500">
-                @if ($errors->any())
+                @if ($errors->gantiPassword->any())
                     <div class="mb-3 text-xs text-red-600 bg-red-50 p-2 rounded">
                         <ul class="list-disc list-inside">
-                            @foreach ($errors->all() as $error)
+                            @foreach ($errors->gantiPassword->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
                     </div>
                 @endif
 
-                @if (session('error'))
+                @if (session('ganti_pw_error') && !$errors->gantiPassword->any())
                     <div class="mb-3 text-xs text-red-600 bg-red-50 p-2 rounded">
-                        {{ session('error') }}
+                        Terjadi kesalahan saat mengganti password.
                     </div>
                 @endif
 
-                @if (session('success'))
+                @if (session('ganti_pw_success'))
                     <div class="mb-3 text-xs text-green-600 bg-green-50 p-2 rounded">
-                        {{ session('success') }}
+                        Password berhasil diubah.
                     </div>
                 @endif
 
@@ -66,7 +66,8 @@
                     <!-- Password Baru -->
                     <div class="mb-4" x-data="{ show: false }">
                         <label class="block text-xs sm:text-sm text-gray-600">Password Baru</label>
-                        <span class="italic text-sm mb-1 text-red-500">Minimal 8 karakter dengan 1 angka dan 1 simbol</span>
+                        <span class="italic text-sm mb-1 text-red-500">Minimal 8 karakter dengan 1 angka dan 1
+                            simbol</span>
                         <div class="relative">
                             <input :type="show ? 'text' : 'password'" name="new_password" required
                                 placeholder="Masukan password baru Anda..."
@@ -111,7 +112,7 @@
         </div>
     </div>
 </div>
-@if ($errors->any() || session('error'))
+@if (session()->has('ganti_pw_error') || session()->has('ganti_pw_success'))
     <script>
         document.addEventListener('alpine:init', () => {
             window.dispatchEvent(new CustomEvent('open-ganti-password'))

@@ -25,6 +25,8 @@ class RevisiLaporanController extends Controller
       'targetAcademicActivities',
       'targetAchievements',
       'targetIndependentActivities',
+      'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
+      'kesanPesanMahasiswa'
     ])
       ->where('laporan_id', $laporanId)
       ->where('nim', $dataMahasiswa->nim)
@@ -160,6 +162,34 @@ class RevisiLaporanController extends Controller
         'status' => $report->status,
       ];
     });
+    $laporanKeuangan = $laporan->laporanKeuanganMahasiswa;
+
+    $parsingLaporanKeuangan = null;
+
+    if ($laporanKeuangan) {
+      $parsingLaporanKeuangan = [
+        'id' => $laporanKeuangan->id,
+        'total' => $laporanKeuangan->total_nominal,
+        'status' => $laporanKeuangan->status,
+        'detail' => $laporanKeuangan->detailKeuanganMahasiswa->map(function ($detail) {
+          return [
+            'id' => $detail->id,
+            'keperluan' => $detail->keperluan,
+            'nominal' => $detail->nominal,
+            'status' => $detail->status,
+          ];
+        }),
+      ];
+    }
+
+    $parsingKesanPesan = $laporan->kesanPesanMahasiswa->map(function ($report) {
+      return [
+        'id' => $report->id,
+        'kesan' => $report->kesan,
+        'pesan' => $report->pesan,
+        'status' => $report->status,
+      ];
+    });
 
     return view('mahasiswa.halaman-revisi-monev', compact([
       'dataMahasiswa',
@@ -175,6 +205,8 @@ class RevisiLaporanController extends Controller
       'parsingNextAcademicActivities',
       'parsingNextAchievements',
       'parsingNextIndependentActivities',
+      'parsingLaporanKeuangan',
+      'parsingKesanPesan'
     ]));
   }
 }
