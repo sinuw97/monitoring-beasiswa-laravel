@@ -2148,7 +2148,7 @@
                         <div>
                             <p class="text-sm text-gray-500">Total Keuangan</p>
                             <p class="text-xl lg:text-2xl font-bold text-[#013F4E]">
-                                Rp {{ number_format($parsingLaporanKeuangan['total'], 0, ',', '.') }}
+                                Rp {{$parsingLaporanKeuangan === null ? 0 : number_format($parsingLaporanKeuangan['total'], 0, ',', '.') }}
                             </p>
                         </div>
                     </div>
@@ -2156,7 +2156,7 @@
 
                 {{-- Tabel --}}
                 <div class="overflow-x-auto w-full">
-                    <x-tabel :headers="['No', 'Keperluan', 'Nominal', 'Status']" :columns="['keperluan', 'nominal', 'status']" :rows="$parsingLaporanKeuangan['detail']" idKey="id"
+                    <x-tabel :headers="['No', 'Keperluan', 'Nominal', 'Status']" :columns="['keperluan', 'nominal', 'status']" :rows="$parsingLaporanKeuangan === null ? [] : $parsingLaporanKeuangan['detail']" idKey="id"
                         editEvent="edit-keuangan" deleteRoute="laporan.keuangan.hapus" :status="$laporan->status"
                         style="draft" />
                 </div>
