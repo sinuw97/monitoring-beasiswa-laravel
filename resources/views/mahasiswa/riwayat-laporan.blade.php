@@ -25,7 +25,8 @@
                 <div class="p-4 bg-white">
                     <div class="flex justify-between items-start mb-2">
                         <div>
-                            <span class="inline-block px-2 py-0.5 rounded text-xs font-semibold mb-1 border {{ $warnaStatus }}">
+                            <span
+                                class="inline-block px-2 py-0.5 rounded text-xs font-semibold mb-1 border {{ $warnaStatus }}">
                                 {{ $laporan->status }}
                             </span>
                             <h3 class="font-bold text-gray-800">Semester {{ $laporan->semester }}</h3>
@@ -76,43 +77,48 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse ($riwayatLaporan as $laporan)
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-3 text-center">{{ $loop->iteration }}</td>
-                                        <td class="px-6 py-3 font-medium text-gray-800">{{ $laporan->semester ?? '-' }}</td>
-                                        <td class="px-6 py-3">
-                                            {{ $laporan->periodeSemester?->tahun_akademik ?? '-' }}
-                                            {{ $laporan->periodeSemester?->semester }}
-                                        </td>
-                                        <td class="px-6 py-3 text-center">
-                                            @php
-                                                $warnaStatus = match ($laporan->status) {
-                                                    'Lolos', 'Lolos dengan penugasan' => 'bg-green-100 text-green-700 border-green-200',
-                                                    'Pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                                                    'Dikembalikan' => 'bg-blue-100 text-blue-700 border-blue-200',
-                                                    'Ditolak SP-1', 'Ditolak SP-2', 'Ditolak SP-3' => 'bg-red-100 text-red-700 border-red-200',
-                                                    default => 'bg-gray-100 text-gray-700',
-                                                };
-                                            @endphp
-                         <span
-                                                class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border {{ $warnaStatus }}">
-                                                {{ $laporan->status }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-3 text-gray-500">
-                                            {{ $laporan->created_at ? $laporan->created_at->translatedFormat('d F Y') : '-' }}
-                                        </td>
-                                        <td class="px-6 py-3 text-center">
-                                            @if ($laporan->status === 'Dikembalikan')
-                                                <a href="{{ route('mahasiswa.revisi-laporan', $laporan->laporan_id) }}"
-                                                    class="text-[#1D7D94] hover:text-[#0f4d5c] font-semibold text-sm hover:underline">
-                                                    Revisi</a>
-                                            @else
-                                                <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
-                                                    class="text-[#1D7D94] hover:text-[#0f4d5c] font-semibold text-sm hover:underline">
-                                                    Lihat</a>
-                                            @endif
-                                        </td>
-                                    </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-3 text-center">{{ $loop->iteration }}</td>
+                            <td class="px-6 py-3 font-medium text-gray-800">{{ $laporan->semester ?? '-' }}</td>
+                            <td class="px-6 py-3">
+                                {{ $laporan->periodeSemester?->tahun_akademik ?? '-' }}
+                                {{ $laporan->periodeSemester?->semester }}
+                            </td>
+                            <td class="px-6 py-3 text-center">
+                                @php
+                                    $warnaStatus = match ($laporan->status) {
+                                        'Lolos',
+                                        'Lolos dengan penugasan'
+                                            => 'bg-green-100 text-green-700 border-green-200',
+                                        'Pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                                        'Dikembalikan' => 'bg-blue-100 text-blue-700 border-blue-200',
+                                        'Ditolak SP-1',
+                                        'Ditolak SP-2',
+                                        'Ditolak SP-3'
+                                            => 'bg-red-100 text-red-700 border-red-200',
+                                        default => 'bg-gray-100 text-gray-700',
+                                    };
+                                @endphp
+                                <span
+                                    class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border {{ $warnaStatus }}">
+                                    {{ $laporan->status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-gray-500">
+                                {{ $laporan->created_at ? $laporan->created_at->translatedFormat('d F Y') : '-' }}
+                            </td>
+                            <td class="px-6 py-3 text-center">
+                                @if ($laporan->status === 'Dikembalikan')
+                                    <a href="{{ route('mahasiswa.revisi-laporan', $laporan->laporan_id) }}"
+                                        class="text-[#1D7D94] hover:text-[#0f4d5c] font-semibold text-sm hover:underline">
+                                        Revisi</a>
+                                @else
+                                    <a href="{{ route('mahasiswa.detail-laporan', $laporan->laporan_id) }}"
+                                        class="text-[#1D7D94] hover:text-[#0f4d5c] font-semibold text-sm hover:underline">
+                                        Lihat</a>
+                                @endif
+                            </td>
+                        </tr>
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-8 text-center text-gray-500 italic">

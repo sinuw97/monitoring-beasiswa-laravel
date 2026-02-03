@@ -158,6 +158,21 @@ class PengisianMonevController extends Controller
             return back()->with('error', 'Laporan tidak ditemukan.');
         }
 
+        // Routing ke halaman berdasarkan status laporan
+        if ($laporan->status === 'Dikembalikan') {
+            return redirect()->route(
+                'mahasiswa.revisi-laporan',
+                ['laporanId' => $laporan->laporan_id]
+            );
+        }
+
+        if ($laporan->status !== 'Draft') {
+            return redirect()->route(
+                'mahasiswa.detail-laporan',
+                ['laporanId' => $laporan->laporan_id]
+            );
+        }
+
         // parsing setiap model
         $parsingAcademicReports = $laporan->academicReports->map(function ($report) {
             return [
@@ -330,7 +345,7 @@ class PengisianMonevController extends Controller
         if (!$dataMahasiswa) {
             abort(401, 'Mahasiswa belum login');
         }
-        
+
         // ambil data monev mhs
         $laporan = LaporanMonevMahasiswa::with([
             'periodeSemester',
