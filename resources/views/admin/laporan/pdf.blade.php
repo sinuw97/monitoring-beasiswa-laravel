@@ -3,52 +3,60 @@
 <head>
     <title>Laporan Hasil Belajar</title>
     <style>
+        /* Define Page Margins explicitly */
+        @page {
+            margin-top: 3cm;
+            margin-left: 3cm;
+            margin-right: 2.5cm;
+            margin-bottom: 2.5cm;
+        }
+
         body {
             font-family: Arial, sans-serif;
             font-size: 11pt;
             line-height: 1.3;
         }
+
         .page-break {
             page-break-after: always;
         }
+
         .text-center {
             text-align: center;
         }
+
         .text-bold {
             font-weight: bold;
         }
-        .text-right {
-            text-align: right;
-        }
-        .mb-1 { margin-bottom: 5px; }
-        .mb-2 { margin-bottom: 10px; }
-        .mb-3 { margin-bottom: 15px; }
-        .mt-1 { margin-top: 5px; }
-        .mt-2 { margin-top: 10px; }
-        .mt-3 { margin-top: 15px; }
-        .mt-5 { margin-top: 30px; }
 
         /* Cover Styles */
+        .cover-container {
+            text-align: center;
+            width: 100%;
+        }
+
         .cover-title {
             font-size: 14pt;
             font-weight: bold;
-            margin-top: 50px;
-            margin-bottom: 100px;
+            margin-top: 20px;
+            margin-bottom: 60px;
         }
+
         .cover-logo {
-            width: 600px;
-            margin-bottom: 100px;
+            width: 250px; /* Adjusted size */
+            margin-bottom: 60px;
         }
+
         .cover-info {
+            width: 80%;
             margin: 0 auto;
-            width: auto;
         }
+
         .cover-footer {
-            position: absolute;
-            bottom: 50px;
-            width: 100%;
+            margin-top: 100px;
             text-align: center;
             font-weight: bold;
+            font-size: 12pt;
         }
 
         /* Section Styles */
@@ -57,6 +65,7 @@
             margin-top: 20px;
             margin-bottom: 10px;
         }
+
         .sub-section-header {
             margin-left: 20px;
             margin-top: 10px;
@@ -69,33 +78,43 @@
             border-collapse: collapse;
             margin-bottom: 15px;
         }
+
         table.bordered th, table.bordered td {
             border: 1px solid black;
             padding: 5px;
-            vertical-align: top;
+            vertical-align: middle;
         }
+
         table.bordered th {
-            background-color: #bffbf9; /* Light cyan matching reference */
+            background-color: #bffbf9; /* Cyan */
             text-align: center;
+            font-weight: bold;
         }
+
         table.no-border td {
             border: none;
-            padding: 2px;
+            padding: 4px;
+            vertical-align: top;
         }
 
         .signature-section {
-            margin-top: 50px;
+            margin-top: 30px;
             width: 100%;
         }
+
+        /* Floating Signature Boxes */
         .signature-box {
-            float: left;
+            display: inline-block;
             width: 45%;
-        }
-        .signature-box.right {
-            float: right;
+            vertical-align: top;
         }
 
-        /* Clear float */
+        .signature-box.right {
+            float: right;
+            text-align: left; /* Align text left within the right box, or center if preferred */
+        }
+
+        /* Clearfix */
         .clearfix::after {
             content: "";
             clear: both;
@@ -106,41 +125,43 @@
 <body>
 
     <!-- COVER PAGE -->
-    <div class="text-center page-break">
-        <div class="cover-title">
-            LAPORAN HASIL BELAJAR<br>
-            PENERIMA BANTUAN KIP KULIAH
-        </div>
+    <div class="page-break">
+        <div class="cover-container">
+            <div class="cover-title">
+                LAPORAN HASIL BELAJAR<br>
+                PENERIMA BANTUAN KIP KULIAH
+            </div>
 
-        <img src="{{ public_path('icon/Logo-TSU.png') }}" class="cover-logo" alt="Logo">
+            <img src="{{ public_path('icon/Logo-TSU.png') }}" class="cover-logo" alt="Logo">
 
-        <table class="cover-info no-border">
-            <tr>
-                <td style="width: 200px;">NAMA</td>
-                <td style="width: 10px;">:</td>
-                <td>{{ $dataMahasiswa->name }}</td>
-            </tr>
-            <tr>
-                <td>NIM</td>
-                <td>:</td>
-                <td>{{ $dataMahasiswa->nim }}</td>
-            </tr>
-            <tr>
-                <td>ANGKATAN</td>
-                <td>:</td>
-                <td>{{ $dataMahasiswa->detailMahasiswa->angkatan ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td>JENJANG/PROGRAM STUDI</td>
-                <td>:</td>
-                <td>S1 / {{ $dataMahasiswa->detailMahasiswa->prodi ?? '-' }}</td>
-            </tr>
-        </table>
+            <table class="cover-info no-border">
+                <tr>
+                    <td style="width: 200px;">NAMA</td>
+                    <td style="width: 20px;">:</td>
+                    <td>{{ $dataMahasiswa->name }}</td>
+                </tr>
+                <tr>
+                    <td>NIM</td>
+                    <td>:</td>
+                    <td>{{ $dataMahasiswa->nim }}</td>
+                </tr>
+                <tr>
+                    <td>ANGKATAN</td>
+                    <td>:</td>
+                    <td>{{ $dataMahasiswa->detailMahasiswa->angkatan ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>JENJANG/PROGRAM STUDI</td>
+                    <td>:</td>
+                    <td>S1 / {{ $dataMahasiswa->detailMahasiswa->prodi ?? '-' }}</td>
+                </tr>
+            </table>
 
-        <div class="cover-footer">
-            Bantuan Biaya Pendidikan KIP KULIAH<br>
-            UNIVERSITAS TIGA SERANGKAI<br>
-            TAHUN {{ date('Y') }}
+            <div class="cover-footer">
+                Bantuan Biaya Pendidikan KIP KULIAH<br>
+                UNIVERSITAS TIGA SERANGKAI<br>
+                TAHUN {{ date('Y') }}
+            </div>
         </div>
     </div>
 
@@ -161,7 +182,7 @@
             <tr>
                 <td>Tempat, Tanggal Lahir</td>
                 <td>:</td>
-                <td>-</td> <!-- Data not available in model -->
+                <td>-</td>
             </tr>
             <tr>
                 <td>Program Studi</td>
@@ -176,7 +197,7 @@
             <tr>
                 <td>Fakultas</td>
                 <td>:</td>
-                <td>-</td> <!-- Data not available in model -->
+                <td>-</td>
             </tr>
             <tr>
                 <td>Perguruan Tinggi</td>
@@ -206,14 +227,10 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Loop for Semester 1 to 8 -->
                 @for ($i = 1; $i <= 8; $i++)
                     @php
-                        // Convert number to Roman
                         $romans = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
                         $romanSemester = $romans[$i-1];
-
-                        // Find data for this semester
                         $report = $laporan->academicReports->where('semester', $i)->first();
                     @endphp
                     <tr>
@@ -230,42 +247,39 @@
             *) Untuk D3 maksimal semester 6, untuk D4/S1 maksimal semester 8
         </div>
 
+        <br>
+
         <div class="section-header">III. LAPORAN PRESTASI NON AKADEMIK</div>
         <div class="sub-section-header">a) Prestasi yang diraih selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
         <table class="bordered">
             <thead>
                 <tr>
-                    <th style="width: 30px;">No.</th>
+                    <th style="width: 40px;">No.</th>
                     <th>Kegiatan</th>
-                    <th>Tingkat</th>
-                    <th>Waktu pelaksanaan</th>
-                    <th>Hasil</th>
+                    <th style="width: 100px;">Tingkat</th>
+                    <th style="width: 100px;">Waktu pelaksanaan</th>
+                    <th style="width: 100px;">Hasil</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($laporan->studentAchievements as $item)
+                @forelse($allAchievements as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->achievements_name }}</td>
-                        <td>{{ $item->level }}</td>
-                        <td>{{ $item->date ?? '-' }}</td>
-                        <td>{{ $item->award }}</td>
+                        <td class="text-center">{{ $item->level }}</td>
+                        <td class="text-center">{{ $item->start_date ?? '-' }}</td>
+                        <td class="text-center">{{ $item->award }}</td>
                     </tr>
                 @empty
-                    <tr>
-                        <td class="text-center">&nbsp;</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">&nbsp;</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    @for($k=0; $k<2; $k++)
+                        <tr>
+                            <td class="text-center">&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endfor
                 @endforelse
             </tbody>
         </table>
@@ -278,37 +292,32 @@
         <table class="bordered">
             <thead>
                 <tr>
-                    <th style="width: 30px;">No.</th>
+                    <th style="width: 40px;">No.</th>
                     <th>Nama Organisasi</th>
-                    <th>Aktif sejak</th>
-                    <th>Akhir Keaktifan</th>
-                    <th>Jabatan</th>
+                    <th style="width: 100px;">Aktif sejak</th>
+                    <th style="width: 100px;">Akhir Keaktifan</th>
+                    <th style="width: 100px;">Jabatan</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($laporan->organizationActivities as $item)
+                @forelse($allOrganizations as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->ukm_name }}</td>
-                        <td>{{ $item->start_date ?? '-' }}</td>
-                        <td>{{ $item->end_date ?? '-' }}</td>
-                        <td>{{ $item->position }}</td>
+                        <td class="text-center">{{ $item->start_date ?? '-' }}</td>
+                        <td class="text-center">{{ $item->end_date ?? '-' }}</td>
+                        <td class="text-center">{{ $item->position }}</td>
                     </tr>
                 @empty
-                    <tr>
-                        <td class="text-center">&nbsp;</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">&nbsp;</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    @for($k=0; $k<2; $k++)
+                        <tr>
+                            <td class="text-center">&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endfor
                 @endforelse
             </tbody>
         </table>
@@ -317,23 +326,23 @@
         </div>
     </div>
 
-    <!-- PAGE 3: CONTINUE NON-AKADEMIK & KEUANGAN -->
+    <!-- PAGE 3 -->
     <div class="page-break">
         <div class="sub-section-header">c) Keikutsertaan pada kegiatan kepanitiaan yang diikuti selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
         <table class="bordered">
             <thead>
                 <tr>
-                    <th style="width: 30px;">No.</th>
+                    <th style="width: 40px;">No.</th>
                     <th>Kegiatan</th>
-                    <th>Waktu pelaksanaan</th>
+                    <th style="width: 150px;">Waktu pelaksanaan</th>
                 </tr>
             </thead>
             <tbody>
-                 @forelse($laporan->committeeActivities as $item)
+                 @forelse($allCommittees as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->activity_name }}</td>
-                        <td>{{ $item->start_date ?? '-' }}</td>
+                        <td class="text-center">{{ $item->start_date ?? '-' }}</td>
                     </tr>
                 @empty
                     <tr>
@@ -352,25 +361,23 @@
         <table class="bordered">
             <thead>
                 <tr>
-                    <th style="width: 30px;">No.</th>
+                    <th style="width: 40px;">No.</th>
                     <th>Judul karya tulis/karya ilmiah</th>
                 </tr>
             </thead>
             <tbody>
-                 @forelse($laporan->independentActivities as $item)
+                 @forelse($allIndependent as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->activity_name }}</td>
                     </tr>
                 @empty
-                    <tr>
-                        <td class="text-center">&nbsp;</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">&nbsp;</td>
-                        <td></td>
-                    </tr>
+                    @for($k=0; $k<2; $k++)
+                        <tr>
+                            <td class="text-center">&nbsp;</td>
+                            <td></td>
+                        </tr>
+                    @endfor
                 @endforelse
             </tbody>
         </table>
@@ -385,14 +392,13 @@
         <table class="bordered">
             <thead>
                 <tr>
-                    <th style="width: 30px;">No</th>
+                    <th style="width: 40px;">No</th>
                     <th>Keperluan</th>
-                    <th>Nominal</th>
+                    <th style="width: 150px;">Nominal</th>
                 </tr>
             </thead>
             <tbody>
                 @php
-                    // Correct relation usage
                     $laporanKeuangan = $laporan->laporanKeuanganMahasiswa;
                     $detailKeuangan = $laporanKeuangan ? $laporanKeuangan->detailKeuanganMahasiswa : collect([]);
                     $total = 0;
@@ -407,31 +413,13 @@
                         </tr>
                     @endforeach
                 @else
-                    <tr>
-                        <td class="text-center">1</td>
-                        <td>Makan</td>
-                        <td>Rp </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">2</td>
-                        <td>Tempat Tinggal (kos)</td>
-                        <td>Rp </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">3</td>
-                        <td>Transportasi</td>
-                        <td>Rp </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">4</td>
-                        <td>.........................................</td>
-                        <td>Rp </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">5</td>
-                        <td>.........................................</td>
-                        <td>Rp </td>
-                    </tr>
+                    @for($k=1; $k<=5; $k++)
+                        <tr>
+                            <td class="text-center">{{ $k }}</td>
+                            <td></td>
+                            <td>Rp </td>
+                        </tr>
+                    @endfor
                 @endif
                 <tr>
                     <td colspan="2" class="text-center text-bold">Jumlah</td>
@@ -440,7 +428,7 @@
             </tbody>
         </table>
 
-        <div class="section-header">V. Kesan - kesan Mahasiswa</div>
+        <div class="section-header">V. Kesan - pesan Mahasiswa</div>
         <div style="font-style: italic; color: #09697E;">
             Diisi kesan selama menerima beasiswa KIPdi Universitas Tiga Serangkai
         </div>
@@ -454,7 +442,7 @@
         </div>
 
         <div class="signature-section clearfix">
-            <div class="signature-box left">
+            <div class="signature-box">
                 Mengetahui,<br>
                 Wakil Rektor<br>
                 Bidang Akademik, Inovasi dan Kemahasiswaan<br>
@@ -463,10 +451,11 @@
                 <b>( Prof. Dr. Drajat Tri Kartono, M.Si )</b><br>
                 NIP. 102024039
             </div>
+
             <div class="signature-box right">
-                ...................., ...........................................<br>
+                <div style="margin-bottom: 5px;">Surakarta, {{ date('d F Y') }}</div>
                 Pembuat Laporan<br>
-                <br><br><br><br><br>
+                <br><br><br><br>
                 <div class="mb-1" style="font-size: 8pt; color: #888;">TTD + Materai Rp.10.000,-</div>
                 <b>( {{ $dataMahasiswa->name }} )</b><br>
                 NIM. {{ $dataMahasiswa->nim }}
@@ -474,68 +463,28 @@
         </div>
     </div>
 
-    <!-- PAGE 4: ATTACHMENTS -->
+    <!-- PAGE 4: ATTACHMENTS (LAMPIRAN) -->
     <div>
         <h3 class="text-center">Lampiran - lampiran</h3>
         <table class="bordered">
             <thead>
                 <tr>
-                    <th style="width: 30px;">No.</th>
+                    <th style="width: 40px;">No.</th>
                     <th>Nama Dokumen</th>
                     <th style="width: 100px;">Status</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="text-center">1</td>
-                    <td>Kartu Hasil Studi (KHS)</td>
-                    <td class="text-center">Ada / Tidak</td>
-                </tr>
-                <tr>
-                    <td class="text-center">2</td>
-                    <td>Surat Keterangan Aktif Kuliah</td>
-                    <td class="text-center">Ada / Tidak</td>
-                </tr>
-                <tr>
-                    <td class="text-center">3</td>
-                    <td>Copy sertifikat/piagam prestasi yang diraih selama menjadi mahasiswa</td>
-                    <td class="text-center">Ada / Tidak</td>
-                </tr>
-                <tr>
-                    <td class="text-center">4</td>
-                    <td>Copy sertifikat/surat keterangan keikutsertaan pada kegiatan organisasi kemahasiswaan intra kampus</td>
-                    <td class="text-center">Ada / Tidak</td>
-                </tr>
-                <tr>
-                    <td class="text-center">5</td>
-                    <td>Copy sertifikat/surat keterangan keikutsertaan pada kegiatan kepanitiaan</td>
-                    <td class="text-center">Ada / Tidak</td>
-                </tr>
-                <tr>
-                    <td class="text-center">6</td>
-                    <td>Copy hasil publikasi Ilmiah/Karya Tulis/PKM</td>
-                    <td class="text-center">Ada / Tidak</td>
-                </tr>
-                <tr>
-                    <td class="text-center">7</td>
-                    <td>Copy Surat Keterangan Lulus/ Copy Ijazah</td>
-                    <td class="text-center">Ada / Tidak</td>
-                </tr>
-                <tr>
-                    <td class="text-center">8</td>
-                    <td>Copy Transkrip Nilai</td>
-                    <td class="text-center">Ada / Tidak</td>
-                </tr>
-                <tr>
-                    <td class="text-center">9</td>
-                    <td>......................... (Lampiran lain)</td>
-                    <td class="text-center"></td>
-                </tr>
-                <tr>
-                    <td class="text-center">Dst.</td>
-                    <td></td>
-                    <td class="text-center"></td>
-                </tr>
+                <tr><td class="text-center">1</td><td>Kartu Hasil Studi (KHS)</td><td class="text-center">Ada / Tidak</td></tr>
+                <tr><td class="text-center">2</td><td>Surat Keterangan Aktif Kuliah</td><td class="text-center">Ada / Tidak</td></tr>
+                <tr><td class="text-center">3</td><td>Copy sertifikat/piagam prestasi yang diraih selama menjadi mahasiswa</td><td class="text-center">Ada / Tidak</td></tr>
+                <tr><td class="text-center">4</td><td>Copy sertifikat/surat keterangan keikutsertaan pada kegiatan organisasi kemahasiswaan intra kampus</td><td class="text-center">Ada / Tidak</td></tr>
+                <tr><td class="text-center">5</td><td>Copy sertifikat/surat keterangan keikutsertaan pada kegiatan kepanitiaan</td><td class="text-center">Ada / Tidak</td></tr>
+                <tr><td class="text-center">6</td><td>Copy hasil publikasi Ilmiah/Karya Tulis/PKM</td><td class="text-center">Ada / Tidak</td></tr>
+                <tr><td class="text-center">7</td><td>Copy Surat Keterangan Lulus/ Copy Ijazah</td><td class="text-center">Ada / Tidak</td></tr>
+                <tr><td class="text-center">8</td><td>Copy Transkrip Nilai</td><td class="text-center">Ada / Tidak</td></tr>
+                <tr><td class="text-center">9</td><td>......................... (Lampiran lain)</td><td class="text-center"></td></tr>
+                <tr><td class="text-center">Dst.</td><td></td><td class="text-center"></td></tr>
             </tbody>
         </table>
     </div>

@@ -309,7 +309,28 @@ class LaporanMonevController extends Controller
                 $dataMahasiswa = Mahasiswa::where('nim', $laporan->nim)->first();
 
                 if ($dataMahasiswa) {
-                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact('laporan', 'dataMahasiswa'));
+                    // Fetch Cumulative Data
+                    $allAchievements = \App\Models\monev\StudentAchievements::where('nim', $dataMahasiswa->nim)
+                                        ->orderBy('start_date', 'asc')
+                                        ->get();
+                    $allOrganizations = \App\Models\monev\OrganizationActivities::where('nim', $dataMahasiswa->nim)
+                                        ->orderBy('start_date', 'asc')
+                                        ->get();
+                    $allCommittees = \App\Models\monev\CommitteeActivities::where('nim', $dataMahasiswa->nim)
+                                        ->orderBy('start_date', 'asc')
+                                        ->get();
+                    $allIndependent = \App\Models\monev\IndependentActivities::where('nim', $dataMahasiswa->nim)
+                                        ->orderBy('start_date', 'asc')
+                                        ->get();
+
+                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact(
+                        'laporan',
+                        'dataMahasiswa',
+                        'allAchievements',
+                        'allOrganizations',
+                        'allCommittees',
+                        'allIndependent'
+                    ));
                     $content = $pdf->output();
 
                     // Format nama file: [NIM]_[Semester]_[Tahun].pdf
@@ -347,11 +368,37 @@ class LaporanMonevController extends Controller
             'independentActivities',
             'evaluations',
             'targetNextSemester',
+            'targetAcademicActivities',
+            'targetAchievements',
+            'targetIndependentActivities',
+            'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
+            'kesanPesanMahasiswa'
         ])->where('laporan_id', $id)->firstOrFail();
 
         $dataMahasiswa = Mahasiswa::where('nim', $laporan->nim)->firstOrFail();
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact('laporan', 'dataMahasiswa'));
+        // Fetch Cumulative Data
+        $allAchievements = \App\Models\monev\StudentAchievements::where('nim', $dataMahasiswa->nim)
+                            ->orderBy('start_date', 'asc')
+                            ->get();
+        $allOrganizations = \App\Models\monev\OrganizationActivities::where('nim', $dataMahasiswa->nim)
+                            ->orderBy('start_date', 'asc')
+                            ->get();
+        $allCommittees = \App\Models\monev\CommitteeActivities::where('nim', $dataMahasiswa->nim)
+                            ->orderBy('start_date', 'asc')
+                            ->get();
+        $allIndependent = \App\Models\monev\IndependentActivities::where('nim', $dataMahasiswa->nim)
+                            ->orderBy('start_date', 'asc')
+                            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact(
+            'laporan',
+            'dataMahasiswa',
+            'allAchievements',
+            'allOrganizations',
+            'allCommittees',
+            'allIndependent'
+        ));
 
         return $pdf->download('laporan_monev_' . $dataMahasiswa->nim . '_' . $laporan->periodeSemester?->semester . '.pdf');
     }
