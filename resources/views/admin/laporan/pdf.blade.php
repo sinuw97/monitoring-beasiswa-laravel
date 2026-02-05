@@ -324,10 +324,8 @@
         <div style="font-size: 10pt;">
             *) melampirkan copy sertifikat/surat keterangan dari pimpinan organisasi
         </div>
-    </div>
-
-    <!-- PAGE 3 -->
-    <div class="page-break">
+    <br>
+    <!-- PAGE 3 content continues here without forced break -->
         <div class="sub-section-header">c) Keikutsertaan pada kegiatan kepanitiaan yang diikuti selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
         <table class="bordered">
             <thead>
@@ -441,26 +439,28 @@
             Demikian laporan ini saya buat dengan sebenar-benarnya.
         </div>
 
-        <div class="signature-section clearfix">
-            <div class="signature-box">
-                Mengetahui,<br>
-                Wakil Rektor<br>
-                Bidang Akademik, Inovasi dan Kemahasiswaan<br>
-                <br><br><br><br>
-                <div class="mb-1" style="font-size: 8pt; color: #888;">CAP PTS - TTD</div>
-                <b>( Prof. Dr. Drajat Tri Kartono, M.Si )</b><br>
-                NIP. 102024039
-            </div>
-
-            <div class="signature-box right">
-                <div style="margin-bottom: 5px;">Surakarta, {{ date('d F Y') }}</div>
-                Pembuat Laporan<br>
-                <br><br><br><br>
-                <div class="mb-1" style="font-size: 8pt; color: #888;">TTD + Materai Rp.10.000,-</div>
-                <b>( {{ $dataMahasiswa->name }} )</b><br>
-                NIM. {{ $dataMahasiswa->nim }}
-            </div>
-        </div>
+        {{-- Replaced div/float layout with table for better PDF support --}}
+        <table class="no-border signature-section">
+            <tr>
+                <td style="width: 50%; text-align: left; vertical-align: top;">
+                    Mengetahui,<br>
+                    Wakil Rektor<br>
+                    Bidang Akademik, Inovasi dan Kemahasiswaan<br>
+                    <br><br><br><br>
+                    <div class="mb-1" style="font-size: 8pt; color: #888;">CAP PTS - TTD</div>
+                    <b>( Prof. Dr. Drajat Tri Kartono, M.Si )</b><br>
+                    NIP. 102024039
+                </td>
+                <td style="width: 50%; text-align: left; vertical-align: top; padding-left: 50px;">
+                    <div style="margin-bottom: 5px;">Surakarta, {{ date('d F Y') }}</div>
+                    Pembuat Laporan<br>
+                    <br><br><br><br>
+                    <div class="mb-1" style="font-size: 8pt; color: #888;">TTD + Materai Rp.10.000,-</div>
+                    <b>( {{ $dataMahasiswa->name }} )</b><br>
+                    NIM. {{ $dataMahasiswa->nim }}
+                </td>
+            </tr>
+        </table>
     </div>
 
     <!-- PAGE 4: ATTACHMENTS (LAMPIRAN) -->

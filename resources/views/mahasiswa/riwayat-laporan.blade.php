@@ -165,7 +165,6 @@
                                 </div>
                             </td>
                         </tr>
-                        >>>>>>> 4aab94bcbd8ecdc3bf0074d5e63f1a9c8ac18d63
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-8 text-center text-gray-500 italic">
