@@ -454,7 +454,7 @@
                 <td style="width: 50%; text-align: left; vertical-align: top; padding-left: 50px;">
                     <div style="margin-bottom: 5px;">Surakarta, {{ date('d F Y') }}</div>
                     Pembuat Laporan<br>
-                    <br><br><br><br>
+                    <br><br><br><br><br><br>
                     <div class="mb-1" style="font-size: 8pt; color: #888;">TTD + Materai Rp.10.000,-</div>
                     <b>( {{ $dataMahasiswa->name }} )</b><br>
                     NIM. {{ $dataMahasiswa->nim }}
