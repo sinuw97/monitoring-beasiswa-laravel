@@ -323,14 +323,14 @@ class LaporanMonevController extends Controller
                                         ->orderBy('start_date', 'asc')
                                         ->get();
 
-                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact(
-                        'laporan',
-                        'dataMahasiswa',
-                        'allAchievements',
-                        'allOrganizations',
-                        'allCommittees',
-                        'allIndependent'
-                    ));
+                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf_admin', compact(
+                    'laporan',
+                    'dataMahasiswa',
+                    'allAchievements',
+                    'allOrganizations',
+                    'allCommittees',
+                    'allIndependent'
+                ));
                     $content = $pdf->output();
 
                     // Format nama file: [NIM]_[Semester]_[Tahun].pdf
@@ -391,7 +391,8 @@ class LaporanMonevController extends Controller
                             ->orderBy('start_date', 'asc')
                             ->get();
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf', compact(
+        // Gunakan view yang detail untuk Admin
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.pdf_admin', compact(
             'laporan',
             'dataMahasiswa',
             'allAchievements',
@@ -409,9 +410,13 @@ class LaporanMonevController extends Controller
     public function exportDocx(string $id)
     {
         $laporan = LaporanMonevMahasiswa::with([
-            'periodeSemester',
-            'academicReports',
-            // Relations below kept for other uses if needed, but we will fetch all specifically
+            'academicActivities',
+            'independentActivities', // Added independentActivities
+            'evaluations', // Added evaluations
+            'targetNextSemester', // Added targetNextSemester
+            'targetAcademicActivities', // Added targetAcademicActivities
+            'targetAchievements', // Added targetAchievements
+            'targetIndependentActivities', // Added targetIndependentActivities
             'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
             'kesanPesanMahasiswa'
         ])
@@ -434,7 +439,21 @@ class LaporanMonevController extends Controller
                             ->orderBy('start_date', 'asc')
                             ->get();
 
-        $phpWord = $this->createPhpWordObject($laporan, $dataMahasiswa, $allAchievements, $allOrganizations, $allCommittees, $allIndependent);
+        $phpWord = $this->createPhpWordObject(
+            $laporan,
+            $dataMahasiswa,
+            $allAchievements,
+            $allOrganizations,
+            $allCommittees,
+            $allIndependent,
+            $laporan->academicActivities,
+            $laporan->independentActivities,
+            $laporan->evaluations,
+            $laporan->targetNextSemester,
+            $laporan->targetAcademicActivities,
+            $laporan->targetAchievements,
+            $laporan->targetIndependentActivities
+        );
 
          // Download
         $fileName = 'Laporan_Monev_' . $dataMahasiswa->nim . '.docx';
@@ -473,6 +492,7 @@ class LaporanMonevController extends Controller
         $query = LaporanMonevMahasiswa::with([
             'periodeSemester',
             'academicReports',
+            'academicActivities', // Added academicActivities
             'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
             'kesanPesanMahasiswa'
         ])
@@ -543,7 +563,21 @@ class LaporanMonevController extends Controller
                                         ->orderBy('start_date', 'asc')
                                         ->get();
 
-                    $phpWord = $this->createPhpWordObject($laporan, $dataMahasiswa, $allAchievements, $allOrganizations, $allCommittees, $allIndependent);
+                    $phpWord = $this->createPhpWordObject(
+                        $laporan,
+                        $dataMahasiswa,
+                        $allAchievements,
+                        $allOrganizations,
+                        $allCommittees,
+                        $allIndependent,
+                        $laporan->academicActivities,
+                        $laporan->independentActivities,
+                        $laporan->evaluations,
+                        $laporan->targetNextSemester,
+                        $laporan->targetAcademicActivities,
+                        $laporan->targetAchievements,
+                        $laporan->targetIndependentActivities
+                    );
 
                     // Save individual docx to temp
                     $tempDocx = tempnam(sys_get_temp_dir(), 'LaporanMonevDocx');
@@ -577,7 +611,7 @@ class LaporanMonevController extends Controller
         return response()->download($zipFilePath)->deleteFileAfterSend(true);
     }
 
-    private function createPhpWordObject($laporan, $dataMahasiswa, $allAchievements, $allOrganizations, $allCommittees, $allIndependent)
+    private function createPhpWordObject($laporan, $dataMahasiswa, $allAchievements, $allOrganizations, $allCommittees, $allIndependent, $academicActivities, $independentActivities, $evaluations, $targetNextSemester, $targetAcademicActivities, $targetAchievements, $targetIndependentActivities)
     {
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         $phpWord->setDefaultFontName('Arial');
@@ -597,7 +631,8 @@ class LaporanMonevController extends Controller
         // --- COVER PAGE ---
         $section->addText("LAPORAN HASIL BELAJAR", $headerStyle, $centerParam);
         $section->addText("PENERIMA BANTUAN KIP KULIAH", $headerStyle, $centerParam);
-        $section->addTextBreak(4);
+
+        $section->addTextBreak(3);
 
         $logoPath = public_path('icon/Logo-TSU.png');
         if (file_exists($logoPath)) {
@@ -606,30 +641,39 @@ class LaporanMonevController extends Controller
                 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
             ]);
         }
-        $section->addTextBreak(4);
+        $section->addTextBreak(3);
 
-        $tableStyle = ['borderSize' => 0, 'borderColor' => 'FFFFFF', 'cellMargin' => 50];
-        // Center the table visually by using a fixed width table centered in page?
-        // Or just indent. Let's try indenting or 3 columns (Empty, Content, Empty).
-        $table = $section->addTable($tableStyle);
+        $tableStyleName = 'CoverInfoTable';
+        $tableStyle = [
+            'borderSize' => 0,
+            'borderColor' => 'FFFFFF',
+            'cellMargin' => 50,
+            'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
+            'unit' => 'pct',
+            'width' => 3500, // 70% of page width
+        ];
+        $phpWord->addTableStyle($tableStyleName, $tableStyle);
+        $table = $section->addTable($tableStyleName);
         $table->addRow();
-        $table->addCell(3000)->addText("NAMA", $normalStyle);
-        $table->addCell(500)->addText(":", $normalStyle);
-        $table->addCell(5000)->addText($dataMahasiswa->name, $normalStyle);
+        $table->addCell(1500)->addText("NAMA", $normalStyle); // 30%
+        $table->addCell(250)->addText(":", $normalStyle); // 5%
+        $table->addCell(3250)->addText($dataMahasiswa->name, $normalStyle); // 65%
         $table->addRow();
-        $table->addCell(3000)->addText("NIM", $normalStyle);
-        $table->addCell(500)->addText(":", $normalStyle);
-        $table->addCell(5000)->addText($dataMahasiswa->nim, $normalStyle);
+        $table->addCell(1500)->addText("NIM", $normalStyle);
+        $table->addCell(250)->addText(":", $normalStyle);
+        $table->addCell(3250)->addText($dataMahasiswa->nim, $normalStyle);
         $table->addRow();
-        $table->addCell(3000)->addText("ANGKATAN", $normalStyle);
-        $table->addCell(500)->addText(":", $normalStyle);
-        $table->addCell(5000)->addText($dataMahasiswa->detailMahasiswa->angkatan ?? '-', $normalStyle);
+        $table->addCell(1500)->addText("ANGKATAN", $normalStyle);
+        $table->addCell(250)->addText(":", $normalStyle);
+        $table->addCell(3250)->addText($dataMahasiswa->detailMahasiswa->angkatan ?? '-', $normalStyle);
         $table->addRow();
-        $table->addCell(3000)->addText("JENJANG/PROGRAM STUDI", $normalStyle);
-        $table->addCell(500)->addText(":", $normalStyle);
-        $table->addCell(5000)->addText("S1 / " . ($dataMahasiswa->detailMahasiswa->prodi ?? '-'), $normalStyle);
+        $table->addCell(1500)->addText("JENJANG/PROGRAM STUDI", $normalStyle);
+        $table->addCell(250)->addText(":", $normalStyle);
+        $table->addCell(3250)->addText("S1 / " . ($dataMahasiswa->detailMahasiswa->prodi ?? '-'), $normalStyle);
 
-        $section->addTextBreak(6);
+
+
+        $section->addTextBreak(5);
         $section->addText("Bantuan Biaya Pendidikan KIP KULIAH", $boldStyle, $centerParam);
         $section->addText("UNIVERSITAS TIGA SERANGKAI", $boldStyle, $centerParam);
         $section->addText("TAHUN " . date('Y'), $boldStyle, $centerParam);
@@ -659,7 +703,9 @@ class LaporanMonevController extends Controller
         $section->addTextBreak(1);
 
         // --- SECTION II: PRESTASI AKADEMIK ---
+        // a) Hasil Studi
         $section->addText("II. LAPORAN PRESTASI AKADEMIK", $subHeaderStyle);
+        $section->addText("a) Hasil Studi :", $normalStyle);
 
         // Cyan color for headers
         $headerColor = 'BFFBF9';
@@ -693,6 +739,29 @@ class LaporanMonevController extends Controller
 
         $section->addText("*) Melampirkan KHS atau transkrip nilai keseluruhan sampai lulus yang dilegalisir oleh Jurusan/Program Studi", ['size' => 10, 'italic' => false], $leftParam);
         $section->addText("*) Untuk D3 maksimal semester 6, untuk D4/S1 maksimal semester 8", ['size' => 10, 'italic' => false], $leftParam);
+        $section->addTextBreak(1);
+
+        // b) Kegiatan Akademik Lain
+        $section->addText("b) Kegiatan Akademik Lain :", $normalStyle);
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Kegiatan", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Tipe", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Keikutsertaan", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Waktu", $boldStyle, $centerParam); // Tanggal/Waktu
+        // Using academicActivities from relation
+        $rowCount = max($academicActivities->count(), 2);
+        for($i=0; $i<$rowCount; $i++) {
+            $act = $academicActivities[$i] ?? null;
+            $table->addRow();
+            $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
+            $table->addCell(3000)->addText($act ? $act->activity_name : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? $act->activity_type : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? $act->participation : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? \Carbon\Carbon::parse($act->start_date)->format('d M Y') : '', $normalStyle);
+        }
+        $section->addText("*) melampirkan copy sertifikat/surat keterangan", ['size' => 10], $leftParam);
         $section->addTextBreak(1);
 
         // --- SECTION III: PRESTASI NON AKADEMIK ---
@@ -768,28 +837,122 @@ class LaporanMonevController extends Controller
         $section->addText("*) melampirkan copy sertifikat/surat keterangan dari ketua panitia", ['size' => 10], $leftParam);
         $section->addTextBreak(1);
 
-         // d) Publikasi
-         // Assuming independentActivities maps here? Or maybe we don't have a specific table for this in DB yet.
-         // I'll used independentActivities for now or empty.
-        $section->addText("d) Publikasi Ilmiah/Artikel/Karya Tulis/PKM yang dibuat selama menjadi mahasiswa Universitas Tiga Serangkai :", $normalStyle);
+        // d) Kegiatan Mandiri (Using Report Data)
+        $section->addText("d) Kegiatan Mandiri Mahasiswa :", $normalStyle);
         $table = $section->addTable('BorderedTable');
         $table->addRow();
         $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
-        $table->addCell(8000, ['bgColor' => $headerColor])->addText("Judul karya tulis/karya ilmiah", $boldStyle, $centerParam);
+        $table->addCell(4000, ['bgColor' => $headerColor])->addText("Kegiatan", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Partisipasi", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Waktu", $boldStyle, $centerParam);
 
-        // Use Cumulative Data
-        $rowCount = max($allIndependent->count(), 2);
+        // Use Report Data
+        $rowCount = max($independentActivities->count(), 2);
         for($i=0; $i<$rowCount; $i++) {
-            $act = $allIndependent[$i] ?? null;
+            $act = $independentActivities[$i] ?? null;
             $table->addRow();
             $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
-            $table->addCell(8000)->addText($act ? $act->activity_name : '', $normalStyle);
+            $table->addCell(4000)->addText($act ? $act->activity_name : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? $act->participation : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? \Carbon\Carbon::parse($act->start_date)->format('d M Y') : '', $normalStyle);
         }
         $section->addText("*) melampirkan copy hasil Karya Ilmiah/Karya Tulis/PKM yang telah dibuat", ['size' => 10], $leftParam);
         $section->addTextBreak(1);
 
-        // --- SECTION IV: KEUANGAN ---
-        $section->addText("IV. LAPORAN KEUANGAN", $subHeaderStyle);
+        // --- SECTION IV: EVALUASI (REALISASI) ---
+        $section->addText("IV. EVALUASI (REALISASI)", $subHeaderStyle);
+
+        $eval = $evaluations->first(); // Assuming single evaluation per report
+
+        $section->addText("Faktor Pendukung :", $boldStyle);
+        $section->addText($eval ? $eval->support_factors : '-', $normalStyle);
+        $section->addTextBreak(1);
+
+        $section->addText("Faktor Penghambat :", $boldStyle);
+        $section->addText($eval ? $eval->barrier_factors : '-', $normalStyle);
+        $section->addTextBreak(1);
+
+         // --- SECTION V: TARGET SEMESTER DEPAN (Rencana) ---
+        $section->addText("V. TARGET SEMESTER DEPAN (Rencana)", $subHeaderStyle);
+
+        // a) Rencana Nilai IPS dan IPK
+        $section->addText("a) Rencana Nilai IPS dan IPK :", $normalStyle);
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Semester", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Target IPS", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Target IPK", $boldStyle, $centerParam);
+
+        $rowCount = max($targetNextSemester->count(), 2);
+        for($i=0; $i<$rowCount; $i++) {
+            $item = $targetNextSemester[$i] ?? null;
+            $table->addRow();
+            $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
+            $table->addCell(3000)->addText($item ? $item->semester : '', $normalStyle, $centerParam);
+            $table->addCell(2000)->addText($item ? $item->target_ips : '', $normalStyle, $centerParam);
+            $table->addCell(2000)->addText($item ? $item->target_ipk : '', $normalStyle, $centerParam);
+        }
+        $section->addTextBreak(1);
+
+        // b) Rencana Kegiatan Akademik
+        $section->addText("b) Rencana Kegiatan Akademik :", $normalStyle);
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(4000, ['bgColor' => $headerColor])->addText("Kegiatan", $boldStyle, $centerParam);
+        $table->addCell(4000, ['bgColor' => $headerColor])->addText("Rencana/Strategi", $boldStyle, $centerParam);
+
+        $rowCount = max($targetAcademicActivities->count(), 2);
+        for($i=0; $i<$rowCount; $i++) {
+            $item = $targetAcademicActivities[$i] ?? null;
+            $table->addRow();
+            $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
+            $table->addCell(4000)->addText($item ? $item->activity_name : '', $normalStyle);
+            $table->addCell(4000)->addText($item ? $item->strategy : '', $normalStyle);
+        }
+        $section->addTextBreak(1);
+
+        // c) Rencana Prestasi
+        $section->addText("c) Rencana Prestasi Mahasiswa :", $normalStyle);
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Prestasi", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Tingkat/Raihan", $boldStyle, $centerParam);
+
+        $rowCount = max($targetAchievements->count(), 2);
+        for($i=0; $i<$rowCount; $i++) {
+            $item = $targetAchievements[$i] ?? null;
+            $table->addRow();
+            $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
+            $table->addCell(3000)->addText($item ? $item->achievements_name : '', $normalStyle);
+            $table->addCell(3000)->addText($item ? ($item->level . ' / ' . $item->award) : '', $normalStyle);
+        }
+        $section->addTextBreak(1);
+
+        // d) Rencana Kegiatan Mandiri
+        $section->addText("d) Rencana Kegiatan Mandiri :", $normalStyle);
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Kegiatan", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Partisipasi", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Rencana/Strategi", $boldStyle, $centerParam);
+
+        $rowCount = max($targetIndependentActivities->count(), 2);
+        for($i=0; $i<$rowCount; $i++) {
+            $item = $targetIndependentActivities[$i] ?? null;
+            $table->addRow();
+            $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
+            $table->addCell(3000)->addText($item ? $item->activity_name : '', $normalStyle);
+            $table->addCell(2000)->addText($item ? $item->participation : '', $normalStyle);
+            $table->addCell(3000)->addText($item ? $item->strategy : '', $normalStyle);
+        }
+        $section->addTextBreak(1);
+
+        // --- SECTION VI: LAPORAN KEUANGAN ---
+        $section->addText("VI. LAPORAN KEUANGAN", $subHeaderStyle);
         $section->addText("Laporan rata-rata pemakaian dana biaya hidup yang diberikan sebesar Rp 5.700.000,- per semester oleh mahasiswa selama satu semester :", $normalStyle, $justifyParam);
         $section->addTextBreak(1);
 
@@ -831,7 +994,7 @@ class LaporanMonevController extends Controller
         $section->addTextBreak(1);
 
         // --- SECTION V: KESAN PESAN ---
-        $section->addText("V. Kesan - pesan Mahasiswa", $subHeaderStyle);
+        $section->addText("VII. Kesan - pesan Mahasiswa", $subHeaderStyle);
         $section->addText("Diisi kesan selama menerima beasiswa KIPdi Universitas Tiga Serangkai", ['italic' => true, 'color' => '0099CC', 'size'=>10]);
         $section->addText("__________________________________________________________________________________", $normalStyle);
 
@@ -873,6 +1036,43 @@ class LaporanMonevController extends Controller
         $cell2->addTextBreak(1);
         $cell2->addText($dataMahasiswa->name, $boldStyle);
         $cell2->addText("NIM. " . $dataMahasiswa->nim, $normalStyle);
+
+        // --- LAMPIRAN ---
+        $section->addPageBreak();
+        $section->addText("Lampiran - lampiran", ['bold' => true, 'size' => 12], $centerParam);
+        $section->addTextBreak(1);
+
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(6000, ['bgColor' => $headerColor])->addText("Nama Dokumen", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Status", $boldStyle, $centerParam);
+
+        $lampiranItems = [
+            "Kartu Hasil Studi (KHS)",
+            "Surat Keterangan Aktif Kuliah",
+            "Copy sertifikat/piagam prestasi yang diraih selama menjadi mahasiswa",
+            "Copy sertifikat/surat keterangan keikutsertaan pada kegiatan organisasi kemahasiswaan intra kampus",
+            "Copy sertifikat/surat keterangan keikutsertaan pada kegiatan kepanitiaan",
+            "Copy hasil publikasi Ilmiah/Karya Tulis/PKM",
+            "Copy Surat Keterangan Lulus/ Copy Ijazah",
+            "Copy Transkrip Nilai",
+            "......................... (Lampiran lain)",
+            "Dst."
+        ];
+
+        foreach ($lampiranItems as $idx => $item) {
+             $table->addRow();
+             if ($item === "Dst.") {
+                 $table->addCell(1000)->addText($item, $normalStyle, $centerParam); // Dst. in No column
+                 $table->addCell(6000)->addText("", $normalStyle);
+                 $table->addCell(2000)->addText("", $normalStyle);
+             } else {
+                 $table->addCell(1000)->addText($idx + 1, $normalStyle, $centerParam);
+                 $table->addCell(6000)->addText($item, $normalStyle);
+                 $table->addCell(2000)->addText($idx < 8 ? "Ada / Tidak" : "", $normalStyle, $centerParam);
+             }
+        }
 
         return $phpWord;
     }

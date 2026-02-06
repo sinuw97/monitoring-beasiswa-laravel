@@ -248,7 +248,44 @@
             *) Untuk D3 maksimal semester 6, untuk D4/S1 maksimal semester 8
         </div>
 
+        <div class="sub-section-header">b) Kegiatan Akademik Lain :</div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">No.</th>
+                    <th>Kegiatan</th>
+                    <th>Tipe</th>
+                    <th>Keikutsertaan</th>
+                    <th>Waktu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($laporan->academicActivities as $item)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td>{{ $item->activity_name }}</td>
+                        <td class="text-center">{{ $item->activity_type }}</td>
+                        <td class="text-center">{{ $item->participation }}</td>
+                        <td class="text-center">{{ \Carbon\Carbon::parse($item->start_date)->format('d M Y') }}</td>
+                    </tr>
+                @empty
+                    @for($k=0; $k<2; $k++)
+                        <tr>
+                            <td class="text-center">&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endfor
+                @endforelse
+            </tbody>
+        </table>
+        <div style="font-size: 10pt;">
+            *) melampirkan copy sertifikat/surat keterangan
+        </div>
 
+        <br>
 
         <div class="section-header">III. LAPORAN PRESTASI NON AKADEMIK</div>
         <div class="sub-section-header">a) Prestasi yang diraih selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
@@ -325,7 +362,6 @@
         <div style="font-size: 10pt;">
             *) melampirkan copy sertifikat/surat keterangan dari pimpinan organisasi
         </div>
-    <br>
     <!-- PAGE 3 content continues here without forced break -->
         <div class="sub-section-header">c) Keikutsertaan pada kegiatan kepanitiaan yang diikuti selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
         <table class="bordered">
@@ -356,24 +392,30 @@
             *) melampirkan copy sertifikat/surat keterangan dari ketua panitia
         </div>
 
-        <div class="sub-section-header">d) Publikasi Ilmiah/Artikel/Karya Tulis/PKM yang dibuat selama menjadi mahasiswa Universitas Tiga Serangkai :</div>
+        <div class="sub-section-header">d) Kegiatan Mandiri Mahasiswa :</div>
         <table class="bordered">
             <thead>
                 <tr>
                     <th style="width: 40px;">No.</th>
-                    <th>Judul karya tulis/karya ilmiah</th>
+                    <th>Kegiatan</th>
+                    <th style="width: 150px;">Partisipasi</th>
+                    <th style="width: 150px;">Waktu</th>
                 </tr>
             </thead>
             <tbody>
-                 @forelse($allIndependent as $item)
+                 @forelse($laporan->independentActivities as $item)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
                         <td>{{ $item->activity_name }}</td>
+                        <td class="text-center">{{ $item->participation }}</td>
+                        <td class="text-center">{{ \Carbon\Carbon::parse($item->start_date)->format('d M Y') }}</td>
                     </tr>
                 @empty
                     @for($k=0; $k<2; $k++)
                         <tr>
                             <td class="text-center">&nbsp;</td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                         </tr>
                     @endfor
@@ -384,7 +426,139 @@
             *) melampirkan copy hasil Karya Ilmiah/Karya Tulis/PKM yang telah dibuat
         </div>
 
-        <div class="section-header">IV. LAPORAN KEUANGAN</div>
+        <div class="section-header">IV. EVALUASI (REALISASI)</div>
+        @php
+            $eval = $laporan->evaluations->first();
+        @endphp
+        <div style="margin-left: 20px;">
+            <strong>Faktor Pendukung :</strong><br>
+            {{ $eval ? $eval->support_factors : '-' }}
+            <br><br>
+            <strong>Faktor Penghambat :</strong><br>
+            {{ $eval ? $eval->barrier_factors : '-' }}
+        </div>
+
+        <div class="section-header">V. TARGET SEMESTER DEPAN (Rencana)</div>
+
+        <div class="sub-section-header">a) Rencana Nilai IPS dan IPK :</div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">No.</th>
+                    <th>Semester</th>
+                    <th>Target IPS</th>
+                    <th>Target IPK</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($laporan->targetNextSemester as $item)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $item->semester }}</td>
+                        <td class="text-center">{{ $item->target_ips }}</td>
+                        <td class="text-center">{{ $item->target_ipk }}</td>
+                    </tr>
+                @empty
+                    @for($k=0; $k<2; $k++)
+                        <tr>
+                            <td class="text-center">&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endfor
+                @endforelse
+            </tbody>
+        </table>
+
+        <div class="sub-section-header">b) Rencana Kegiatan Akademik :</div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">No.</th>
+                    <th>Kegiatan</th>
+                    <th>Rencana/Strategi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($laporan->targetAcademicActivities as $item)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td>{{ $item->activity_name }}</td>
+                        <td>{{ $item->strategy }}</td>
+                    </tr>
+                @empty
+                    @for($k=0; $k<2; $k++)
+                        <tr>
+                            <td class="text-center">&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endfor
+                @endforelse
+            </tbody>
+        </table>
+
+        <div class="sub-section-header">c) Rencana Prestasi Mahasiswa :</div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">No.</th>
+                    <th>Prestasi</th>
+                    <th>Tingkat/Raihan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($laporan->targetAchievements as $item)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td>{{ $item->achievements_name }}</td>
+                        <td class="text-center">{{ $item->level }} / {{ $item->award }}</td>
+                    </tr>
+                @empty
+                    @for($k=0; $k<2; $k++)
+                        <tr>
+                            <td class="text-center">&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endfor
+                @endforelse
+            </tbody>
+        </table>
+
+        <div class="sub-section-header">d) Rencana Kegiatan Mandiri :</div>
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">No.</th>
+                    <th>Kegiatan</th>
+                    <th>Partisipasi</th>
+                    <th>Rencana/Strategi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($laporan->targetIndependentActivities as $item)
+                    <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td>{{ $item->activity_name }}</td>
+                        <td class="text-center">{{ $item->participation }}</td>
+                        <td>{{ $item->strategy }}</td>
+                    </tr>
+                @empty
+                    @for($k=0; $k<2; $k++)
+                        <tr>
+                            <td class="text-center">&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endfor
+                @endforelse
+            </tbody>
+        </table>
+
+        <div class="section-header">VI. LAPORAN KEUANGAN</div>
         <div style="margin-bottom: 5px;">
             Laporan rata-rata pemakaian dana biaya hidup yang diberikan sebesar Rp 5.700.000,- per semester oleh mahasiswa selama satu semester :
         </div>
@@ -427,7 +601,7 @@
             </tbody>
         </table>
 
-        <div class="section-header">V. Kesan - pesan Mahasiswa</div>
+        <div class="section-header">VII. Kesan - pesan Mahasiswa</div>
         <div style="font-style: italic; color: #09697E;">
             Diisi kesan selama menerima beasiswa KIPdi Universitas Tiga Serangkai
         </div>
