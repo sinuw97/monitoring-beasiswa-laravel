@@ -404,6 +404,480 @@ class LaporanMonevController extends Controller
     }
 
     /**
+     * Export single report to Docx.
+     */
+    public function exportDocx(string $id)
+    {
+        $laporan = LaporanMonevMahasiswa::with([
+            'periodeSemester',
+            'academicReports',
+            // Relations below kept for other uses if needed, but we will fetch all specifically
+            'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
+            'kesanPesanMahasiswa'
+        ])
+            ->where('laporan_id', $id)
+            ->firstOrFail();
+
+        $dataMahasiswa = Mahasiswa::where('nim', $laporan->nim)->firstOrFail();
+
+        // Fetch Cumulative Data
+        $allAchievements = \App\Models\monev\StudentAchievements::where('nim', $dataMahasiswa->nim)
+                            ->orderBy('start_date', 'asc')
+                            ->get();
+        $allOrganizations = \App\Models\monev\OrganizationActivities::where('nim', $dataMahasiswa->nim)
+                            ->orderBy('start_date', 'asc')
+                            ->get();
+        $allCommittees = \App\Models\monev\CommitteeActivities::where('nim', $dataMahasiswa->nim)
+                            ->orderBy('start_date', 'asc')
+                            ->get();
+        $allIndependent = \App\Models\monev\IndependentActivities::where('nim', $dataMahasiswa->nim)
+                            ->orderBy('start_date', 'asc')
+                            ->get();
+
+        $phpWord = $this->createPhpWordObject($laporan, $dataMahasiswa, $allAchievements, $allOrganizations, $allCommittees, $allIndependent);
+
+         // Download
+        $fileName = 'Laporan_Monev_' . $dataMahasiswa->nim . '.docx';
+        $tempFile = tempnam(sys_get_temp_dir(), 'LaporanMonev');
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $objWriter->save($tempFile);
+
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Export multiple reports to Docx as ZIP.
+     */
+    public function exportDocxZip(Request $request)
+    {
+        // Ambil periode aktif
+        $periodeCheck1 = Periode::where('status', '=', 'Aktif')->get();
+        $periodeCheck2 = Periode::where('status', '=', 'Aktif Sementara')->get();
+
+        if ($periodeCheck1->count() == 0 && $periodeCheck2->count() == 0) {
+            return back()->with('error', 'Tidak ada periode aktif.');
+        }
+
+        $periode = Periode::where('status', '=', 'Aktif')->orWhere('status', '=', 'Aktif Sementara')->first();
+        $tahun = substr($periode->tahun_akademik, 0, 4);
+        $semesterKode = $periode->semester == 'Ganjil' ? '01' : '02';
+        $semesterId = 'SM' . $tahun . $semesterKode;
+
+        // Ambil filter dan search dari request
+        $angkatan = $request->angkatan;
+        $status = $request->status;
+        $periodeFilter = $request->periode;
+        $search = $request->search;
+
+        // Query dasar dengan eager loading yang sama dengan exportDocx
+        $query = LaporanMonevMahasiswa::with([
+            'periodeSemester',
+            'academicReports',
+            'laporanKeuanganMahasiswa.detailKeuanganMahasiswa',
+            'kesanPesanMahasiswa'
+        ])
+        ->join('mahasiswa', 'laporan_mahasiswa.nim', '=', 'mahasiswa.nim') // Join untuk filter nama/nim
+        ->where('semester_id', '=', $periodeFilter ?? $semesterId)
+        ->select('laporan_mahasiswa.*'); // Pastikan hanya ambil kolom laporan agar tidak bentrok id
+
+        // Filter angkatan
+        if (!empty($angkatan)) {
+            $query->join('detail_mahasiswa', 'mahasiswa.nim', '=', 'detail_mahasiswa.nim')
+                  ->where('detail_mahasiswa.angkatan', $angkatan);
+        }
+
+        // Filter status
+        if (!empty($status)) {
+            $query->where('laporan_mahasiswa.status', '=', $status);
+        } else {
+            $query->where('laporan_mahasiswa.status', '!=', 'Draft');
+        }
+
+        // Search by NIM or Nama
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('mahasiswa.nim', 'like', "%{$search}%")
+                ->orWhere('mahasiswa.name', 'like', "%{$search}%");
+            });
+        }
+
+        // Sorting by Name
+        if ($request->sort === 'asc') {
+            $query->orderBy('mahasiswa.name', 'asc');
+        } elseif ($request->sort === 'desc') {
+            $query->orderBy('mahasiswa.name', 'desc');
+        }
+
+        $dataLaporan = $query->get();
+
+        if ($dataLaporan->isEmpty()) {
+            return back()->with('error', 'Tidak ada data laporan untuk diexport.');
+        }
+
+        // Buat file ZIP sementara
+        $zipFileName = 'laporan_monev_docx_' . date('Y-m-d_H-i-s') . '.zip';
+        $zipFilePath = storage_path('app/public/' . $zipFileName); // Simpan sementara di storage
+
+        // Pastikan direktori ada
+        if (!file_exists(dirname($zipFilePath))) {
+            mkdir(dirname($zipFilePath), 0755, true);
+        }
+
+        $zip = new \ZipArchive;
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+            foreach ($dataLaporan as $laporan) {
+                $dataMahasiswa = Mahasiswa::where('nim', $laporan->nim)->first();
+
+                if ($dataMahasiswa) {
+                    // Fetch Cumulative Data
+                    $allAchievements = \App\Models\monev\StudentAchievements::where('nim', $dataMahasiswa->nim)
+                                        ->orderBy('start_date', 'asc')
+                                        ->get();
+                    $allOrganizations = \App\Models\monev\OrganizationActivities::where('nim', $dataMahasiswa->nim)
+                                        ->orderBy('start_date', 'asc')
+                                        ->get();
+                    $allCommittees = \App\Models\monev\CommitteeActivities::where('nim', $dataMahasiswa->nim)
+                                        ->orderBy('start_date', 'asc')
+                                        ->get();
+                    $allIndependent = \App\Models\monev\IndependentActivities::where('nim', $dataMahasiswa->nim)
+                                        ->orderBy('start_date', 'asc')
+                                        ->get();
+
+                    $phpWord = $this->createPhpWordObject($laporan, $dataMahasiswa, $allAchievements, $allOrganizations, $allCommittees, $allIndependent);
+
+                    // Save individual docx to temp
+                    $tempDocx = tempnam(sys_get_temp_dir(), 'LaporanMonevDocx');
+                    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                    $objWriter->save($tempDocx);
+
+                    // Format nama file: [NIM]_[Semester]_[Tahun].docx
+                    $smt = $laporan->periodeSemester ? $laporan->periodeSemester->semester : 'Unit';
+                    $thn = $laporan->periodeSemester ? $laporan->periodeSemester->tahun_akademik : 'Unknown';
+                    $fileName = $dataMahasiswa->nim . '_' . $smt . '_' . $thn . '.docx';
+                    $fileName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $fileName);
+
+                    $zip->addFile($tempDocx, $fileName);
+
+                    $tempFiles[] = $tempDocx;
+                }
+            }
+            $zip->close();
+
+            // Cleanup temp files
+            if(isset($tempFiles)){
+                foreach($tempFiles as $tf){
+                    @unlink($tf);
+                }
+            }
+
+        } else {
+            return back()->with('error', 'Gagal membuat file ZIP.');
+        }
+
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    }
+
+    private function createPhpWordObject($laporan, $dataMahasiswa, $allAchievements, $allOrganizations, $allCommittees, $allIndependent)
+    {
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $phpWord->setDefaultFontName('Arial');
+        $phpWord->setDefaultFontSize(11);
+
+        $section = $phpWord->addSection();
+
+        // Styles
+        $headerStyle = ['bold' => true, 'size' => 14, 'name' => 'Arial'];
+        $subHeaderStyle = ['bold' => true, 'size' => 11, 'name' => 'Arial'];
+        $normalStyle = ['size' => 11, 'name' => 'Arial'];
+        $boldStyle = ['bold' => true, 'size' => 11, 'name' => 'Arial'];
+        $centerParam = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER];
+        $leftParam = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::START];
+        $justifyParam = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::BOTH];
+
+        // --- COVER PAGE ---
+        $section->addText("LAPORAN HASIL BELAJAR", $headerStyle, $centerParam);
+        $section->addText("PENERIMA BANTUAN KIP KULIAH", $headerStyle, $centerParam);
+        $section->addTextBreak(4);
+
+        $logoPath = public_path('icon/Logo-TSU.png');
+        if (file_exists($logoPath)) {
+            $section->addImage($logoPath, [
+                'width' => 200,
+                'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
+            ]);
+        }
+        $section->addTextBreak(4);
+
+        $tableStyle = ['borderSize' => 0, 'borderColor' => 'FFFFFF', 'cellMargin' => 50];
+        // Center the table visually by using a fixed width table centered in page?
+        // Or just indent. Let's try indenting or 3 columns (Empty, Content, Empty).
+        $table = $section->addTable($tableStyle);
+        $table->addRow();
+        $table->addCell(3000)->addText("NAMA", $normalStyle);
+        $table->addCell(500)->addText(":", $normalStyle);
+        $table->addCell(5000)->addText($dataMahasiswa->name, $normalStyle);
+        $table->addRow();
+        $table->addCell(3000)->addText("NIM", $normalStyle);
+        $table->addCell(500)->addText(":", $normalStyle);
+        $table->addCell(5000)->addText($dataMahasiswa->nim, $normalStyle);
+        $table->addRow();
+        $table->addCell(3000)->addText("ANGKATAN", $normalStyle);
+        $table->addCell(500)->addText(":", $normalStyle);
+        $table->addCell(5000)->addText($dataMahasiswa->detailMahasiswa->angkatan ?? '-', $normalStyle);
+        $table->addRow();
+        $table->addCell(3000)->addText("JENJANG/PROGRAM STUDI", $normalStyle);
+        $table->addCell(500)->addText(":", $normalStyle);
+        $table->addCell(5000)->addText("S1 / " . ($dataMahasiswa->detailMahasiswa->prodi ?? '-'), $normalStyle);
+
+        $section->addTextBreak(6);
+        $section->addText("Bantuan Biaya Pendidikan KIP KULIAH", $boldStyle, $centerParam);
+        $section->addText("UNIVERSITAS TIGA SERANGKAI", $boldStyle, $centerParam);
+        $section->addText("TAHUN " . date('Y'), $boldStyle, $centerParam);
+
+        $section->addPageBreak();
+
+        // --- SECTION I: DATA MAHASISWA ---
+        $section->addText("I. DATA MAHASISWA", $subHeaderStyle);
+        $table = $section->addTable(['borderSize' => 0]);
+        $rows = [
+            ['Nama', $dataMahasiswa->name],
+            ['NIM', $dataMahasiswa->nim],
+            ['Tempat, Tanggal Lahir', '-'], // Placeholder
+            ['Program Studi', $dataMahasiswa->detailMahasiswa->prodi ?? '-'],
+            ['Jenjang', 'S1'],
+            ['Fakultas', '-'], // Placeholder
+            ['Perguruan Tinggi', 'Universitas Tiga Serangkai'],
+            ['Tahun Masuk', $dataMahasiswa->detailMahasiswa->angkatan ?? '-'],
+            ['Tahun Lulus', '-'], // Placeholder
+        ];
+        foreach ($rows as $r) {
+            $table->addRow();
+            $table->addCell(3000)->addText($r[0], $normalStyle);
+            $table->addCell(500)->addText(":", $normalStyle);
+            $table->addCell(5000)->addText($r[1], $normalStyle);
+        }
+        $section->addTextBreak(1);
+
+        // --- SECTION II: PRESTASI AKADEMIK ---
+        $section->addText("II. LAPORAN PRESTASI AKADEMIK", $subHeaderStyle);
+
+        // Cyan color for headers
+        $headerColor = 'BFFBF9';
+        $borderStyle = ['borderSize' => 6, 'borderColor' => '000000', 'cellMargin' => 50];
+        $phpWord->addTableStyle('BorderedTable', $borderStyle);
+
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(4000, ['bgColor' => $headerColor])->addText("Semester", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("IPS", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("IPK", $boldStyle, $centerParam);
+
+        // Fixed 8 semesters
+        $allReports = AcademicReports::where('nim', $dataMahasiswa->nim)->get();
+        for ($i = 1; $i <= 8; $i++) {
+            $semNum = $i;
+            $rep = $allReports->where('semester', $semNum)->first();
+
+            // Roman numeral for semester
+            $roman = match($semNum) {
+                1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 6 => 'VI', 7 => 'VII', 8 => 'VIII', default => $semNum
+            };
+
+            $table->addRow();
+            $table->addCell(1000)->addText($i, $normalStyle, $centerParam);
+            $table->addCell(4000)->addText($roman, $normalStyle, $centerParam); // Just Roman Numeral as per image
+            $table->addCell(2000)->addText($rep ? $rep->ips : '', $normalStyle, $centerParam);
+            $table->addCell(2000)->addText($rep ? $rep->ipk : '', $normalStyle, $centerParam);
+        }
+
+        $section->addText("*) Melampirkan KHS atau transkrip nilai keseluruhan sampai lulus yang dilegalisir oleh Jurusan/Program Studi", ['size' => 10, 'italic' => false], $leftParam);
+        $section->addText("*) Untuk D3 maksimal semester 6, untuk D4/S1 maksimal semester 8", ['size' => 10, 'italic' => false], $leftParam);
+        $section->addTextBreak(1);
+
+        // --- SECTION III: PRESTASI NON AKADEMIK ---
+        $section->addText("III. LAPORAN PRESTASI NON AKADEMIK", $subHeaderStyle);
+
+        // a) Prestasi
+        $section->addText("a) Prestasi yang diraih selama menjadi mahasiswa Universitas Tiga Serangkai :", $normalStyle);
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Kegiatan", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Tingkat", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Waktu pelaksanaan", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Hasil", $boldStyle, $centerParam);
+
+        // Use Cumulative Data
+        $rowCount = max($allAchievements->count(), 2);
+        for($i=0; $i<$rowCount; $i++) {
+            $act = $allAchievements[$i] ?? null;
+            $table->addRow();
+            $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
+            $table->addCell(3000)->addText($act ? $act->achievements_name : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? $act->level : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? $act->start_date : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? $act->award : '', $normalStyle);
+        }
+
+        $section->addText("*) Kolom 'Tingkat' diisi dengan pilihan kota/propinsi/nasional/internasional", ['size' => 10], $leftParam);
+        $section->addText("*) melampirkan copy sertifikat/piagam", ['size' => 10], $leftParam);
+        $section->addTextBreak(1);
+
+        // b) Organisasi
+        $section->addText("b) Keikutsertaan pada kegiatan organisasi kemahasiswaan intra kampus selama menjadi mahasiswa Universitas Tiga Serangkai :", $normalStyle);
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Nama Organisasi", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Aktif sejak", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Akhir Keaktifan", $boldStyle, $centerParam);
+        $table->addCell(2000, ['bgColor' => $headerColor])->addText("Jabatan", $boldStyle, $centerParam);
+
+        // Use Cumulative Data
+        $rowCount = max($allOrganizations->count(), 2);
+        for($i=0; $i<$rowCount; $i++) {
+            $act = $allOrganizations[$i] ?? null;
+            $table->addRow();
+            $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
+            $table->addCell(3000)->addText($act ? $act->ukm_name : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? $act->start_date : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? $act->end_date : '', $normalStyle);
+            $table->addCell(2000)->addText($act ? $act->position : '', $normalStyle);
+        }
+        $section->addText("*) melampirkan copy sertifikat/surat keterangan dari pimpinan organisasi", ['size' => 10], $leftParam);
+        $section->addTextBreak(1);
+
+        // c) Kepanitiaan
+        $section->addText("c) Keikutsertaan pada kegiatan kepanitiaan yang diikuti selama menjadi mahasiswa Universitas Tiga Serangkai :", $normalStyle);
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(5000, ['bgColor' => $headerColor])->addText("Kegiatan", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Waktu pelaksanaan", $boldStyle, $centerParam);
+
+        // Use Cumulative Data
+        $rowCount = max($allCommittees->count(), 2);
+        for($i=0; $i<$rowCount; $i++) {
+            $act = $allCommittees[$i] ?? null;
+            $table->addRow();
+            $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
+            $table->addCell(5000)->addText($act ? $act->activity_name : '', $normalStyle);
+            $table->addCell(3000)->addText($act ? $act->start_date : '', $normalStyle);
+        }
+        $section->addText("*) melampirkan copy sertifikat/surat keterangan dari ketua panitia", ['size' => 10], $leftParam);
+        $section->addTextBreak(1);
+
+         // d) Publikasi
+         // Assuming independentActivities maps here? Or maybe we don't have a specific table for this in DB yet.
+         // I'll used independentActivities for now or empty.
+        $section->addText("d) Publikasi Ilmiah/Artikel/Karya Tulis/PKM yang dibuat selama menjadi mahasiswa Universitas Tiga Serangkai :", $normalStyle);
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No.", $boldStyle, $centerParam);
+        $table->addCell(8000, ['bgColor' => $headerColor])->addText("Judul karya tulis/karya ilmiah", $boldStyle, $centerParam);
+
+        // Use Cumulative Data
+        $rowCount = max($allIndependent->count(), 2);
+        for($i=0; $i<$rowCount; $i++) {
+            $act = $allIndependent[$i] ?? null;
+            $table->addRow();
+            $table->addCell(1000)->addText($i+1, $normalStyle, $centerParam);
+            $table->addCell(8000)->addText($act ? $act->activity_name : '', $normalStyle);
+        }
+        $section->addText("*) melampirkan copy hasil Karya Ilmiah/Karya Tulis/PKM yang telah dibuat", ['size' => 10], $leftParam);
+        $section->addTextBreak(1);
+
+        // --- SECTION IV: KEUANGAN ---
+        $section->addText("IV. LAPORAN KEUANGAN", $subHeaderStyle);
+        $section->addText("Laporan rata-rata pemakaian dana biaya hidup yang diberikan sebesar Rp 5.700.000,- per semester oleh mahasiswa selama satu semester :", $normalStyle, $justifyParam);
+        $section->addTextBreak(1);
+
+        $table = $section->addTable('BorderedTable');
+        $table->addRow();
+        $table->addCell(1000, ['bgColor' => $headerColor])->addText("No", $boldStyle, $centerParam);
+        $table->addCell(5000, ['bgColor' => $headerColor])->addText("Keperluan", $boldStyle, $centerParam);
+        $table->addCell(3000, ['bgColor' => $headerColor])->addText("Nominal", $boldStyle, $centerParam);
+
+        // Fixed rows as per image/template implication, but filling with available data?
+        // Since the data is dynamic, I will list the dynamic data, but try to map them if they match.
+        // For now, I will just list the user data.
+        $total = 0;
+        $keuanganItems = $laporan->laporanKeuanganMahasiswa ? $laporan->laporanKeuanganMahasiswa->detailKeuanganMahasiswa : collect([]);
+
+        if ($keuanganItems->isNotEmpty()) {
+            foreach ($keuanganItems as $idx => $keuangan) {
+                 $table->addRow();
+                 $table->addCell(1000)->addText($idx + 1, $normalStyle, $centerParam);
+                 $table->addCell(5000)->addText($keuangan->keperluan, $normalStyle); // Changed from description
+                 $table->addCell(3000)->addText("Rp " . number_format($keuangan->nominal, 0, ',', '.'), $normalStyle); // Changed from amount
+                 $total += $keuangan->nominal; // Changed from amount
+            }
+        } else {
+             // Blank rows if no data
+             for($k=1; $k<=5; $k++) {
+                 $table->addRow();
+                 $table->addCell(1000)->addText($k, $normalStyle, $centerParam);
+                 $table->addCell(5000)->addText("", $normalStyle);
+                 $table->addCell(3000)->addText("", $normalStyle);
+             }
+        }
+
+        // Total Row
+        $table->addRow();
+        $table->addCell(6000, ['gridSpan' => 2])->addText("Jumlah", $boldStyle, $centerParam);
+        $table->addCell(3000)->addText("Rp " . number_format($total, 0, ',', '.'), $boldStyle);
+
+        $section->addTextBreak(1);
+
+        // --- SECTION V: KESAN PESAN ---
+        $section->addText("V. Kesan - pesan Mahasiswa", $subHeaderStyle);
+        $section->addText("Diisi kesan selama menerima beasiswa KIPdi Universitas Tiga Serangkai", ['italic' => true, 'color' => '0099CC', 'size'=>10]);
+        $section->addText("__________________________________________________________________________________", $normalStyle);
+
+        $kesan = $laporan->kesanPesanMahasiswa->first() ? $laporan->kesanPesanMahasiswa->first()->kesan : ''; // Access first item
+        $pesan = $laporan->kesanPesanMahasiswa->first() ? $laporan->kesanPesanMahasiswa->first()->pesan : ''; // Access first item
+        if($kesan || $pesan) {
+            $section->addText($kesan . " " . $pesan, $normalStyle);
+        } else {
+            $section->addTextBreak(2);
+        }
+        $section->addTextBreak(1);
+        $section->addText("Demikian laporan ini saya buat dengan sebenar-benarnya.", $normalStyle);
+
+         // --- SIGNATURES ---
+        $section->addTextBreak(2);
+
+        // Signature Table
+        $table = $section->addTable(['borderSize' => 0, 'width' => 100 * 50]);
+        $table->addRow();
+
+        // Left Column: Wakil Rektor
+        $cell1 = $table->addCell(5000);
+        $cell1->addText("Mengetahui,", $normalStyle);
+        $cell1->addText("Wakil Rektor", $normalStyle);
+        $cell1->addText("Bidang Akademik, Inovasi dan Kemahasiswaan", $normalStyle);
+        $cell1->addTextBreak(4);
+        $cell1->addText("Prof. Dr. Drajat Tri Kartono, M.Si", $boldStyle);
+        $cell1->addText("NIP. 102024039", $normalStyle);
+
+        // Right Column: Student
+        $cell2 = $table->addCell(4000);
+        $cell2->addText("", $normalStyle); // Spacing
+        // City and Date
+        $cell2->addText("Surakarta, " . date('d F Y'), $normalStyle);
+        $cell2->addText("Pembuat Laporan", $normalStyle);
+        $cell2->addTextBreak(1);
+        $cell2->addText("METERAI", ['size' => 8], ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
+        $cell2->addText("Rp 10.000,-", ['size' => 8], ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
+        $cell2->addTextBreak(1);
+        $cell2->addText($dataMahasiswa->name, $boldStyle);
+        $cell2->addText("NIM. " . $dataMahasiswa->nim, $normalStyle);
+
+        return $phpWord;
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(string $id)

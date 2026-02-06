@@ -109,17 +109,17 @@
         </div>
 
         {{-- Tombol --}}
-        <div class="flex justify-end gap-3 pt-2 border-t border-gray-200">
+        <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2 border-t border-gray-200">
             <a href="{{ url('/admin/laporan') }}"
-                class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#09697E] transition">
+                class="w-full sm:w-auto text-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#09697E] transition">
                 Reset
             </a>
             <button type="submit"
-                class="px-4 py-2 bg-[#09697E] border border-transparent rounded-lg text-sm font-medium text-white hover:bg-[#075263] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#09697E] shadow-sm hover:shadow transition">
+                class="w-full sm:w-auto px-4 py-2 bg-[#09697E] border border-transparent rounded-lg text-sm font-medium text-white hover:bg-[#075263] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#09697E] shadow-sm hover:shadow transition">
                 Terapkan
             </button>
             <a href="{{ route('admin.laporan.export', request()->query()) }}"
-                class="px-4 py-2 bg-green-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-sm hover:shadow transition flex items-center gap-2">
+                class="w-full sm:w-auto justify-center px-4 py-2 bg-green-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-sm hover:shadow transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
@@ -127,8 +127,17 @@
                 </svg>
                 Export Excel
             </a>
+            <a href="{{ route('admin.laporan.export-docx-zip', request()->query()) }}"
+                class="w-full sm:w-auto justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm hover:shadow transition flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                    </path>
+                </svg>
+                Export Word Zip
+            </a>
             <a href="{{ route('admin.laporan.export-pdf-zip', request()->query()) }}"
-                class="px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-sm hover:shadow transition flex items-center gap-2">
+                class="w-full sm:w-auto justify-center px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-sm hover:shadow transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
@@ -202,6 +211,14 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
                                         </path>
+                                    </svg>
+                                </a>
+
+                                <a href="{{ url('/admin/laporan/' . $laporan->laporan_id . '/export-docx') }}"
+                                   class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition"
+                                   title="Export Word">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
                                 </a>
 
