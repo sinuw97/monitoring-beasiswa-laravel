@@ -166,23 +166,28 @@
             </div>
         </div>
 
-        {{-- Tables Section --}}
-        <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 space-y-8">
+        {{-- Section A: Kegiatan Akademik --}}
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">A. Kegiatan Akademik</h3>
 
-            {{-- Academic Reports --}}
+            {{-- 1. IPS & IPK --}}
             <div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">A. Kegiatan Akademik (IPS &
-                    IPK Semester ini)</h3>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">1. IPS & IPK Semester Ini</h4>
+                </div>
                 <div class="overflow-x-auto">
                     <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Komentar', 'Status']" :columns="['semester', 'ips', 'ipk', 'bukti', 'komentar', 'status']" :rows="$parsingAcademicReports" idKey="id" status="View"
                         style="riwayat" />
                 </div>
             </div>
 
-            {{-- Academic Activities --}}
+            <hr class="my-6 border-gray-100">
+
+            {{-- 2. Kegiatan Akademik Lainnya --}}
             <div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Akademik Lainnya
-                </h3>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">2. Kegiatan Akademik Lainnya</h4>
+                </div>
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
                         'No',
@@ -212,10 +217,17 @@
                 </div>
             </div>
 
-            {{-- Organization Activities --}}
+        </div> {{-- End Section A --}}
+
+        {{-- Section B: Kegiatan Non-Akademik --}}
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">B. Kegiatan Non-Akademik</h3>
+
+            {{-- 1. Organisasi --}}
             <div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">B. Kegiatan Non-Akademik
-                    (Organisasi)</h3>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">1. Organisasi</h4>
+                </div>
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
                         'No',
@@ -247,9 +259,13 @@
                 </div>
             </div>
 
-            {{-- Committee Activities --}}
+            <hr class="my-6 border-gray-100">
+
+            {{-- 2. Kepanitiaan --}}
             <div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Kepanitiaan</h3>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">2. Kepanitiaan</h4>
+                </div>
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
                         'No',
@@ -281,9 +297,13 @@
                 </div>
             </div>
 
-            {{-- Achievements --}}
+            <hr class="my-6 border-gray-100">
+
+            {{-- 3. Prestasi --}}
             <div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Prestasi</h3>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">3. Prestasi</h4>
+                </div>
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
                         'No',
@@ -315,9 +335,13 @@
                 </div>
             </div>
 
-            {{-- Independent Activities --}}
+            <hr class="my-6 border-gray-100">
+
+            {{-- 4. Kegiatan Mandiri --}}
             <div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Mandiri</h3>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">4. Kegiatan Mandiri</h4>
+                </div>
                 <div class="overflow-x-auto">
                     <x-tabel :headers="[
                         'No',
@@ -347,60 +371,80 @@
                 </div>
             </div>
 
-            {{-- Evaluasi Diri --}}
-            <div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">C. Evaluasi Diri</h3>
+        </div> {{-- End Section B --}}
+
+        {{-- Section C: Evaluasi Diri --}}
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">C. Evaluasi Diri</h3>
                 <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <p class="text-gray-700 italic">"{{ $parsingEvaluations->evaluation ?? 'Tidak ada evaluasi diri' }}"
                     </p>
                 </div>
             </div>
 
-            {{-- Rencana Semester Depan --}}
+        </div> {{-- End Section C --}}
+
+        {{-- Section D: Rencana Semester Depan --}}
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">D. Rencana Semester Depan</h3>
+
+            {{-- 1. Target IPS & IPK --}}
             <div>
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">D. Rencana Semester Depan
-                </h3>
-                {{-- Target IPS/IPK --}}
-                <div class="mb-4">
-                    <h4 class="font-semibold text-gray-700 mb-1">Target Akademik</h4>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">1. Target IPS & IPK</h4>
+                </div>
                     <div class="overflow-x-auto">
                         <x-tabel :headers="['No', 'Semester', 'Target IPS', 'Target IPK', 'Status']" :columns="['semester', 'target-ips', 'target-ipk', 'status']" :rows="$parsingNextReports" idKey="id" status="View"
                             style="riwayat" />
                     </div>
                 </div>
 
-                {{-- Target Kegiatan Akademik --}}
-                <div class="mb-4">
-                    <h4 class="font-semibold text-gray-700 mb-1">Rencana Kegiatan Akademik</h4>
+                <hr class="my-6 border-gray-100">
+
+            {{-- 2. Rencana Kegiatan Akademik --}}
+            <div>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">2. Rencana Kegiatan Akademik</h4>
+                </div>
                     <div class="overflow-x-auto">
                         <x-tabel :headers="['No', 'Nama Kegiatan', 'Strategi', 'Status']" :columns="['activity-name', 'strategy', 'status']" :rows="$parsingNextAcademicActivities" idKey="id" status="View"
                             style="riwayat" />
                     </div>
                 </div>
 
-                {{-- Target Prestasi --}}
-                <div class="mb-4">
-                    <h4 class="font-semibold text-gray-700 mb-1">Rencana Prestasi</h4>
+                <hr class="my-6 border-gray-100">
+
+            {{-- 3. Rencana Prestasi --}}
+            <div>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">3. Rencana Prestasi</h4>
+                </div>
                     <div class="overflow-x-auto">
                         <x-tabel :headers="['No', 'Nama Prestasi', 'Tingkat', 'Juara', 'Status']" :columns="['achievements-name', 'level', 'award', 'status']" :rows="$parsingNextAchievements" idKey="id" status="View"
                             style="riwayat" />
                     </div>
                 </div>
 
-                {{-- Target Mandiri --}}
-                <div class="mb-4">
-                    <h4 class="font-semibold text-gray-700 mb-1">Rencana Kegiatan Mandiri</h4>
+                <hr class="my-6 border-gray-100">
+
+            {{-- 4. Rencana Kegiatan Mandiri --}}
+            <div>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">4. Rencana Kegiatan Mandiri</h4>
+                </div>
                     <div class="overflow-x-auto">
                         <x-tabel :headers="['No', 'Nama Kegiatan', 'Partisipasi', 'Strategi', 'Status']" :columns="['activity-name', 'participation', 'strategy', 'status']" :rows="$parsingNextIndependentActivities" idKey="id" status="View"
                             style="riwayat" />
                     </div>
                 </div>
-            </div>
+            </div> {{-- End Section D --}}
 
-            {{-- Keuangan --}}
-            <div x-cloak x-data="{ openKeuangan: false, openEditKeuangan: false, editDataKeuangan: {} }" class="mb-2 cursor-default"
+        {{-- Section E: Laporan Keuangan --}}
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">E. Laporan Keuangan</h3>
+
+            <div x-cloak x-data="{ openKeuangan: false, openEditKeuangan: false, editDataKeuangan: {} }"
                 x-on:edit-keuangan="editDataKeuangan = $event.detail; openEditKeuangan = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">E. Laporan Keuangan</h3>
 
                 {{-- Ringkasan Total Keuangan --}}
                 <div class="mb-3">
@@ -424,11 +468,14 @@
                 </div>
             </div>
 
-            {{-- Kesan Pesan --}}
-            <div x-cloak x-data="{ openKesanPesan: false, openEditKesanPesan: false, editDataKesanPesan: {} }" class="mb-2 cursor-default"
+        </div> {{-- End Section E --}}
+
+        {{-- Section F: Kesan dan Pesan --}}
+        <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mb-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">F. Kesan dan Pesan Mahasiswa</h3>
+
+            <div x-cloak x-data="{ openKesanPesan: false, openEditKesanPesan: false, editDataKesanPesan: {} }"
                 x-on:edit-pesan-kesan="editDataKesanPesan = $event.detail; openEditKesanPesan = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">F. Kesan dan Pesan Mahasiswa
-                </h3>
 
                 <div class="overflow-x-auto w-full">
                     <x-tabel :headers="['No', 'Kesan', 'Pesan', 'Status']" :columns="['kesan', 'pesan', 'status']" :rows="$parsingKesanPesan" idKey="id"
@@ -436,7 +483,7 @@
                         style="riwayat" />
                 </div>
             </div>
-        </div>
+        </div> {{-- End Section F --}}
 
         <div class="mt-4 flex justify-end">
             <a href="{{ route('mahasiswa.riwayat-laporan') }}"

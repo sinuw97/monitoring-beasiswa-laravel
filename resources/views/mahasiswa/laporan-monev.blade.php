@@ -3,162 +3,91 @@
 @section('title', 'Isi Laporan Monev')
 
 @section('content')
-    <div class="mb-6 flex justify-between items-start">
-        <div>
-            <h1 class="font-bold text-3xl text-gray-800">Laporan Monev Yang Tersimpan</h1>
-            <p class="text-gray-600 mt-1">Anda dapat melihat, melanjutkan, atau memperbarui laporan monev yang
-                tersimpan di bawah ini.</p>
-        </div>
+    <div class="mb-8">
+        <h1 class="font-bold text-3xl text-gray-900 tracking-tight">Laporan Monev</h1>
+        <p class="text-gray-500 mt-2 text-lg">Kelola dan pantau perkembangan laporan monitoring evaluasi Anda.</p>
     </div>
-    <div class="grid grid-cols-1 gap-6">
-        {{-- Info Card --}}
-        <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
-            <div class="h-2 bg-[#09697E]"></div>
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 007-7z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Nama Mahasiswa</p>
-                            <p class="font-semibold text-gray-800">{{ $dataMahasiswa->name }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">NIM</p>
-                            <p class="font-semibold text-gray-800">{{ $dataMahasiswa->nim }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Periode</p>
-                            <p class="font-semibold text-gray-800">{{ $laporan->periodeSemester?->tahun_akademik }}
-                                {{ $laporan->periodeSemester?->semester }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
-                            <svg viewBox="0 0 24 24" version="1.1" class="w-[20px] h-[20px]"
-                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                fill="#000000">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <title></title>
-                                    <g fill="none" fill-rule="evenodd" id="页面-1" stroke="none"
-                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
-                                        <g id="导航图标" stroke="#09697E" stroke-width="1.5"
-                                            transform="translate(-28.000000, -272.000000)">
-                                            <g id="学术" transform="translate(28.000000, 272.000000)">
-                                                <g id="编组" transform="translate(1.000000, 4.000000)">
-                                                    <polygon id="路径" points="0 2.75 11 0 22 2.75 11 5.5"></polygon>
-                                                    <path
-                                                        d="M4.95,4.4 L4.95,9.88383 C4.95,9.88383 7.7,11.55 11,11.55 C14.3,11.55 17.05,9.88383 17.05,9.88383 L17.05,4.4"
-                                                        id="路径"></path>
-                                                    <line id="路径" x1="1.65" x2="1.65" y1="3.3"
-                                                        y2="15.4">
-                                                    </line>
-                                                    <rect height="3.3" id="矩形" width="3.3" x="0" y="14.3">
-                                                    </rect>
-                                                </g>
-                                            </g>
-                                        </g>
-                                    </g>
-                                </g>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Semester Ke</p>
-                            <p class="font-semibold text-gray-800">{{ $laporan->semester }}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
-                            <svg fill="#000000" viewBox="0 0 24 24" class="w-[20px] h-[20px]" id="date-check"
-                                data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path id="primary"
-                                        d="M20,21H4a1,1,0,0,1-1-1V9H21V20A1,1,0,0,1,20,21ZM21,5a1,1,0,0,0-1-1H4A1,1,0,0,0,3,5V9H21Z"
-                                        style="fill: none; stroke: #09697E; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
-                                    </path>
-                                    <path id="secondary" d="M16,3V6M8,3V6"
-                                        style="fill: none; stroke: #09697E; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
-                                    </path>
-                                    <polyline id="secondary-2" data-name="secondary" points="9 15 11 17 15 13"
-                                        style="fill: none; stroke: #09697E; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;">
-                                    </polyline>
-                                </g>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Tanggal Dibuat</p>
-                            <p class="font-semibold text-gray-800">{{ $laporan->created_at->translatedFormat('d F Y') }}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-blue-50 rounded-lg text-[#09697E]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Status Laporan</p>
-                            @php
-                                $warnaStatus = match ($laporan->status) {
-                                    'Lolos', 'Lolos dengan penugasan' => 'bg-green-100 text-green-700 border-green-200',
-                                    'Pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                                    'Dikembalikan' => 'bg-blue-100 text-blue-700 border-blue-200',
-                                    'Ditolak SP-1',
-                                    'Ditolak SP-2',
-                                    'Ditolak SP-3'
-                                        => 'bg-red-100 text-red-700 border-red-200',
-                                    default => 'bg-gray-100 text-gray-700',
-                                };
-                            @endphp
-                            <span
-                                class="px-2 py-0.5 rounded text-xs font-bold
-                                {{ $warnaStatus }}">
-                                {{ $laporan->status }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {{-- Nama --}}
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div class="p-3 bg-blue-50 text-blue-600 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 007-7z" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Mahasiswa</p>
+                <p class="font-bold text-gray-900 text-sm truncate">{{ $dataMahasiswa->name }}</p>
             </div>
         </div>
 
+        {{-- NIM --}}
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div class="p-3 bg-indigo-50 text-indigo-600 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">NIM</p>
+                <p class="font-bold text-gray-900 text-sm">{{ $dataMahasiswa->nim }}</p>
+            </div>
+        </div>
+
+        {{-- Periode --}}
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div class="p-3 bg-purple-50 text-purple-600 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Periode</p>
+                <p class="font-bold text-gray-900 text-sm">{{ $laporan->periodeSemester?->tahun_akademik }} {{ $laporan->periodeSemester?->semester }}</p>
+                <p class="text-xs text-gray-500 font-medium">Semester Ke-{{ $laporan->semester }}</p>
+            </div>
+        </div>
+
+        {{-- Status --}}
+        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div class="p-3 bg-green-50 text-green-600 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Status</p>
+                @php
+                    $warnaStatus = match ($laporan->status) {
+                        'Lolos', 'Lolos dengan penugasan' => 'text-green-600 bg-green-50',
+                        'Pending' => 'text-yellow-600 bg-yellow-50',
+                        'Dikembalikan' => 'text-blue-600 bg-blue-50',
+                        'Ditolak SP-1', 'Ditolak SP-2', 'Ditolak SP-3' => 'text-red-600 bg-red-50',
+                        default => 'text-gray-600 bg-gray-50',
+                    };
+                @endphp
+                <span class="font-bold text-sm {{ $warnaStatus }} px-2 py-0.5 rounded-md inline-block mt-0.5">
+                    {{ $laporan->status }}
+                </span>
+                <p class="text-xs text-gray-400 mt-1">{{ $laporan->created_at->translatedFormat('d M Y') }}</p>
+            </div>
+        </div>
+    </div>
+
         {{-- Informasi Penting --}}
-        <div class="bg-[#EAF6F8] border-l-4 border-[#1D7D94] rounded-md px-4 py-3">
-            <div class="flex items-start gap-3">
-                <p class="text-sm text-[#0F3F4A] leading-relaxed">
-                    Perhatikan bahwa <b>tanggal mulai</b> dan <b>tanggal selesai</b> kegiatan harus berada dalam
-                    <b>rentang waktu periode monev</b> yang telah ditentukan.
-                </p>
+        <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-4 mb-6 shadow-sm">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-700">
+                        Perhatikan bahwa <span class="font-medium">tanggal mulai</span> dan <span class="font-medium">tanggal selesai</span> kegiatan harus berada dalam
+                        <span class="font-medium">rentang waktu periode monev</span> yang telah ditentukan.
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -170,17 +99,17 @@
         @endif
 
         @if (session('success'))
-            <div class="bg-green-100 border-l-4 border-green-600 text-[#013F4E] w-full px-3 py-3 rounded">
+            <div class="bg-green-100 border-l-4 border-green-600 text-[#013F4E] w-full px-3 py-3 rounded mb-6">
                 {{ session('success') }}
             </div>
         @elseif (session('error'))
-            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 w-full px-3 py-3 rounded">
+            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 w-full px-3 py-3 rounded mb-6">
                 {{ session('error') }}
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 p-2 rounded">
+            <div class="bg-red-200 border-l-4 border-red-600 text-red-700 p-2 rounded mb-6">
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>- {{ $error }}</li>
@@ -190,15 +119,34 @@
         @endif
 
         {{-- Tables Section --}}
-        <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 space-y-8">
-            {{-- Reports --}}
-            <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="cursor-default"
-                x-on:edit-reports.window="editDataReports = $event.detail; openEditReports = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">A. Kegiatan Akademik</h3>
+        <div class="space-y-8">
+            {{-- Reports & Academic Activities Unified Card --}}
+            <div x-cloak x-data="{
+                openReports: false, openEditReports: false, editDataReports: {},
+                openAcademic: false, openEditAcademic: false, editDataAcademy: {}
+            }"
+                x-on:edit-reports.window="editDataReports = $event.detail; openEditReports = true"
+                x-on:edit-academic.window="editDataAcademy = $event.detail; openEditAcademic = true"
+                class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+                <div class="mb-6 pb-2 border-b border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800">A. Kegiatan Akademik</h3>
+                </div>
 
                 {{-- Tabel --}}
                 <div class="overflow-x-auto w-full">
-                    <h4 class="font-semibold text-gray-700 mb-1">IPS & IPK</h4>
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                        <h4 class="text-lg font-bold text-gray-800">1. IPS & IPK</h4>
+                        @if ($laporan->status === 'Draft' && (!$parsingAcademicReports || count($parsingAcademicReports) === 0))
+                            <button @click="openReports = true"
+                                class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Tambah
+                            </button>
+                        @endif
+                    </div>
                     {{-- Panggil komponen tabel --}}
                     <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Status']" :columns="['semester', 'ips', 'ipk', 'bukti', 'status']" :rows="$parsingAcademicReports" idKey="id" editEvent="edit-reports"
                         deleteRoute="laporan.academic-reports.delete" :status="$laporan->status" style="draft" />
@@ -207,11 +155,7 @@
                 {{-- Modal --}}
                 @if ($laporan->status === 'Draft')
                     @if (!$parsingAcademicReports || count($parsingAcademicReports) === 0)
-                        {{-- Btn tambah data --}}
-                        <button @click="openReports = true"
-                            class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                            Tambah
-                        </button>
+                        {{-- Button moved to header --}}
                     @endif
 
                     {{-- Modal tambah data --}}
@@ -322,15 +266,25 @@
                         </form>
                     </x-modal>
                 @endif
-            </div>
+                {{-- Divider --}}
+                <hr class="my-6 border-gray-100">
 
-            {{-- Academic Activities --}}
-            <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="cursor-default"
-                x-on:edit-academic.window="editDataAcademy = $event.detail; openEditAcademic = true">
+                {{-- Academic Activities Section --}}
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">2. Kegiatan Akademik Lain</h4>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openAcademic = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 {{-- Tabel --}}
                 <div class="overflow-x-auto w-full">
-                    <h4 class="font-semibold text-gray-700 mb-1">Kegiatan Akademik Lain</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama Kegiatan',
@@ -357,10 +311,6 @@
 
                 {{-- Modal --}}
                 @if ($laporan->status === 'Draft')
-                    <button @click="openAcademic = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
 
                     {{-- Tambah Modal --}}
                     <x-modal title="Tambah Data Kegiatan Akademik" show="openAcademic">
@@ -536,13 +486,37 @@
                 @endif
             </div>
 
-            {{-- Organization Activities --}}
-            <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="cursor-default"
-                x-on:edit-org.window="editDataOrg = $event.detail; openEditOrg = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">B. KEGIATAN NON-AKADEMIK</h3>
+            {{-- Organization, Committee, Achievement, Independent Unified Card --}}
+            <div x-cloak x-data="{
+                openOrganization: false, openEditOrg: false, editDataOrg: {},
+                openCommittee: false, openEditCommittee: false, editDataCommittee: {},
+                openAchievement: false, openEditAchievement: false, editDataAchievement: {},
+                openIndependent: false, openEditIndependent: false, editDataIndependent: {}
+            }"
+                x-on:edit-org.window="editDataOrg = $event.detail; openEditOrg = true"
+                x-on:edit-committee.window="editDataCommittee = $event.detail; openEditCommittee = true"
+                x-on:edit-achievement.window="editDataAchievement = $event.detail; openEditAchievement = true"
+                x-on:edit-independent.window="editDataIndependent = $event.detail; openEditIndependent = true"
+                class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+                <div class="mb-6 pb-2 border-b border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800">B. Kegiatan Non-Akademik</h3>
+                </div>
+
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">1. Kegiatan Organisasi Mahasiswa</h4>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openOrganization = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 <div class="overflow-x-auto w-full">
-                    <h4 class="font-semibold text-gray-700 mb-1">Kegiatan Organisasi Mahasiswa</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama UKM',
@@ -569,11 +543,6 @@
                 </div>
 
                 @if ($laporan->status === 'Draft')
-                    {{-- Btn --}}
-                    <button @click="openOrganization = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
 
                     {{-- Modal Tambah --}}
                     <x-modal title="Tambah data kegiatan organisasi" show="openOrganization">
@@ -770,14 +739,24 @@
                         </form>
                     </x-modal>
                 @endif
-            </div>
+                {{-- Divider --}}
+                <hr class="my-6 border-gray-100">
 
-            {{-- Committee Activities --}}
-            <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="cursor-default"
-                x-on:edit-committee.window="editDataCommittee = $event.detail; openEditCommittee = true">
+                {{-- Committee Activities --}}
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">2. Kegiatan Kepanitiaan</h4>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openCommittee = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 <div class="overflow-x-auto w-full">
-                    <h4 class="font-semibold text-gray-700 mb-1">Kegiatan Kepanitiaan</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama Kegiatan',
@@ -805,10 +784,6 @@
                 </div>
 
                 @if ($laporan->status === 'Draft')
-                    <button @click="openCommittee = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
 
                     {{-- Modal Tambah --}}
                     <x-modal title="Tambah Data Kegiatan Penugasan dan Kepanitian" show="openCommittee">
@@ -1023,14 +998,24 @@
                         });
                     </script>
                 @endif
-            </div>
+                {{-- Divider --}}
+                <hr class="my-6 border-gray-100">
 
-            {{-- Achievements --}}
-            <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="cursor-default"
-                x-on:edit-achievement.window="editDataAchievement = $event.detail; openEditAchievement = true">
+                {{-- Achievements --}}
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">3. Prestasi</h4>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openAchievement = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 <div class="overflow-x-auto w-full">
-                    <h4 class="font-semibold text-gray-700 mb-1">Prestasi</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama Prestasi',
@@ -1058,10 +1043,6 @@
                 </div>
 
                 @if ($laporan->status === 'Draft')
-                    <button @click="openAchievement = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
 
                     {{-- Modal Tambah --}}
                     <x-modal title="Tambah Data Prestasi" show="openAchievement">
@@ -1434,14 +1415,24 @@
                         });
                     </script>
                 @endif
-            </div>
+                {{-- Divider --}}
+                <hr class="my-6 border-gray-100">
 
-            {{-- Independent Activities --}}
-            <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="cursor-default"
-                x-on:edit-independent="editDataIndependent = $event.detail; openEditIndependent = true">
+                {{-- Independent Activities --}}
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">4. Kegiatan Mandiri</h4>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openIndependent = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 <div class="overflow-x-auto w-full">
-                    <h4 class="font-semibold text-gray-700 mb-1">Kegiatan Mandiri</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama Kegiatan',
@@ -1467,10 +1458,6 @@
                 </div>
 
                 @if ($laporan->status === 'Draft')
-                    <button @click="openIndependent = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
                     {{-- Modal Tambah --}}
                     <x-modal title="Tambah Data Kegiatan Mandiri" show="openIndependent">
                         <form method="POST" enctype="multipart/form-data"
@@ -1635,48 +1622,66 @@
             </div>
 
             {{-- Evaluations --}}
-            <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="cursor-default">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">C. EVALUASI</h3>
-                {{-- Data yg ditampilkan --}}
-                <div>
+            <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }"
+                class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
 
-                    <p class="text-[#013F4E] text-[12pt] font-semibold mb-0.5">Faktor Pendukung
-                        <span class="text-red-500">*</span>
-                    </p>
-                    <textarea name="faktor-pendukung" id="faktor-pendukung" required
-                        class="resize-none px-2 py-0.5 w-full sm:w-full md:w-[450px] h-[200px] cursor-default shadow-md border border-[#c0c0c0] focus:outline-none focus:ring-0"
-                        readonly>{{ $parsingEvaluations->support_factors ?? '-' }}</textarea>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800">C. Evaluasi</h3>
+
+                    @if ($parsingEvaluations && $laporan->status === 'Draft')
+                        <div class="flex gap-2">
+                            <button x-data='{ eval: @json($parsingEvaluations) }'
+                                @click="
+                                            openEditEvaluation = true;
+                                            editDataEvaluation = eval;
+                                        "
+                                class="px-3 py-1.5 text-white bg-[#2179ca] hover:bg-[#1c6bb4] rounded-md shadow-sm text-sm font-semibold flex items-center gap-1 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                </svg>
+                                Edit
+                            </button>
+                            {{-- Hapus (keeping logic) --}}
+                            <button x-data='{ eval: @json($parsingEvaluations) }'
+                                @click="$dispatch('delete-row', { id: eval.id, route: '{{ route('laporan.evaluations.hapus', ':id') }}'.replace(':id', eval.id) })"
+                                class="px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-md shadow-sm text-sm font-semibold flex items-center gap-1 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                                Hapus
+                            </button>
+                        </div>
+                    @elseif (!$parsingEvaluations || $laporan->status === 'Draft')
+                        <button @click="openEvaluation = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
                 </div>
-                <div>
-                    <p class="text-[#013F4E] text-[12pt] font-semibold mb-0.5">Faktor Penghambat
-                        <span class="text-red-500">*</span>
-                    </p>
-                    <textarea name="faktor-penghambat" id="faktor-penghambat" required
-                        class="resize-none px-2 py-0.5 w-full sm:w-full md:w-[450px] h-[200px] cursor-default shadow-md border border-[#c0c0c0] focus:outline-none focus:ring-0"
-                        readonly>{{ $parsingEvaluations->barrier_factors ?? '-' }}</textarea>
+
+                {{-- Data yg ditampilkan --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-gray-600 font-semibold mb-2">Faktor Pendukung <span class="text-red-500">*</span></p>
+                        <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 min-h-[150px]">
+                            {{ $parsingEvaluations->support_factors ?? '-' }}
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 font-semibold mb-2">Faktor Penghambat <span class="text-red-500">*</span></p>
+                        <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 min-h-[150px]">
+                            {{ $parsingEvaluations->barrier_factors ?? '-' }}
+                        </div>
+                    </div>
                 </div>
 
                 @if ($parsingEvaluations && $laporan->status === 'Draft')
-                    <div class="flex gap-4 mt-2">
-                        <button x-data='{ eval: @json($parsingEvaluations) }'
-                            @click="
-                                        openEditEvaluation = true;
-                                        editDataEvaluation = eval;
-                                    "
-                            class="px-3 py-0.5 text-white bg-[#2179ca] hover:bg-[#1c6bb4] rounded-sm cursor-poin">
-                            Edit
-                        </button>
-                        <button x-data='{ eval: @json($parsingEvaluations) }'
-                            @click="$dispatch('delete-row', { id: eval.id, route: '{{ route('laporan.evaluations.hapus', ':id') }}'.replace(':id', eval.id) })"
-                            class="px-3 py-0.5 bg-red-500 hover:bg-red-600 text-white rounded-sm cursor-pointer">
-                            Hapus
-                        </button>
-                    </div>
+                    {{-- Buttons moved to header --}}
                 @elseif (!$parsingEvaluations || $laporan->status === 'Draft')
-                    <button @click="openEvaluation = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
+                    {{-- Buttons moved to header --}}
                 @endif
 
                 {{-- Modal Tambah --}}
@@ -1747,23 +1752,43 @@
             </div>
 
             {{-- Target Next SMT --}}
-            <div x-cloak x-data="{ openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {} }" class="cursor-default"
-                x-on:edit-target-rep.window="editDataTargetRep = $event.detail; openEditTargetRep = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">D. Rencana Semester Depan
-                </h3>
+            {{-- Next Semester Plan Unified Card --}}
+            <div x-cloak x-data="{
+                openTargetRep: false, openEditTargetRep: false, editDataTargetRep: {},
+                openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {},
+                openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {},
+                openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {}
+            }"
+                x-on:edit-target-rep.window="editDataTargetRep = $event.detail; openEditTargetRep = true"
+                x-on:edit-target-academic.window="editDataTargetAcademic = $event.detail; openEditTargetAcademic = true"
+                x-on:edit-target-achievement.window="editDatatargetAchievement = $event.detail; openEditTargetAchievement = true"
+                x-on:edit-target-independent.window="editDataTargetIndependent = $event.detail; openEditTargetIndependent = true"
+                class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+                <div class="mb-6 pb-2 border-b border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800">D. Rencana Semester Depan</h3>
+                </div>
+
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">1. Rencana IPS & IPK</h4>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openTargetRep = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 <div class="overflow-x-auto w-full">
-                    <h4 class="font-semibold text-gray-700 mb-1">Rencana IPS & IPK</h4>
                     <x-tabel :headers="['No', 'Semester', 'Target IPS', 'Target IPK', 'Status']" :columns="['semester', 'target-ips', 'target-ipk', 'status']" :rows="$parsingNextReports" idKey="id"
                         editEvent="edit-target-rep" deleteRoute="laporan.next-semester-reports.hapus" :status="$laporan->status"
                         style="draft" />
                 </div>
 
                 @if ($laporan->status === 'Draft')
-                    <button @click="openTargetRep = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
                     {{-- Modal Tambah --}}
                     <x-modal title="Tambah Data Target IPS dan IPK" show="openTargetRep">
                         <form method="POST"
@@ -1867,24 +1892,28 @@
                         </form>
                     </x-modal>
                 @endif
-            </div>
+                {{-- Divider --}}
+                <hr class="my-6 border-gray-100">
 
-            {{-- Target Keg Akademik --}}
-            <div x-cloak x-data="{ openTargetAcademic: false, openEditTargetAcademic: false, editDataTargetAcademic: {} }" class="cursor-default"
-                x-on:edit-target-academic.window="editDataTargetAcademic = $event.detail; openEditTargetAcademic = true">
-                <h4 class="font-semibold text-gray-700 mb-1">Rencana Kegiatan Akademik</h4>
+                {{-- Target Keg Akademik --}}
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">2. Rencana Kegiatan Akademik</h4>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openTargetAcademic = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 <div class="overflow-x-auto w-full">
                     <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Status']" :columns="['activity-name', 'strategy', 'status']" :rows="$parsingNextAcademicActivities" idKey="id"
                         editEvent="edit-target-academic" deleteRoute="laporan.next-smt-activities.hapus"
                         :status="$laporan->status" style="draft" />
                 </div>
-
-                @if ($laporan->status === 'Draft')
-                    <button @click="openTargetAcademic = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
                     {{-- Modal tambah --}}
                     <x-modal title="Tambah Data Rencana Kegiatan Akademik" show="openTargetAcademic">
                         <form method="POST"
@@ -1954,25 +1983,29 @@
                             </div>
                         </form>
                     </x-modal>
-                @endif
-            </div>
 
-            {{-- Target Achievements --}}
-            <div x-cloak x-data="{ openTargetAchievement: false, openEditTargetAchievement: false, editDatatargetAchievement: {} }" class="cursor-default"
-                x-on:edit-target-achievement="editDatatargetAchievement = $event.detail; openEditTargetAchievement = true">
-                <h4 class="font-semibold text-gray-700 mb-1">Rencana Prestasi</h4>
+                {{-- Divider --}}
+                <hr class="my-6 border-gray-100">
+
+                {{-- Target Achievements --}}
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">3. Rencana Prestasi</h4>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openTargetAchievement = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 <div class="overflow-x-auto w-full">
                     <x-tabel :headers="['No', 'Nama Prestasi', 'Tingkat', 'Raihan', 'Status']" :columns="['achievements-name', 'level', 'award', 'status']" :rows="$parsingNextAchievements" idKey="id"
                         editEvent="edit-target-achievement" deleteRoute="laporan.next-smt-achievements.hapus"
                         :status="$laporan->status" style="draft" />
                 </div>
-
-                @if ($laporan->status === 'Draft')
-                    <button @click="openTargetAchievement = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
                     {{-- Modal Tambah --}}
                     <x-modal title="Tambah Data Rencana Prestasi" show="openTargetAchievement">
                         <form method="POST"
@@ -2058,25 +2091,29 @@
                             </div>
                         </form>
                     </x-modal>
-                @endif
-            </div>
 
-            {{-- Target Independent --}}
-            <div x-cloak x-data="{ openTargetIndependent: false, openEditTargetIndependent: false, editDataTargetIndependent: {} }" class="cursor-default"
-                x-on:edit-target-independent="editDataTargetIndependent = $event.detail; openEditTargetIndependent = true">
-                <h4 class="font-semibold text-gray-700 mb-1">Rencana Kegiatan Mandiri</h4>
+                {{-- Divider --}}
+                <hr class="my-6 border-gray-100">
+
+                {{-- Target Independent --}}
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800">4. Rencana Kegiatan Mandiri</h4>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openTargetIndependent = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 <div class="overflow-x-auto w-full">
                     <x-tabel :headers="['No', 'Nama Kegiatan', 'Rencana/Strategi', 'Keikutsertaan', 'Status']" :columns="['activity-name', 'strategy', 'participation', 'status']" :rows="$parsingNextIndependentActivities" idKey="id"
                         editEvent="edit-target-independent" deleteRoute="laporan.next-smt-independent.hapus"
                         :status="$laporan->status" style="draft" />
                 </div>
-
-                @if ($laporan->status === 'Draft')
-                    <button @click="openTargetIndependent = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
                     {{-- Modal tambah --}}
                     <x-modal title="Tambah Data Rencana Kegiatan Mandiri" show="openTargetIndependent">
                         <form method="POST"
@@ -2164,13 +2201,26 @@
                             </div>
                         </form>
                     </x-modal>
-                @endif
+
             </div>
 
             {{-- Keuangan --}}
-            <div x-cloak x-data="{ openKeuangan: false, openEditKeuangan: false, editDataKeuangan: {} }" class="cursor-default"
-                x-on:edit-keuangan="editDataKeuangan = $event.detail; openEditKeuangan = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">E. Laporan Keuangan</h3>
+            <div x-cloak x-data="{ openKeuangan: false, openEditKeuangan: false, editDataKeuangan: {} }"
+                x-on:edit-keuangan="editDataKeuangan = $event.detail; openEditKeuangan = true"
+                class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800">E. Laporan Keuangan</h3>
+                    @if ($laporan->status === 'Draft')
+                        <button @click="openKeuangan = true"
+                            class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah
+                        </button>
+                    @endif
+                </div>
 
                 {{-- Ringkasan Total Keuangan --}}
                 <div class="mb-3">
@@ -2194,10 +2244,6 @@
                 </div>
 
                 @if ($laporan->status === 'Draft')
-                    <button @click="openKeuangan = true"
-                        class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                        Tambah
-                    </button>
                     {{-- Modal tambah --}}
                     <x-modal title="Tambah Data Keuangan Mahasiswa" show="openKeuangan">
                         <form method="POST" action="{{ route('laporan.keuangan.store', $laporan->laporan_id) }}"
@@ -2271,12 +2317,26 @@
             </div>
 
             {{-- Kesan Pesan --}}
-            <div x-cloak x-data="{ openKesanPesan: false, openEditKesanPesan: false, editDataKesanPesan: {} }" class="cursor-default"
-                x-on:edit-pesan-kesan="editDataKesanPesan = $event.detail; openEditKesanPesan = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">F. Kesan dan Pesan Mahasiswa</h3>
+            <div x-cloak x-data="{ openKesanPesan: false, openEditKesanPesan: false, editDataKesanPesan: {} }"
+                x-on:edit-pesan-kesan="editDataKesanPesan = $event.detail; openEditKesanPesan = true"
+                class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800">F. Kesan dan Pesan Mahasiswa</h3>
+                    @if ($laporan->status === 'Draft')
+                        @if (!$parsingKesanPesan || count($parsingKesanPesan) === 0)
+                             <button @click="openKesanPesan = true"
+                                class="bg-[#f9d223] px-3 py-1.5 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-sm text-sm font-semibold text-gray-800 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Tambah
+                            </button>
+                        @endif
+                    @endif
+                </div>
 
                 <div class="overflow-x-auto w-full">
-                    <h4 class="font-semibold text-gray-700 mb-1">Kesan dan Pesan</h4>
                     <x-tabel :headers="['No', 'Kesan', 'Pesan', 'Status']" :columns="['kesan', 'pesan', 'status']" :rows="$parsingKesanPesan" idKey="id"
                         editEvent="edit-pesan-kesan" deleteRoute="laporan.kesan-pesan.hapus" :status="$laporan->status"
                         style="draft" />
@@ -2284,11 +2344,6 @@
 
                 @if ($laporan->status === 'Draft')
                     @if (!$parsingKesanPesan || count($parsingKesanPesan) === 0)
-                        {{-- Btn tambah data --}}
-                        <button @click="openKesanPesan = true"
-                            class="bg-[#f9d223] mt-2 px-2 py-0.75 rounded-lg hover:bg-[#ffe056] transition cursor-pointer shadow-md">
-                            Tambah
-                        </button>
                     @endif
 
                     {{-- Modal tambah --}}
@@ -2367,14 +2422,17 @@
             <x-modal-delete />
 
             {{-- Button Aksi --}}
-            <div x-cloak x-data="{ openModalKonfirmasi: false }" class="mt-4 flex gap-2">
-                <button type="button"
-                    class="button bg-[#09697E] hover:bg-[#27788a] text-white px-2 py-1 rounded-md cursor-pointer">
-                    <a href="{{ route('mahasiswa.dashboard') }}">Kembali</a>
-                </button>
+            <div x-cloak x-data="{ openModalKonfirmasi: false }" class="mt-8 flex justify-end gap-3 border-t border-gray-200 pt-6">
+                <a href="{{ route('mahasiswa.dashboard') }}"
+                    class="px-4 py-2 bg-white border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
+                    Kembali
+                </a>
                 <button @click="openModalKonfirmasi = true"
-                    class="button bg-[#3FAA54] hover:bg-[#48cc62] px-2 py-1 rounded-md cursor-pointer text-white">
-                    Ajukan
+                    class="px-4 py-2 bg-[#09697E] hover:bg-[#075363] text-white font-medium rounded-lg shadow-sm transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    Ajukan Laporan
                 </button>
                 {{-- Modal Konfirmasi --}}
                 <x-modal title="Konfirmasi Pengajuan Laporan" show="openModalKonfirmasi">
