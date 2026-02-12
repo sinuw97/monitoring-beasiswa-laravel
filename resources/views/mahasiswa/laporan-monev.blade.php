@@ -194,11 +194,11 @@
             {{-- Reports --}}
             <div x-cloak x-data="{ openReports: false, openEditReports: false, editDataReports: {} }" class="cursor-default"
                 x-on:edit-reports.window="editDataReports = $event.detail; openEditReports = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">A. Kegiatan Akademik (IPS &
-                    IPK Semester ini)</h3>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">A. Kegiatan Akademik</h3>
 
                 {{-- Tabel --}}
                 <div class="overflow-x-auto w-full">
+                    <h4 class="font-semibold text-gray-700 mb-1">IPS & IPK</h4>
                     {{-- Panggil komponen tabel --}}
                     <x-tabel :headers="['No', 'Semester', 'IPS', 'IPK', 'Bukti', 'Status']" :columns="['semester', 'ips', 'ipk', 'bukti', 'status']" :rows="$parsingAcademicReports" idKey="id" editEvent="edit-reports"
                         deleteRoute="laporan.academic-reports.delete" :status="$laporan->status" style="draft" />
@@ -327,11 +327,10 @@
             {{-- Academic Activities --}}
             <div x-cloak x-data="{ openAcademic: false, openEditAcademic: false, editDataAcademy: {} }" class="cursor-default"
                 x-on:edit-academic.window="editDataAcademy = $event.detail; openEditAcademic = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">B. Kegiatan Non-Akademik
-                    (Organisasi)</h3>
 
                 {{-- Tabel --}}
                 <div class="overflow-x-auto w-full">
+                    <h4 class="font-semibold text-gray-700 mb-1">Kegiatan Akademik Lain</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama Kegiatan',
@@ -540,10 +539,10 @@
             {{-- Organization Activities --}}
             <div x-cloak x-data="{ openOrganization: false, openEditOrg: false, editDataOrg: {} }" class="cursor-default"
                 x-on:edit-org.window="editDataOrg = $event.detail; openEditOrg = true">
-                <h2 class="text-xl lg:text-2xl font-bold text-[#013F4E] mt-4">B. KEGIATAN NON-AKADEMIK</h2>
-                <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kegiatan Organisasi Mahasiswa</p>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">B. KEGIATAN NON-AKADEMIK</h3>
 
                 <div class="overflow-x-auto w-full">
+                    <h4 class="font-semibold text-gray-700 mb-1">Kegiatan Organisasi Mahasiswa</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama UKM',
@@ -776,9 +775,9 @@
             {{-- Committee Activities --}}
             <div x-cloak x-data="{ openCommittee: false, openEditCommittee: false, editDataCommittee: {} }" class="cursor-default"
                 x-on:edit-committee.window="editDataCommittee = $event.detail; openEditCommittee = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Kepanitiaan</h3>
 
                 <div class="overflow-x-auto w-full">
+                    <h4 class="font-semibold text-gray-700 mb-1">Kegiatan Kepanitiaan</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama Kegiatan',
@@ -1029,9 +1028,9 @@
             {{-- Achievements --}}
             <div x-cloak x-data="{ openAchievement: false, openEditAchievement: false, editDataAchievement: {} }" class="cursor-default"
                 x-on:edit-achievement.window="editDataAchievement = $event.detail; openEditAchievement = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Prestasi</h3>
 
                 <div class="overflow-x-auto w-full">
+                    <h4 class="font-semibold text-gray-700 mb-1">Prestasi</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama Prestasi',
@@ -1440,9 +1439,9 @@
             {{-- Independent Activities --}}
             <div x-cloak x-data="{ openIndependent: false, openEditIndependent: false, editDataIndependent: {} }" class="cursor-default"
                 x-on:edit-independent="editDataIndependent = $event.detail; openEditIndependent = true">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">Kegiatan Mandiri</h3>
 
                 <div class="overflow-x-auto w-full">
+                    <h4 class="font-semibold text-gray-700 mb-1">Kegiatan Mandiri</h4>
                     <x-tabel :headers="[
                         'No',
                         'Nama Kegiatan',
@@ -1637,10 +1636,11 @@
 
             {{-- Evaluations --}}
             <div x-cloak x-data="{ openEvaluation: false, openEditEvaluation: false, editDataEvaluation: {} }" class="cursor-default">
-                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">C. Evaluasi Diri</h3>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">C. EVALUASI</h3>
                 {{-- Data yg ditampilkan --}}
                 <div>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Pendukung
+
+                    <p class="text-[#013F4E] text-[12pt] font-semibold mb-0.5">Faktor Pendukung
                         <span class="text-red-500">*</span>
                     </p>
                     <textarea name="faktor-pendukung" id="faktor-pendukung" required
@@ -1648,7 +1648,7 @@
                         readonly>{{ $parsingEvaluations->support_factors ?? '-' }}</textarea>
                 </div>
                 <div>
-                    <p class="text-[#013F4E] text-[14pt] font-semibold mb-0.5">Faktor Penghambat
+                    <p class="text-[#013F4E] text-[12pt] font-semibold mb-0.5">Faktor Penghambat
                         <span class="text-red-500">*</span>
                     </p>
                     <textarea name="faktor-penghambat" id="faktor-penghambat" required
@@ -1753,6 +1753,7 @@
                 </h3>
 
                 <div class="overflow-x-auto w-full">
+                    <h4 class="font-semibold text-gray-700 mb-1">Rencana IPS & IPK</h4>
                     <x-tabel :headers="['No', 'Semester', 'Target IPS', 'Target IPK', 'Status']" :columns="['semester', 'target-ips', 'target-ipk', 'status']" :rows="$parsingNextReports" idKey="id"
                         editEvent="edit-target-rep" deleteRoute="laporan.next-semester-reports.hapus" :status="$laporan->status"
                         style="draft" />
@@ -2272,10 +2273,10 @@
             {{-- Kesan Pesan --}}
             <div x-cloak x-data="{ openKesanPesan: false, openEditKesanPesan: false, editDataKesanPesan: {} }" class="cursor-default"
                 x-on:edit-pesan-kesan="editDataKesanPesan = $event.detail; openEditKesanPesan = true">
-                <h2 class="text-xl lg:text-2xl font-bold text-[#013F4E]">F. Kesan dan Pesan Mahasiswa</h2>
-                <p class="text-[#013F4E] text-md lg:text-lg font-semibold mb-0.5">Kesan dan Pesan</p>
+                <h3 class="text-lg font-bold text-gray-800 mb-2 border-b border-gray-100 pb-2">F. Kesan dan Pesan Mahasiswa</h3>
 
                 <div class="overflow-x-auto w-full">
+                    <h4 class="font-semibold text-gray-700 mb-1">Kesan dan Pesan</h4>
                     <x-tabel :headers="['No', 'Kesan', 'Pesan', 'Status']" :columns="['kesan', 'pesan', 'status']" :rows="$parsingKesanPesan" idKey="id"
                         editEvent="edit-pesan-kesan" deleteRoute="laporan.kesan-pesan.hapus" :status="$laporan->status"
                         style="draft" />
