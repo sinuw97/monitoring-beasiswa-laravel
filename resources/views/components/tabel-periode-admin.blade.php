@@ -1,3 +1,33 @@
+@php
+    $allPeriode = \App\Models\semester\Periode::all();
+    $hasAktif = $allPeriode->contains('status', 'Aktif');
+    $hasAktifKhusus = $allPeriode->contains('status', 'Aktif-Khusus');
+@endphp
+
+{{-- Warning Banner: Aktif-Khusus ada tapi tidak ada Aktif --}}
+@if (!$hasAktif && $hasAktifKhusus)
+    @php
+        // Auto-promosikan satu periode Aktif-Khusus menjadi Aktif
+        $toPromote = \App\Models\semester\Periode::where('status', 'Aktif-Khusus')
+            ->orderBy('semester_id', 'desc')
+            ->first();
+        if ($toPromote) {
+            $toPromote->update(['status' => 'Aktif']);
+        }
+    @endphp
+    <div class="max-w-5xl mx-auto mt-2 sm:mt-4 mb-2 px-4 py-3 rounded-lg bg-yellow-50 border border-yellow-300 text-yellow-800 flex items-center gap-3">
+        <svg class="w-6 h-6 flex-shrink-0 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span class="text-sm font-medium">
+            Tidak ada periode berstatus <strong>Aktif</strong>. Periode
+            <strong>{{ $toPromote->tahun_akademik }} {{ $toPromote->semester }}</strong>
+            (sebelumnya Aktif-Khusus) telah otomatis diubah menjadi <strong>Aktif</strong>.
+        </span>
+    </div>
+@endif
+
 <div class="bg-white shadow-lg rounded-xl max-w-5xl mx-auto p-2 sm:p-6 border-t-4 border-[#09697E] mt-2 sm:mt-8">
     {{-- Header Section --}}
     <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-3">

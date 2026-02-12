@@ -224,7 +224,15 @@ class DashboardAdminController extends Controller
     }
 
     public function deletePeriode($id){
+        $periode = Periode::where('semester_id', $id)->first();
+        $wasActive = $periode && $periode->status === 'Aktif';
+
         Periode::where('semester_id', $id)->delete();
+
+        // Jika yang dihapus adalah periode Aktif, promosikan Aktif-Khusus menjadi Aktif
+        if ($wasActive) {
+            $this->promoteAktifKhususIfNeeded();
+        }
 
         return redirect('/admin/dashboard')->with('success', 'Periode berhasil dihapus.');
     }
@@ -236,7 +244,7 @@ class DashboardAdminController extends Controller
         ]);
 
         $periode = Periode::where('semester_id', $id)->first();
-        
+
         if ($periode) {
             $periode->update([
                 'tanggal_mulai' => $request->tanggal_mulai,
@@ -267,11 +275,33 @@ class DashboardAdminController extends Controller
 
     public function deactivatePeriode($id) {
         $periode = Periode::where('semester_id', $id)->first();
-        
+
         $periode->update([
             'status' => 'Non-Aktif',
         ]);
 
+        // Jika tidak ada lagi periode Aktif, promosikan Aktif-Khusus menjadi Aktif
+        $this->promoteAktifKhususIfNeeded();
+
         return redirect('/admin/dashboard')->with('success', 'Periode berhasil dinonaktifkan.');
+    }
+
+    /**
+     * Jika tidak ada periode Aktif tapi ada periode Aktif-Khusus,
+     * ubah salah satu Aktif-Khusus menjadi Aktif.
+     */
+    private function promoteAktifKhususIfNeeded()
+    {
+        $hasActive = Periode::where('status', 'Aktif')->exists();
+
+        if (!$hasActive) {
+            $aktifKhusus = Periode::where('status', 'Aktif-Khusus')
+                ->orderBy('semester_id', 'desc')
+                ->first();
+
+            if ($aktifKhusus) {
+                $aktifKhusus->update(['status' => 'Aktif']);
+            }
+        }
     }
 }
