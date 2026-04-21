@@ -28,10 +28,9 @@ class DataMahasiswaImport implements ToCollection, WithHeadingRow
                 ['nim' => $row['nim']], // Search by NIM
                 [
                     'name' => $row['nama'],
-                    'email' => $row['email'] ?? $row['nim'] . '@student.example.com', // Fallback email
+                    'email' => $row['email'] ?? $row['nim'] . '@tsu.ac.id', // Fallback email
                     'password' => bcrypt($row['nim']), // Password = NIM
                     'avatar' => 'https://ui-avatars.com/api/?name=' . str_replace(' ', '+', $row['nama']),
-                    'angkatan' => '20' . substr($row['nim'], 0, 2), // Assuming simple logic or provided
                 ]
             );
 
@@ -44,7 +43,7 @@ class DataMahasiswaImport implements ToCollection, WithHeadingRow
                     'no_hp' => $row['no_hp'] ?? '-',
                     'jenis_beasiswa' => $row['jenis_beasiswa'] ?? 'Tidak Ada',
                     'jenis_kelamin' => $row['jenis_kelamin'] ?? 'Laki-Laki',
-                    'angkatan' => '20' . substr($row['nim'], 0, 2),
+                    'angkatan' => $row['angkatan'],
                     'status' => $row['status'] ?? 'Aktif',
                     'alamat' => $row['alamat'] ?? '-',
                 ]

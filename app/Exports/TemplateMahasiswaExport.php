@@ -2,33 +2,17 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use App\Exports\Sheets\TemplateDataSheet;
+use App\Exports\Sheets\PanduanSheet;
 
-class TemplateMahasiswaExport implements WithHeadings, ShouldAutoSize, WithStyles
+class TemplateMahasiswaExport implements WithMultipleSheets
 {
-    public function headings(): array
+    public function sheets(): array
     {
         return [
-            'nim',
-            'nama',
-            'email',
-            'prodi',
-            'kelas',
-            'no_hp',
-            'jenis_beasiswa',
-            'jenis_kelamin',
-            'status',
-            'alamat',
-        ];
-    }
-
-    public function styles(Worksheet $sheet)
-    {
-        return [
-            1    => ['font' => ['bold' => true]],
+            new TemplateDataSheet(),
+            new PanduanSheet(),
         ];
     }
 }
