@@ -131,7 +131,7 @@ class DataMahasiswaController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'nim' => $request->nim,
-                'angkatan' => '20'.$request->angkatan,
+                'angkatan' => $request->angkatan,
                 'password' => bcrypt($request->nim),
             ]);
 
@@ -142,7 +142,7 @@ class DataMahasiswaController extends Controller
                 'no_hp' => $request->no_hp,
                 'jenis_beasiswa' => $request->jenis_beasiswa,
                 'jenis_kelamin' => $request->jenis_kelamin,
-                'angkatan' => '20'.$request->angkatan,
+                'angkatan' => $request->angkatan,
                 'status' => $request->status,
                 'alamat' => $request->alamat
             ]);
@@ -219,7 +219,7 @@ class DataMahasiswaController extends Controller
         //
         $request->validate([
             'name' => 'required|string|max:255',
-            'nim' => 'required|string|max:8',
+            'nim' => 'required|string|max:20',
             'prodi' => 'max:255',
             'angkatan' => 'required|string|max:255',
             'jenis_beasiswa' => 'max:100',
