@@ -67,7 +67,7 @@
                         class="w-full border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:border-[#09697E] focus:ring-[#09697E] text-sm">
                     <option value="">Pilih Program Studi</option>
                     @php
-                        $prodiList = ['S1 Informatika', 'S1 Sistem Informasi', 'D3 Teknik Komputer', 'D3 Manajemen Akuntansi'];
+                        $prodiList = ['D3 Teknologi Informasi', 'D3 Desain Produk Tekstil', 'D3 Sistem Informasi', 'S1 Informatika', 'S1 Sistem Informasi', 'S1 Rekayasa Komputer', 'S1 Psikologi', 'S1 Pendidikan Guru Sekolah Dasar', 'S1 Manajemen'];
                     @endphp
                     @foreach($prodiList as $prodi)
                         <option value="{{ $prodi }}">{{ $prodi }}</option>
