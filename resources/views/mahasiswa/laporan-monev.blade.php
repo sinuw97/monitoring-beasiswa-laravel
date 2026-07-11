@@ -17,7 +17,7 @@
             </div>
             <div>
                 <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Mahasiswa</p>
-                <p class="font-bold text-gray-900 text-sm truncate">{{ $dataMahasiswa->name }}</p>
+                <p class="font-bold text-gray-900 text-sm break-words">{{ $dataMahasiswa->name }}</p>
             </div>
         </div>
 

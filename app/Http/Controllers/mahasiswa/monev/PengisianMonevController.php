@@ -91,7 +91,7 @@ class PengisianMonevController extends Controller
 
         // cek semester id dri param
         $cekSemesterId = Periode::where('semester_id', $semesterId)
-            ->where('status', 'Aktif')
+            ->whereIn('status', ['Aktif', 'Aktif-Khusus'])
             ->exists();
 
         if (!$cekSemesterId) {
